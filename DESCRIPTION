@@ -1,11 +1,36 @@
-Package: MSstatsLiP
 Type: Package
-Title: What the Package Does (Title Case)
+Package: MSstatsLiP
+Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments.
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Date: 2021-03-04
+Description: Tools for Post Translational Modification (PTM) and protein 
+              significance analysis. Supports DDA, DIA, and tandem mass tag 
+              (TMT) labeling. Provides functions for summarization, estimation 
+              of PTM site abundance, and detection of changes in PTMs across 
+              conditions. 
+Author: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
+            person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
+            person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
+            person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
+          	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
+          	person("Olga", "Vitek", email = "o.vitek@northeastern.edu", role = "aut"))
+License: Artistic-2.0
+Depends: R (>= 4.0), data.table
+Imports: dplyr, gridExtra, stringr, reshape2, stats, utils, 
+          ggplot2, grDevices, graphics, MSstats,
+          data.table
+Suggests: 
+    BiocStyle,
+    knitr,
+    rmarkdown,
+    testthat,
+    covr
+LinkingTo: Rcpp
+VignetteBuilder: knitr
+biocViews: ImmunoOncology, MassSpectrometry, Proteomics, Software, DifferentialExpression, 
+           OneChannel, TwoChannel, Normalization, QualityControl
+BugReports: https://github.com/Vitek-Lab/MSstatsLiP/issues
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
