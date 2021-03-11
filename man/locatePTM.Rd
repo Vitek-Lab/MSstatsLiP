@@ -24,7 +24,7 @@ unmodified sites, \code{FALSE} otherwise. Default is \code{FALSE}.}
 }
 \value{
 A data frame with three columns: \code{uniprot_iso}, \code{peptide},
-  \code{site}.
+\code{site}.
 }
 \description{
 \code{PTMlocate} annotates modified sites with associated peptides.

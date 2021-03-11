@@ -1,11 +1,41 @@
 #' Converts raw LiP MS data from Spectronautt into the format needed for
-#' MSstatsLiP. Needs as input both LiP Trp outputs from Spectronautt.
+#' MSstatsLiP.
+#'
+#' Takes as as input both raw LiP and Trp outputs from Spectronautt.
 #'
 #' @export
 #' @importFrom MSstats SpectronauttoMSstatsFormat
 #' @importFrom data.table as.data.table
 #' @importFrom stringr str_extract str_count str_locate_all
 #' @importFrom purrr map_int
+#'
+#' @param LiP.data name of LiP Spectronaut output, which is long-format.
+#' @param Trp.data name of TrP Spectronaut output, which is long-format.
+#' @param fasta A string of path to a FASTA file, used to match LiP peptides.
+#' @param annotation name of 'annotation.txt' data which includes Condition,
+#' BioReplicate, Run. If annotation is already complete in Spectronaut, use
+#' annotation=NULL (default). It will use the annotation information from input.
+#' @param intensity 'PeakArea'(default) uses not normalized peak area.
+#' 'NormalizedPeakArea' uses peak area normalized by Spectronaut
+#' @param filter_with_Qvalue TRUE(default) will filter out the intensities that
+#' have greater than qvalue_cutoff in EG.Qvalue column. Those intensities will
+#' be replaced with zero and will be considered as censored missing values for
+#' imputation purpose.
+#' @param qvalue_cutoff Cutoff for EG.Qvalue. default is 0.01.
+#' @param useUniquePeptide TRUE(default) removes peptides that are assigned for
+#' more than one proteins. We assume to use unique peptide for each protein.
+#' @param fewMeasurements 'remove' (default) will remove the features that have
+#' 1 or 2 measurements across runs.
+#' @param removeProtein_with1Feature TRUE will remove the proteins which have
+#' only 1 feature, which is the combination of peptide, precursor charge,
+#' fragment and charge. FALSE is default.
+#' @param summaryforMultipleRows max(default) or sum - when there are multiple
+#' measurements for certain feature and certain run, use highest or sum of
+#' multiple intensities.
+#' @param which.Conditions list of conditions to format into MSstatsPTM format.
+#' If "all" all conditions will be used. Default is "all".
+#' @examples
+#'
 SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           Trp.data,
                                           fasta,
@@ -75,11 +105,6 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
   df.fasta.lip <- df.fasta.lip[
     which(nchar(df.fasta.lip$PeptideSequence) > min_len_peptide & str_count(
       df.fasta.lip$sequence, df.fasta.lip$PeptideSequence) == 1),]
-  ## TODO: y these matter tho?
-  # df.fasta.lip$idx_peptide <- str_locate_all(df.fasta.lip$sequence,
-  #                                            df.fasta.lip$PeptideSequence)
-  # df.fasta.lip$aa_start <- map_int(df.fasta.lip$idx_peptide, ~.[, "start"])
-  # df.fasta.lip$aa_end <- map_int(df.fasta.lip$idx_peptide, ~.[, "end"])
 
   #Data formatting for MSstatsLiP analysis
   MSstats_LiP <- merge(df.lip, df.fasta.lip[, c("ProteinName", "PeptideSequence")],

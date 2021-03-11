@@ -11,7 +11,7 @@ tidyFasta(path)
 }
 \value{
 A tibble with columns named \code{header}, \code{sequence},
-  \code{uniprot_ac}, \code{uniprot_iso}, \code{entry_name}.
+\code{uniprot_ac}, \code{uniprot_iso}, \code{entry_name}.
 }
 \description{
 \code{tidyFasta} reads and tidys FASTA file.

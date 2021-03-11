@@ -1,7 +1,7 @@
 #' Visualization for explanatory data analysis
 #'
 #' To illustrate the quantitative data and quality control of MS runs,
-#' dataProcessPlotsTMT takes the quantitative data from MSstatsTMT converter
+#' dataProcessPlotsLiP takes the quantitative data from MSstatsLiP converter
 #' functions as input
 #' and generate two types of figures in pdf files as output :
 #' (1) profile plot (specify "ProfilePlot" in option type), to identify the
@@ -10,23 +10,11 @@
 #' systematic bias between MS runs.
 #'
 #' @export
-#' @import ggplot2
-#' @importFrom graphics axis image legend mtext par plot.new title plot
-#' @importFrom grDevices dev.off hcl pdf
-#' @importFrom dplyr mutate n
-#' @importFrom reshape2 dcast
-#' @importFrom MSstatsTMT proteinSummarization
-#' @importFrom gridExtra grid.arrange
-#' @param data.ptm name of the data with PTM sites in protein name, which can be
-#'  the output of MSstatsTMT converter functions.
-#' @param data.protein name of the data with peptide level, which can be the
-#' output of MSstatsTMT converter functions.
-#' @param data.ptm.summarization name of the data with ptm sites in
-#' protein-level name, which can be the output of
-#' the MSstatsTMT \code{\link[MSstatsTMT]{proteinSummarization}} function.
-#' @param data.protein.summarization name of the data with protein-level, which
-#' can be the output of the
-#' MSstatsTMT \code{\link[MSstatsTMT]{proteinSummarization}} function.
+#' @importFrom data.table `:=`
+#' @importFrom MSstatsPTM dataProcessPlotsPTM
+#' #' @param data name of the list with LiP and (optionally) Protein data, which
+#' can be the output of the MSstatsLiP.
+#' \code{\link[MSstatsLiP]{dataSummarizationLiP}} function.
 #' @param type choice of visualization. "ProfilePlot" represents profile plot of
 #'  log intensities across MS runs.
 #' "QCPlot" represents box plots of log intensities across channels and MS runs.
@@ -48,8 +36,10 @@
 #' is 5.
 #' @param width width of the saved pdf file. Default is 10.
 #' @param height height of the saved pdf file. Default is 10.
-#' @param which.Protein Protein list to draw plots. List can be names of
-#' Proteins or order numbers of Proteins.
+#' @param lip.title title of all LiP QC plot
+#' @param protein.title title of all Protein QC plot
+#' @param which.Protein LiP peptide list to draw plots. List can be names of
+#' LiP peptides or order numbers of LiPs.
 #' Default is "all", which generates all plots for each protein. For QC plot,
 #' "allonly" will generate one QC plot with all proteins.
 #' @param originalPlot TRUE(default) draws original profile plots, without
@@ -91,10 +81,10 @@ dataProcessPlotsLiP <- function(data,
   Lip.data <- data[["LiP"]]
   Lip.data.Processed <- Lip.data$ProcessedData
   Lip.data.Processed$PROTEIN <- Lip.data.Processed$FULL_PEPTIDE
-  Lip.data.Processed <- Lip.data.Processed %>% select(-FULL_PEPTIDE)
+  Lip.data.Processed[, FULL_PEPTIDE := NULL]
   Lip.data.Run <- Lip.data$RunlevelData
   Lip.data.Run$Protein <- Lip.data.Run$FULL_PEPTIDE
-  Lip.data.Run <- Lip.data.Run %>% select(-FULL_PEPTIDE)
+  Lip.data.Run[, FULL_PEPTIDE := NULL]
 
   TrP.data <- data[["TrP"]]
 

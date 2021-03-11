@@ -25,7 +25,7 @@ dataSummarizationLiP(
   censoredInt = "NA",
   cutoffCensored = "minFeature",
   MBimpute = TRUE,
-  MBimpute.LiP = TRUE,
+  MBimpute.LiP = FALSE,
   remove50missing = FALSE,
   fix_missing = NULL,
   maxQuantileforCensored = 0.999,

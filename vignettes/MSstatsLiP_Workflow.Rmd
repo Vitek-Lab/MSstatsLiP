@@ -1,0 +1,170 @@
+---
+title: "MSstatsLiP_Workflow"
+author: "Devon Kohler"
+date: "March 4, 2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## MSstatsLiP Workflow Vignette
+
+This Vignette provides an example workflow for how to use the package 
+MSstatsLiP.
+
+## Installation
+
+To install this package, start R (version "4.0") and enter:
+
+``` {r, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("MSstatsTMTPTM")
+```
+
+```{r}
+library(MSstatsLiP)
+
+library(MSstatsPTM)
+library(tidyverse)
+library(MSstats)
+library(data.table)
+```
+## 1. Workflow
+
+### 1.1 Raw Data Format
+
+The first step is to load in the raw dataset for both the PTM and Protein 
+datasets. This data can then be converted into MSstatsLiP format with one of the
+built in converters, or manually converted. In this case we use the converter 
+for Spectronaut
+
+### 1.2 Converter
+
+``` {r}
+# read in raw data files
+load(file = "../data/Example_Lip.rda")
+load(file = "../data/Example_Trp.rda")
+
+msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot,
+        "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta")
+
+head(msstats_data[["LiP"]])
+head(msstats_data[["TrP"]])
+
+## Make conditions match
+msstats_data[["TrP"]]$Condition = substr(msstats_data[["TrP"]]$Condition,1,nchar(msstats_data[["TrP"]]$Condition)-4) 
+msstats_data[["LiP"]]$Condition = substr(msstats_data[["LiP"]]$Condition,1,nchar(msstats_data[["LiP"]]$Condition)-3) 
+```
+
+#### 1.2.2 Barcode plot
+
+```{r}
+BarcodePlotLiP(msstats_data, "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta", 
+               which.prot = c("Q9JMR6", "A5A614"))
+
+```
+
+
+The converter function returns a list of two dataframes one each for LiP and TrP
+data. This list is the input into the next summarization step.
+
+### 1.3 Summarization
+
+#### 1.3.1 Function
+
+``` {r}
+
+msstats_summarized <- dataSummarizationLiP(msstats_data)
+names(msstats_summarized[["LiP"]])
+head(msstats_summarized[["LiP"]]$ProcessedData)
+head(msstats_summarized[["LiP"]]$RunlevelData)
+head(msstats_summarized[["TrP"]]$ProcessedData)
+head(msstats_summarized[["TrP"]]$RunlevelData)
+
+save(msstats_summarized, file = '../data/summarized_temp.rda')
+load(file = '../data/summarized_temp.rda')
+```
+
+Again the summarization function returns a list of two dataframes one each for 
+LiP and TrP. Each LiP and TrP is also a list with additional summary 
+information. This summarized data can be used as input into some of the
+plotting functions included in the package.
+
+#### 1.3.2 QCPlots
+
+``` {r}
+## Profile Plots
+dataProcessPlotsLiP(msstats_summarized,
+                  type = 'QCPLOT',
+                  which.Protein = "allonly",
+                  address = FALSE,
+                  lip.title = "All LiP Peptides")
+
+dataProcessPlotsLiP(msstats_summarized,
+                    type = 'ProfilePlot',
+                    which.Protein = 1,
+                    ylimUp=FALSE,
+                    ylimDown=10,
+                    address = FALSE)
+  
+
+```
+
+#### 1.3.3 PCA Plot
+
+``` {r}
+
+PCAPlotLiP(msstats_summarized,
+                       center.pca = TRUE,
+                       scale.pca = TRUE,
+                       n.components = 10,
+                       bar.plot = TRUE,
+                       protein.pca = FALSE,
+                       comparison.pca = TRUE,
+                       which.pep = "all",
+                       which.comparison = c("IPTG_1_1", "IPTG_1_2"
+                                            , "IPTG_2_2", "IPTG_2_2"),
+                       width=10,
+                       height=10,
+                       address=FALSE)
+
+```
+
+### 1.4 Modeling
+
+#### 1.4.1 Function
+
+```{r}
+
+msstats_model <- groupComparisonLiP(msstats_summarized)
+
+head(msstats_model[["LiP.Model"]])
+head(msstats_model[["TrP.model"]])
+head(msstats_model[["Adjusted.LiP.model"]])
+
+```
+
+#### 1.4.2 Plots
+
+``` {r}
+load(file = "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/Ecoli_model_IPTG.rda")
+
+groupComparisonPlotsLiP(msstats_model, 
+                        type = "VolcanoPlot", 
+                        ProteinName = FALSE, 
+                        which.Comparison = "IPTG_1-IPTG_4",
+                        address = FALSE)
+
+groupComparisonPlotsLiP(LipExpt.model, type = "HEATMAP",
+                        which.Comparison = c("IPTG_1-IPTG_2","IPTG_1-IPTG_3","IPTG_1-IPTG_4", "IPTG_1-IPTG_5"),
+                        numProtein=50,
+                        address = "",
+                        which.Protein=1:50)
+
+```
