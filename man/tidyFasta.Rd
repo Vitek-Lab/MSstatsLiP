@@ -6,17 +6,6 @@
 \usage{
 tidyFasta(path)
 }
-\arguments{
-\item{path}{A string of path to a FASTA file.}
-}
-\value{
-A tibble with columns named \code{header}, \code{sequence},
-\code{uniprot_ac}, \code{uniprot_iso}, \code{entry_name}.
-}
 \description{
-\code{tidyFasta} reads and tidys FASTA file.
-}
-\examples{
-tidyFasta("https://www.uniprot.org/uniprot/O13297.fasta")
-
+reads and tidys FASTA file.
 }

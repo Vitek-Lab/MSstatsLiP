@@ -1,18 +1,13 @@
 #' Read and tidy a FASTA file
 #'
-#' \code{tidyFasta} reads and tidys FASTA file.
-#'
-#' @param path A string of path to a FASTA file.
-#'
-#' @return A tibble with columns named \code{header}, \code{sequence},
-#'   \code{uniprot_ac}, \code{uniprot_iso}, \code{entry_name}.
-#'
-#' @examples
-#' tidyFasta("https://www.uniprot.org/uniprot/O13297.fasta")
+#' reads and tidys FASTA file.
 #'
 #' @export
+#' @importFrom Biostrings readAAStringSet
+#' @import tidyverse
+#' @import tibble
 tidyFasta <- function(path) {
-  
+
   # Check input
   if (missing(path))
     stop(paste0("The input ", sQuote("path"), " is missing"))
@@ -22,11 +17,11 @@ tidyFasta <- function(path) {
     stop("Provide only one path to the FASTA file at a time")
   # if (!file.exists(path))
   #     stop(paste0("The file ", sQuote(path), " does not exist"))
-  
+
   aa <- Biostrings::readAAStringSet(path)
   aa <- as.character(aa)  # named vector
   header <- names(aa)
-  
+
   pat_ac <- paste0(
     "([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]",
     "([A-Z][A-Z0-9]{2}[0-9]){1,2})"
@@ -35,21 +30,21 @@ tidyFasta <- function(path) {
     "([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]",
     "([A-Z][A-Z0-9]{2}[0-9]){1,2})([-]\\d{1,}){0,1}"
   )
-  
+
   mch_head <- regexpr(
     pattern = "([^\\s]*)(?=\\s)", text = header, perl = TRUE
   )
   shead <- regmatches(header, m = mch_head)
-  
+
   mch_uniprot <- regexpr(pattern = pat_ac, text = shead)
   matched <- mch_uniprot != (-1)
   ac <- regmatches(shead, regexpr(pattern = pat_ac, text = shead))
   iso <- regmatches(shead, regexpr(pattern = pat_iso, text = shead))
-  
+
   trimmed <- sub("^(sp|tr)(?=\\|)", "", shead, perl = TRUE)
   trimmed <- sub(pat_iso, "", trimmed)
   entry <- gsub("\\|", "", trimmed)
-  
+
   tibble(
     header = header[matched], sequence = as.vector(aa[matched]),
     uniprot_ac = ac, uniprot_iso = iso, entry_name = entry[matched]
@@ -80,10 +75,10 @@ tidyFasta <- function(path) {
 #' @export
 locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
                       rmConfound=FALSE) {
-  
+
   if (!.locateCheck(peptide, uniprot, fasta, modResidue, modSymbol))
     stop("Input checking fails!")
-  
+
   peptide_seq <- tibble(uniprot_iso = uniprot, peptide = peptide)
   peptide_seq$is_mod <- grepl(modSymbol, peptide_seq$peptide)
   peptide_seq$peptide_unmod <- gsub(modSymbol, "", peptide_seq$peptide)
@@ -124,7 +119,7 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
   col_fasta <- c("uniprot_iso", "peptide", "peptide_unmod", "is_mod",
                  "idx_site", "idx_mod", "site")
   peptide_fasta <- peptide_fasta[, col_fasta]
-  
+
   .rmConfounded(peptide_fasta, rmConfound)
 }
 
@@ -170,7 +165,7 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
       cnfnd[i] <- any(cnfnds)
     }
     s_unmod <- by_prot[!cnfnd, col_res]
-    
+
     n1 <- vapply(peptideFasta$idx_mod, .length_one, FUN.VALUE = logical(1))
     s_mod <- peptideFasta[peptideFasta$is_mod & n1, col_res]
     res <- bind_rows(s_mod, s_unmod)
@@ -205,7 +200,7 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
     return(cbind(start = integer(), end = integer()))
   }
   end <- as.vector(x) + attr(x, "match.length") - 1
-  
+
   cbind(start = start, end = end)
 }
 
@@ -266,7 +261,7 @@ annotSite <- function(aaIndex, residue, lenIndex=NULL) {
         stop("lenIndex should be an integer!")
       if (max(nchar(aaIndex)) > lenIndex)
         stop("lenIndex doesn't reserve enough space for aaIndex!")
-      
+
       aa_idx_pad <- formatC(
         aaIndex, width = lenIndex, format = "d", flag = "0"
       )
@@ -280,10 +275,10 @@ annotSite <- function(aaIndex, residue, lenIndex=NULL) {
 
 locate <- function(peptide, uniprot, fasta, modResidue, modSymbol,
                       rmConfound=FALSE) {
-  
+
   if (!.locateCheck(peptide, uniprot, fasta, modResidue, modSymbol))
     stop("Input checking fails!")
-  
+
   peptide_seq <- tibble(uniprot_iso = uniprot, peptide = peptide)
   peptide_seq$is_mod <- grepl(modSymbol, peptide_seq$peptide)
   peptide_seq$peptide_unmod <- gsub(modSymbol, "", peptide_seq$peptide)
@@ -324,7 +319,7 @@ locate <- function(peptide, uniprot, fasta, modResidue, modSymbol,
   col_fasta <- c("uniprot_iso", "peptide", "peptide_unmod", "is_mod",
                  "idx_site", "idx_mod", "site")
   peptide_fasta <- peptide_fasta[, col_fasta]
-  
+
   .rmConfounded(peptide_fasta, rmConfound)
 }
 
@@ -370,7 +365,7 @@ locate <- function(peptide, uniprot, fasta, modResidue, modSymbol,
       cnfnd[i] <- any(cnfnds)
     }
     s_unmod <- by_prot[!cnfnd, col_res]
-    
+
     n1 <- vapply(peptideFasta$idx_mod, .length_one, FUN.VALUE = logical(1))
     s_mod <- peptideFasta[peptideFasta$is_mod & n1, col_res]
     res <- bind_rows(s_mod, s_unmod)
@@ -405,7 +400,7 @@ locate <- function(peptide, uniprot, fasta, modResidue, modSymbol,
     return(cbind(start = integer(), end = integer()))
   }
   end <- as.vector(x) + attr(x, "match.length") - 1
-  
+
   cbind(start = start, end = end)
 }
 
@@ -466,7 +461,7 @@ annotSite <- function(aaIndex, residue, lenIndex=NULL) {
         stop("lenIndex should be an integer!")
       if (max(nchar(aaIndex)) > lenIndex)
         stop("lenIndex doesn't reserve enough space for aaIndex!")
-      
+
       aa_idx_pad <- formatC(
         aaIndex, width = lenIndex, format = "d", flag = "0"
       )

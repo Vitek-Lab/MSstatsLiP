@@ -51,8 +51,7 @@ for Spectronaut
 load(file = "../data/Example_Lip.rda")
 load(file = "../data/Example_Trp.rda")
 
-msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot,
-        "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta")
+msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot, "200331_ecoli.fasta")
 
 head(msstats_data[["LiP"]])
 head(msstats_data[["TrP"]])
@@ -128,7 +127,7 @@ PCAPlotLiP(msstats_summarized,
                        protein.pca = FALSE,
                        comparison.pca = TRUE,
                        which.pep = "all",
-                       which.comparison = c("IPTG_1_1", "IPTG_1_2"
+                       which.comparison = c("IPTG_1_1", "IPTG_1_2" ## Conditions include biorep. Will change this.
                                             , "IPTG_2_2", "IPTG_2_2"),
                        width=10,
                        height=10,

@@ -5,14 +5,25 @@
 \title{Model LiP and TrP data and make adjustments if needed
 Returns list of three modeled datasets}
 \usage{
-groupComparisonLiP(
-  data,
-  contrast.matrix = "pairwise",
-  moderated = FALSE,
-  adj.method = "BH"
-)
+groupComparisonLiP(data, contrast.matrix = "pairwise")
+}
+\arguments{
+\item{data}{list of summarized datasets. Can be output of MSstatsLiP
+summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}.}
+
+\item{contrast.matrix}{comparison between conditions of interests. Default
+models full pairwise comparison between all conditions}
+}
+\value{
+list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
+data.tables with their corresponding model results.
 }
 \description{
-Model LiP and TrP data and make adjustments if needed
-Returns list of three modeled datasets
+Takes summarized LiP peptide and TrP protein data from dataSummarizationLiP
+If global protein data is unavailable, LiP data only can be passed into the
+function. Including protein data allows for adjusting LiP Fold Change by the
+change in global protein abundance..
+}
+\examples{
+Add example
 }

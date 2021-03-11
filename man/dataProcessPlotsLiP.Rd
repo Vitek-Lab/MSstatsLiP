@@ -27,6 +27,10 @@ dataProcessPlotsLiP(
 )
 }
 \arguments{
+\item{data}{name of the list with LiP and (optionally) Protein data, which
+can be the output of the MSstatsLiP.
+\code{\link[MSstatsLiP]{dataSummarizationLiP}} function.}
+
 \item{type}{choice of visualization. "ProfilePlot" represents profile plot of
 log intensities across MS runs.
 "QCPlot" represents box plots of log intensities across channels and MS runs.}
@@ -60,8 +64,12 @@ is 5.}
 
 \item{height}{height of the saved pdf file. Default is 10.}
 
-\item{which.Protein}{Protein list to draw plots. List can be names of
-Proteins or order numbers of Proteins.
+\item{lip.title}{title of all LiP QC plot}
+
+\item{protein.title}{title of all Protein QC plot}
+
+\item{which.Protein}{LiP peptide list to draw plots. List can be names of
+LiP peptides or order numbers of LiPs.
 Default is "all", which generates all plots for each protein. For QC plot,
 "allonly" will generate one QC plot with all proteins.}
 
@@ -80,20 +88,6 @@ An output pdf file is automatically created with the default name of
 The command address can help to specify where to store the file as well as
 how to modify the beginning of the file name.
 If address=FALSE, plot will be not saved as pdf file but showed in window.}
-
-\item{data.ptm}{name of the data with PTM sites in protein name, which can be
-the output of MSstatsTMT converter functions.}
-
-\item{data.protein}{name of the data with peptide level, which can be the
-output of MSstatsTMT converter functions.}
-
-\item{data.ptm.summarization}{name of the data with ptm sites in
-protein-level name, which can be the output of
-the MSstatsTMT \code{\link[MSstatsTMT]{proteinSummarization}} function.}
-
-\item{data.protein.summarization}{name of the data with protein-level, which
-can be the output of the
-MSstatsTMT \code{\link[MSstatsTMT]{proteinSummarization}} function.}
 }
 \value{
 plot or pdf
@@ -107,4 +101,7 @@ and generate two types of figures in pdf files as output :
 potential sources of variation for each protein;
 (2) quality control plot (specify "QCPlot" in option type), to evaluate the
 systematic bias between MS runs.
+}
+\examples{
+Add example
 }

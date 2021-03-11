@@ -79,8 +79,6 @@
 #' name.
 #' @param maxQuantileforCensored Maximum quantile for deciding censored missing
 #' values. default is 0.999
-#' @param clusters a user specified number of clusters. default is NULL, which
-#' does not use cluster.
 #' @return list of summarized LiP and TrP results. These results contain
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
@@ -127,15 +125,29 @@ dataSummarizationLiP <- function(
 
   format.data <- list(PTM = LiP.dataset, PROTEIN = protein.dataset)
 
-  summarized.data <- dataSummarizationPTM(format.data, logTrans, normalization,
-                       normalization.LiP, nameStandards, nameStandards.LiP,
-                       fillIncompleteRows, featureSubset,
-                       featureSubset.LiP, remove_uninformative_feature_outlier,
-                       remove_uninformative_feature_outlier.LiP, n_top_feature,
-                       n_top_feature.LiP, summaryMethod, equalFeatureVar,
-                       censoredInt, cutoffCensored, MBimpute, MBimpute.LiP,
-                       remove50missing, fix_missing, address,
-                       maxQuantileforCensored, clusters)
+  summarized.data <- dataSummarizationPTM(format.data,
+                                          logTrans,
+                                          normalization,
+                                          normalization.LiP,
+                                          nameStandards,
+                                          nameStandards.LiP,
+                                          fillIncompleteRows,
+                                          featureSubset,
+                                          featureSubset.LiP,
+                                          remove_uninformative_feature_outlier,
+                                          remove_uninformative_feature_outlier.LiP,
+                                          n_top_feature,
+                                          n_top_feature.LiP,
+                                          summaryMethod,
+                                          equalFeatureVar,
+                                          censoredInt,
+                                          cutoffCensored,
+                                          MBimpute,
+                                          MBimpute.LiP,
+                                          remove50missing,
+                                          address,
+                                          maxQuantileforCensored,
+                                          clusters)
 
   Lip.summarized <- summarized.data[["PTM"]]
   Lip.processed <- as.data.table(Lip.summarized[["ProcessedData"]])

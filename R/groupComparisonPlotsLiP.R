@@ -73,6 +73,7 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
+#' Add examples
 groupComparisonPlotsLiP <- function(data = data,
                                     type = type,
                                     sig=0.05,

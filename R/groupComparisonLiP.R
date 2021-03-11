@@ -18,7 +18,7 @@
 #' @return list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
 #'         data.tables with their corresponding model results.
 #' @examples
-#'
+#' Add example
 groupComparisonLiP <- function(data, contrast.matrix = "pairwise"){
 
 

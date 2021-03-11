@@ -52,6 +52,7 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
+#' Add example
 PCAPlotLiP <- function(data,
                        center.pca = TRUE,
                        scale.pca = TRUE,

@@ -12,7 +12,7 @@
 #' @export
 #' @importFrom data.table `:=`
 #' @importFrom MSstatsPTM dataProcessPlotsPTM
-#' #' @param data name of the list with LiP and (optionally) Protein data, which
+#' @param data name of the list with LiP and (optionally) Protein data, which
 #' can be the output of the MSstatsLiP.
 #' \code{\link[MSstatsLiP]{dataSummarizationLiP}} function.
 #' @param type choice of visualization. "ProfilePlot" represents profile plot of
@@ -57,6 +57,7 @@
 #' If address=FALSE, plot will be not saved as pdf file but showed in window.
 #' @return plot or pdf
 #' @examples
+#' Add example
 dataProcessPlotsLiP <- function(data,
                                 type = 'PROFILEPLOT',
                                 ylimUp = FALSE,
