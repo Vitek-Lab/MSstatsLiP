@@ -10,7 +10,8 @@ trypticHistogramLiP(
   fasta,
   x.axis.size = 10,
   y.axis.size = 10,
-  legend.size = 10
+  legend.size = 10,
+  address = ""
 )
 }
 \description{
