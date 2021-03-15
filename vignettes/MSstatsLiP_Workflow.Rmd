@@ -29,11 +29,7 @@ BiocManager::install("MSstatsTMTPTM")
 
 ```{r}
 library(MSstatsLiP)
-
-library(MSstatsPTM)
 library(tidyverse)
-library(MSstats)
-library(data.table)
 ```
 ## 1. Workflow
 
@@ -48,10 +44,11 @@ for Spectronaut
 
 ``` {r}
 # read in raw data files
-load(file = "../data/Example_Lip.rda")
-load(file = "../data/Example_Trp.rda")
+load(file = "../Example_Lip.rda")
+load(file = "../Example_Trp.rda")
 
-msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot, "200331_ecoli.fasta")
+msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot, 
+  "F:\\Northeastern\\Research\\MSstats\\MSstatsLiP\\Ecoli_Val\\200331_ecoli.fasta")
 
 head(msstats_data[["LiP"]])
 head(msstats_data[["TrP"]])
@@ -59,6 +56,9 @@ head(msstats_data[["TrP"]])
 ## Make conditions match
 msstats_data[["TrP"]]$Condition = substr(msstats_data[["TrP"]]$Condition,1,nchar(msstats_data[["TrP"]]$Condition)-4) 
 msstats_data[["LiP"]]$Condition = substr(msstats_data[["LiP"]]$Condition,1,nchar(msstats_data[["LiP"]]$Condition)-3) 
+
+trypticHistogramLiP(msstats_data, "F:\\Northeastern\\Research\\MSstats\\MSstatsLiP\\Ecoli_Val\\200331_ecoli.fasta")
+
 ```
 
 #### 1.2.2 Barcode plot
