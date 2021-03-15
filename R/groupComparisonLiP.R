@@ -31,8 +31,8 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise"){
   Lip.run$Protein <- Lip.run$FULL_PEPTIDE
 
   data.protein <- data[["TrP"]]
-  format.data <- list(PTM = list(ProcessedData = Lip.processed,
-                                 RunlevelData = Lip.run,
+  format.data <- list(PTM = list(ProcessedData = as.data.frame(Lip.processed), ## TODO: Replace when new MSstats version comes out
+                                 RunlevelData = as.data.frame(Lip.run),
                                  SummaryMethod = data.LiP[["SummaryMethod"]],
                                  ModelQC = data.LiP[["ModelQC"]],
                                  PredictBySurvival =
