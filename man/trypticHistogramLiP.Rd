@@ -5,7 +5,14 @@
 \title{Histogram of Half vs Fully tryptic peptides. Calculates proteotypicity,
 and then uses calcualtions in histogram.}
 \usage{
-trypticHistogramLiP(data, fasta)
+trypticHistogramLiP(
+  data,
+  fasta,
+  x.axis.size = 10,
+  y.axis.size = 10,
+  legend.size = 10,
+  address = ""
+)
 }
 \description{
 Histogram of Half vs Fully tryptic peptides. Calculates proteotypicity,
