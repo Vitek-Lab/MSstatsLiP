@@ -1,10 +1,13 @@
 ---
 title: "MSstatsLiP_Workflow"
 author: "Devon Kohler"
-date: "March 4, 2021"
 output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    sef_contained: true
   pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -31,7 +34,10 @@ BiocManager::install("MSstatsTMTPTM")
 library(MSstatsLiP)
 library(tidyverse)
 ```
-## 1. Workflow
+
+## Workflow
+
+### 1. Preprocessing
 
 ### 1.1 Raw Data Format
 
@@ -40,54 +46,92 @@ datasets. This data can then be converted into MSstatsLiP format with one of the
 built in converters, or manually converted. In this case we use the converter 
 for Spectronaut
 
+``` {r}
+## Read in raw data files
+head(LiPRawData)
+head(TrPRawData)
+```
+
 ### 1.2 Converter
 
 ``` {r}
-# read in raw data files
-load(file = "../Example_Lip.rda")
-load(file = "../Example_Trp.rda")
+## Run converter
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
+                                                 "../data/ExampleFastaFile.fasta",
+                                                 TrPRawData)
 
-msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, raw_prot, 
-  "F:\\Northeastern\\Research\\MSstats\\MSstatsLiP\\Ecoli_Val\\200331_ecoli.fasta")
-
-head(msstats_data[["LiP"]])
-head(msstats_data[["TrP"]])
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
 
 ## Make conditions match
-msstats_data[["TrP"]]$Condition = substr(msstats_data[["TrP"]]$Condition,1,nchar(msstats_data[["TrP"]]$Condition)-4) 
-msstats_data[["LiP"]]$Condition = substr(msstats_data[["LiP"]]$Condition,1,nchar(msstats_data[["LiP"]]$Condition)-3) 
-
-trypticHistogramLiP(msstats_data, "F:\\Northeastern\\Research\\MSstats\\MSstatsLiP\\Ecoli_Val\\200331_ecoli.fasta")
+MSstatsLiP_data[["LiP"]][MSstatsLiP_data[["LiP"]]$Condition == "Control", "Condition"] = "Ctrl"
+MSstatsLiP_data[["TrP"]]$Condition = substr(MSstatsLiP_data[["TrP"]]$Condition, 
+  1, nchar(MSstatsLiP_data[["TrP"]]$Condition)-1)
 
 ```
 
-#### 1.2.2 Barcode plot
+In the case above the SpectronauttoMSstatsLiPFormat was ran to convert the data 
+into the format required for MSstatsLiP. Note that the condition names 
+did not match between the LiP and TrP datasets. Here we edit the conditions in 
+each dataset to match.
+
+Additionally, it is important that the column "FULL_PEPTIDE" in the LiP dataset 
+contains both the Protein and Peptide information, seperated by an underscore. 
+This allows us to summarize up to the peptide level, while keeping important 
+information about which protein the peptide corresponds to.
+
+#### 1.3 Barcode plot
+
+MSstatsLiP has a wide variety of plotting functionality to analysis and assess 
+the results of experiments. Here we show a barcode plot, showing the coverage of
+LiP and TrP peptides. This function requires the data in MSstatsLiP format and 
+the path to a fasta file.
 
 ```{r}
-BarcodePlotLiP(msstats_data, "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta", 
-               which.prot = c("Q9JMR6", "A5A614"))
+BarcodePlotLiP(MSstatsLiP_data, "../data/ExampleFastaFile.fasta", 
+               which.prot = c("Q12429"), address = FALSE)
 
 ```
 
+#### 1.4 Half vs Fully Tryptic Plot
 
-The converter function returns a list of two dataframes one each for LiP and TrP
-data. This list is the input into the next summarization step.
+Here we plot the number of half vs fully tryptic peptides per replicate.
 
-### 1.3 Summarization
+``` {r}
+trypticHistogramLiP(MSstatsLiP_data, "../data/ExampleFastaFile.fasta",
+                    address = FALSE)
+```
 
-#### 1.3.1 Function
+#### 1.5 Coefficient of Variation
+
+Here we provide a simple script to exame the coefficient of variance between 
+conditions
+
+``` {r}
+MSstatsLiP_data[["LiP"]] %>% 
+  group_by(PeptideSequence, Condition) %>% 
+  summarize(cv = sd(Intensity) / mean(Intensity)) %>% 
+  ggplot() + geom_violin(aes(x = Condition, y = cv, fill = Condition)) + 
+  labs(title = "Coefficient of Variation between Condtions", 
+       y = "Coefficient of Variation", x = "Conditon")
+```
+
+### 2. Summarization
+
+The next step in the MSstatsLiP workflow is to summarize feature intensities per
+run into one value using the dataSummarizationLiP function. This function takes 
+as input the formatted data from the converter.
+ 
+#### 2.1 Summarization Function
 
 ``` {r}
 
-msstats_summarized <- dataSummarizationLiP(msstats_data)
-names(msstats_summarized[["LiP"]])
-head(msstats_summarized[["LiP"]]$ProcessedData)
-head(msstats_summarized[["LiP"]]$RunlevelData)
-head(msstats_summarized[["TrP"]]$ProcessedData)
-head(msstats_summarized[["TrP"]]$RunlevelData)
+MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
+                                              MBimpute = FALSE)
+names(MSstatsLiP_Summarized[["LiP"]])
+head(MSstatsLiP_Summarized[["LiP"]]$RunlevelData)
+head(MSstatsLiP_Summarized[["TrP"]]$RunlevelData)
 
-save(msstats_summarized, file = '../data/summarized_temp.rda')
-load(file = '../data/summarized_temp.rda')
 ```
 
 Again the summarization function returns a list of two dataframes one each for 
@@ -95,75 +139,93 @@ LiP and TrP. Each LiP and TrP is also a list with additional summary
 information. This summarized data can be used as input into some of the
 plotting functions included in the package.
 
-#### 1.3.2 QCPlots
+#### 2.2 QCPlot
+
+The following plots are used to view the summarized data and check for 
+potential systemic issues.
 
 ``` {r}
-## Profile Plots
-dataProcessPlotsLiP(msstats_summarized,
+## Quality Control Plot
+dataProcessPlotsLiP(MSstatsLiP_Summarized,
                   type = 'QCPLOT',
                   which.Protein = "allonly",
-                  address = FALSE,
-                  lip.title = "All LiP Peptides")
-
-dataProcessPlotsLiP(msstats_summarized,
-                    type = 'ProfilePlot',
-                    which.Protein = 1,
-                    ylimUp=FALSE,
-                    ylimDown=10,
-                    address = FALSE)
-  
-
+                  address = FALSE)
 ```
 
-#### 1.3.3 PCA Plot
+#### 2.3 Profile Plot
+
+``` {r}
+dataProcessPlotsLiP(MSstatsLiP_Summarized,
+                    type = 'ProfilePlot',
+                    which.Protein = 10,
+                    ylimUp=20,
+                    ylimDown=10,
+                    address = FALSE)
+```
+
+#### 2.4 PCA Plot
+
+In addition, Priciple Component Analysis can also be done on the summarized 
+dataset. Three different PCA plots can be created one each for: Percent of 
+explained variance per component, PC1 vs PC2 for peptides, and PC1 vs PC2 for 
+conditions.
 
 ``` {r}
 
-PCAPlotLiP(msstats_summarized,
-                       center.pca = TRUE,
-                       scale.pca = TRUE,
-                       n.components = 10,
-                       bar.plot = TRUE,
-                       protein.pca = FALSE,
-                       comparison.pca = TRUE,
-                       which.pep = "all",
-                       which.comparison = c("IPTG_1_1", "IPTG_1_2" ## Conditions include biorep. Will change this.
-                                            , "IPTG_2_2", "IPTG_2_2"),
-                       width=10,
-                       height=10,
-                       address=FALSE)
+PCAPlotLiP(MSstatsLiP_Summarized,
+           bar.plot = FALSE,
+           protein.pca = FALSE,
+           comparison.pca = TRUE,
+           #which.pep = c("Q99278_EIQLLDENVGTR", "P10592_AHFSNDRVDIIANDQGNR"),
+           which.comparison = c("Ctrl", "Osmo"),
+           address=FALSE)
+
+PCAPlotLiP(MSstatsLiP_Summarized,
+           bar.plot = FALSE,
+           protein.pca = TRUE,
+           comparison.pca = FALSE,
+           which.pep = c("Q99278_EIQLLDENVGTR", "P10592_AHFSNDRVDIIANDQGNR"),
+           #which.comparison = c("Ctrl", "Osmo"),
+           address=FALSE)
 
 ```
 
-### 1.4 Modeling
+### 3. Modeling
 
-#### 1.4.1 Function
+The modeling function groupComparisonLiP takes as input the output of the 
+summarization function dataSummarizationLiP.
+
+#### 3.1 Function
 
 ```{r}
 
-msstats_model <- groupComparisonLiP(msstats_summarized)
+MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
+                                       fasta = "../data/ExampleFastaFile.fasta")
 
-head(msstats_model[["LiP.Model"]])
-head(msstats_model[["TrP.model"]])
-head(msstats_model[["Adjusted.LiP.model"]])
+head(MSstatsLiP_model[["LiP.Model"]])
+head(MSstatsLiP_model[["TrP.Model"]])
+head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
 
 ```
 
-#### 1.4.2 Plots
+The groupComparisonLiP function outputs a list with three seperate models. These
+models are as follows: LiP model, TrP model, and adjusted LiP model.
+
+#### 3.2 Volcano Plot
 
 ``` {r}
-load(file = "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/Ecoli_model_IPTG.rda")
-
-groupComparisonPlotsLiP(msstats_model, 
+groupComparisonPlotsLiP(MSstatsLiP_model, 
                         type = "VolcanoPlot", 
                         ProteinName = FALSE, 
-                        which.Comparison = "IPTG_1-IPTG_4",
                         address = FALSE)
-
-groupComparisonPlotsLiP(LipExpt.model, type = "HEATMAP",
-                        which.Comparison = c("IPTG_1-IPTG_2","IPTG_1-IPTG_3","IPTG_1-IPTG_4", "IPTG_1-IPTG_5"),
-                        numProtein=50,
-                        address = "",
-                        which.Protein=1:50)
-
 ```
+
+#### 3.3 Heatmap
+
+``` {r}
+# groupComparisonPlotsLiP(MSstatsLiP_model, 
+#                         type = "HEATMAP",
+#                         numProtein=50,
+#                         address = FALSE)
+```
+
