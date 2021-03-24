@@ -8,7 +8,7 @@ dataSummarizationLiP(
   data,
   logTrans = 2,
   normalization = "equalizeMedians",
-  normalization.LiP = FALSE,
+  normalization.LiP = "equalizeMedians",
   nameStandards = NULL,
   nameStandards.LiP = NULL,
   fillIncompleteRows = TRUE,
@@ -46,7 +46,7 @@ represents quantile normalization based on reference signals is performed.
 FALSE represents no normalization is performed}
 
 \item{normalization.LiP}{normalization for LiP level dataset. Default is
-FALSE. Can be adjusted to any of the options described above.}
+'equalizeMedians'. Can be adjusted to any of the options described above.}
 
 \item{nameStandards}{vector of global standard peptide names for protein
 dataset. only for normalization with global standard peptides.}

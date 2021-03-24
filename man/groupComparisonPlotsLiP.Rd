@@ -22,7 +22,6 @@ groupComparisonPlotsLiP(
   ProteinName = TRUE,
   colorkey = TRUE,
   numProtein = 100,
-  clustering = "both",
   width = 10,
   height = 10,
   which.Comparison = "all",

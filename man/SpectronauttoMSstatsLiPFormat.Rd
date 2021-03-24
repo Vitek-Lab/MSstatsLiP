@@ -7,8 +7,8 @@ MSstatsLiP.}
 \usage{
 SpectronauttoMSstatsLiPFormat(
   LiP.data,
-  Trp.data,
   fasta,
+  Trp.data = NULL,
   annotation = NULL,
   intensity = "PeakArea",
   filter_with_Qvalue = TRUE,
@@ -23,9 +23,9 @@ SpectronauttoMSstatsLiPFormat(
 \arguments{
 \item{LiP.data}{name of LiP Spectronaut output, which is long-format.}
 
-\item{Trp.data}{name of TrP Spectronaut output, which is long-format.}
-
 \item{fasta}{A string of path to a FASTA file, used to match LiP peptides.}
+
+\item{Trp.data}{name of TrP Spectronaut output, which is long-format.}
 
 \item{annotation}{name of 'annotation.txt' data which includes Condition,
 BioReplicate, Run. If annotation is already complete in Spectronaut, use
