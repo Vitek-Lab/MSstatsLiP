@@ -68,6 +68,12 @@ raw_prot_sel <- raw_prot  %>%
 raw_prot_sel$R.Condition = substr(raw_prot_sel$R.Condition,1,nchar(raw_prot_sel$R.Condition)-4) 
 raw_lip_sel$R.Condition = substr(raw_lip_sel$R.Condition,1,nchar(raw_lip_sel$R.Condition)-3) 
 
+## Sample proteins to increase speed
+sample <- raw_lip_sel %>% filter(!grepl(";", PG.ProteinAccessions)) %>% distinct(PG.ProteinAccessions) %>% sample_n(250)
+raw_lip_sel <- raw_lip_sel %>% filter(PG.ProteinAccessions %in% sample[[1]])
+raw_prot_sel <- raw_prot_sel %>% filter(PG.ProteinAccessions %in% sample[[1]])
+
+
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(raw_lip_sel, 
     "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta",
                                                  raw_prot_sel)
@@ -108,19 +114,32 @@ interest, rather than perform a full pairwise comparison.
 
 ```{r}
 
-contrast_matrix <- list("T1-T2" = c(-1,1,0,0,0,0,0,0),
-                        "T1-T3" = c(-1,0,1,0,0,0,0,0),
-                        "T1-T4" = c(-1,0,0,1,0,0,0,0),
-                        "T1-T5" = c(-1,0,0,0,1,0,0,0),
-                        "T1-T6" = c(-1,0,0,0,0,1,0,0),
-                        "T1-T7" = c(-1,0,0,0,0,0,1,0),
-                        "T1-T8" = c(-1,0,0,0,0,0,0,1))
+contrast_matrix <- matrix(c(-1,1,0,0,0,0,0,0,
+                         -1,0,1,0,0,0,0,0,
+                         -1,0,0,1,0,0,0,0,
+                         -1,0,0,0,1,0,0,0,
+                         -1,0,0,0,0,1,0,0,
+                         -1,0,0,0,0,0,1,0,
+                         -1,0,0,0,0,0,0,1),
+                         nrow=7, ncol=8, byrow=TRUE)
 
-MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
-                                       fasta = "../data/ExampleFastaFile.fasta")
+row.names(contrast_matrix) <- c("T1-T2", "T1-T3", "T1-T4", 
+                                "T1-T5", "T1-T6", "T1-T7", "T1-T8")
+
+MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized, contrast_matrix,
+  fasta = "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta")
 
 head(MSstatsLiP_model[["LiP.Model"]])
 head(MSstatsLiP_model[["TrP.Model"]])
 head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
 
+```
+
+#### 3.1 Volcano Plot
+
+``` {r}
+groupComparisonPlotsLiP(MSstatsLiP_model, 
+                        type = "VolcanoPlot", 
+                        ProteinName = FALSE, 
+                        address = FALSE)
 ```
