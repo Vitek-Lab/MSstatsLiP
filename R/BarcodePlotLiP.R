@@ -39,9 +39,23 @@ BarcodePlotLiP <- function(data,
   formated_fasta <- as.data.table(formated_fasta)
   formated_fasta <- formated_fasta[, c("sequence", "uniprot_iso")]
 
-  ## TODO: Replace this with more robust Rcpp function
-  regex_protein <- '([^-]+)(?:_[^-]+){1}$'
-  lip.data[, ProteinName := factor(str_match(FULL_PEPTIDE, regex_protein)[,2])]
+  ## Extracted protein name from LiP data
+  ## Find unique proteins and peptide combinations
+  available_proteins <- unique(as.character(trp.data$ProteinName))
+  available_proteins <- available_proteins[order(nchar(available_proteins),
+                                                 available_proteins,
+                                                 decreasing = TRUE)]
+  available_ptms <- unique(as.character(lip.data$FULL_PEPTIDE))
+
+  ## Call Rcpp function to extract protein name
+  ptm_proteins <- extract_protein_name(available_ptms,
+                                       available_proteins)
+  global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
+                                      ProteinName = ptm_proteins)
+
+  ## Add extracted protein name into dataset
+  lip.data <- merge(lip.data, global_protein_lookup,
+                    all.x = TRUE, by = 'FULL_PEPTIDE')
 
   ## Test for missing LiP proteins in FASTA file
   lip.proteins <- unique(lip.data[, ProteinName])
