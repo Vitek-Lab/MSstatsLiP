@@ -8,7 +8,7 @@ Description: Tools for Post Translational Modification (PTM) and protein
               (TMT) labeling. Provides functions for summarization, estimation 
               of PTM site abundance, and detection of changes in PTMs across 
               conditions. 
-Author: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
+Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
             person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
             person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
             person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
@@ -18,7 +18,8 @@ License: Artistic-2.0
 Depends: R (>= 4.0), data.table
 Imports: dplyr, gridExtra, stringr, reshape2, stats, utils, 
           ggplot2, grDevices, graphics, MSstats,
-          data.table
+          data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, cluster,
+          factoextra, ggpubr, purrr, tibble, tidyr, tidyverse
 Suggests: 
     BiocStyle,
     knitr,

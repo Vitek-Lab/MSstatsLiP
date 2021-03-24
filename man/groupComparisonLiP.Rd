@@ -5,14 +5,18 @@
 \title{Model LiP and TrP data and make adjustments if needed
 Returns list of three modeled datasets}
 \usage{
-groupComparisonLiP(data, contrast.matrix = "pairwise")
+groupComparisonLiP(data, contrast.matrix = "pairwise", fasta.path = NA)
 }
 \arguments{
 \item{data}{list of summarized datasets. Can be output of MSstatsLiP
-summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}.}
+summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}. Must
+include dataset named "LiP" as minimum.}
 
 \item{contrast.matrix}{comparison between conditions of interests. Default
 models full pairwise comparison between all conditions}
+
+\item{fasta.path}{a file path to a fasta file that includes the proteins
+listed in the data}
 }
 \value{
 list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
