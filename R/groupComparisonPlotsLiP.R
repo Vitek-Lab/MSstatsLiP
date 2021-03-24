@@ -91,7 +91,6 @@ groupComparisonPlotsLiP <- function(data = data,
                                     ProteinName=TRUE,
                                     colorkey=TRUE,
                                     numProtein=100,
-                                    clustering="both",
                                     width=10,
                                     height=10,
                                     which.Comparison="all",
@@ -103,9 +102,15 @@ groupComparisonPlotsLiP <- function(data = data,
   LiP.model <- data[['LiP.Model']]
   Trp.model <- data[['TrP.Model']]
   Adjusted.model <- data[['Adjusted.LiP.Model']]
+  keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
+             "Tvalue", "DF", "pvalue", "adj.pvalue")
+  Adjusted.model[, ..keep]
 
-  LiP.model$Protein <- LiP.model$FULL_PEPTIDE
-  Adjusted.model$Protein <- Adjusted.model$FULL_PEPTIDE
+  LiP.model <- cbind(data.table(Protein = LiP.model$FULL_PEPTIDE), LiP.model)
+  Adjusted.model <- cbind(data.table(Protein = Adjusted.model$FULL_PEPTIDE),
+                          Adjusted.model)
+  LiP.model[, FULL_PEPTIDE := NULL]
+  Adjusted.model[, FULL_PEPTIDE := NULL]
 
   formated.data <- list(PTM.Model = LiP.model,
                         PROTEIN.Model = Trp.model,
@@ -114,8 +119,7 @@ groupComparisonPlotsLiP <- function(data = data,
   groupComparisonPlotsPTM(formated.data, type, sig, FCcutoff, logBase.pvalue,
                           ylimUp, ylimDown, xlimUp, x.axis.size, y.axis.size,
                           dot.size, text.size, text.angle, legend.size,
-                          ProteinName, colorkey, numProtein, clustering,
+                          ProteinName, colorkey, numProtein,
                           width, height, which.Comparison, which.Protein,
                           which.Models, address)
-
 }

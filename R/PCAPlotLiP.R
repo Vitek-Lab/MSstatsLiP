@@ -73,6 +73,11 @@ PCAPlotLiP <- function(data,
   lip.data <- data[["LiP"]]$RunlevelData
   trp.data <- data[["TrP"]]$RunlevelData
 
+  if (which.comparison[[1]] != "all"){
+    lip.data <- lip.data[lip.data$GROUP_ORIGINAL %in% which.comparison, ]
+    trp.data <- trp.data[trp.data$GROUP_ORIGINAL %in% which.comparison, ]
+  }
+
   ## Run PCA
   lip.pca <- calculate.pc(lip.data, center.pca, scale.pca)
   trp.pca <- calculate.pc(trp.data, center.pca, scale.pca)
@@ -94,39 +99,37 @@ PCAPlotLiP <- function(data,
 
   ## Bar plot showing variance of each component
   if (bar.plot){
-    lip.bar <- pca.component.bar.plot(lip.pca, n.components)
-    trp.bar <- pca.component.bar.plot(trp.pca, n.components)
+    lip.bar <- pca.component.bar.plot(lip.pca, n.components,
+                                      "LiP Explained Variance")
+    trp.bar <- pca.component.bar.plot(trp.pca, n.components,
+                                      "TrP Explained Variance")
     grid.arrange(lip.bar, trp.bar, ncol=2)
   }
 
   ## Bar plot showing variance of each component
-  if (which.pep != "all") {
-    lip.pca$x <- lip.pca$x[rownames(lip.pca$x) %in% which.pep, ]
+  if (which.pep[[1]] != "all") {
+    lip.pca$x <- lip.pca$x[rownames(lip.pca$x) %in% which.pep, , drop=FALSE]
     ## TODO: Replace this with more robust Rcpp function
     regex_protein <- '([^-]+)(?:_[^-]+){1}$'
     which.prot <- sapply(which.pep,
                          function(x) {str_match(x, regex_protein)[[2]]})
     which.prot <- unique(as.vector(which.prot))
-    trp.pca$x <- trp.pca$x[rownames(trp.pca$x) %in% which.prot, ]
-
+    trp.pca$x <- trp.pca$x[rownames(trp.pca$x) %in% which.prot, , drop=FALSE]
   }
+
   if (protein.pca){
-    lip.prot.plot <- pca.component.prot.plot(lip.pca)
-    trp.prot.plot <- pca.component.prot.plot(trp.pca)
-    grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
-  }
-
-  if (which.comparison != "all"){
-    lip.pca$rotation <- lip.pca$rotation[
-      rownames(lip.pca$rotation) %in% which.comparison, ]
-    trp.pca$rotation <- trp.pca$rotation[
-      rownames(trp.pca$rotation) %in% which.comparison, ]
-
+    lip.prot.plot <- pca.component.prot.plot(lip.pca, "LiP Peptide PCA")
+    if (nrow(trp.pca$x) > 1){
+      trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
+      grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
+    } else{
+      print(lip.prot.plot)
+    }
   }
 
   if (comparison.pca){
-    lip.comp.plot <- pca.component.comparison.plot(lip.pca)
-    trp.comp.plot <- pca.component.comparison.plot(trp.pca)
+    lip.comp.plot <- pca.component.comparison.plot(lip.pca, "LiP Component PCA")
+    trp.comp.plot <- pca.component.comparison.plot(trp.pca, "TrP Component PCA")
     grid.arrange(lip.comp.plot, trp.comp.plot, ncol=2)
   }
 
@@ -180,7 +183,7 @@ calculate.pc <- function(data, center.pca, scale.pca){
 
 #' Bar plot of explained variance per component
 #' @noRd
-pca.component.bar.plot <- function(data, n.components){
+pca.component.bar.plot <- function(data, n.components, title){
 
   temp.bar.plot <- ggpar(fviz_eig(
     data,
@@ -192,7 +195,7 @@ pca.component.bar.plot <- function(data, n.components){
     ncp = n.components,
     addlabels = TRUE,
     hjust = .5,
-    main = "Variance Explained by Component",
+    main = title,
     xlab = "PC",
     ylab = "Variance",
     ggtheme = theme_minimal())
@@ -203,13 +206,14 @@ pca.component.bar.plot <- function(data, n.components){
 
 #' Dot plot of peptides with top two components on the axis
 #' @noRd
-pca.component.prot.plot <- function(data){
+pca.component.prot.plot <- function(data, title){
 
   temp.bar.plot <- ggpar(
     fviz_pca_ind(data,
                  col.ind = "cos2",
                  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                 repel = TRUE)
+                 repel = TRUE,
+                 title = title)
     )
 
   return(temp.bar.plot)
@@ -217,13 +221,15 @@ pca.component.prot.plot <- function(data){
 
 #' Arrow plot of conditions with top two components on the axis
 #' @noRd
-pca.component.comparison.plot <- function(data){
+pca.component.comparison.plot <- function(data, title){
 
   temp.bar.plot <- ggpar(
     fviz_pca_var(data,
+                 geom = c("point", "text"),
                  col.var = "contrib",
                  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                 repel = TRUE)
+                 repel = TRUE,
+                 title = title)
   )
 
   return(temp.bar.plot)

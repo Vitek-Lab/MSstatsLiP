@@ -35,7 +35,7 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
 
   ## Add extracted protein name into dataset
   lip.data <- merge(lip.data, global_protein_lookup,
-                     all.x = TRUE, by = 'FULL_PEPTIDE')
+                    all.x = TRUE, by = 'FULL_PEPTIDE')
 
   ## Add tryptic data
   tryptic.label <- calculateTrypticity(lip.data, format_fasta)
@@ -46,7 +46,11 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                    by = c("ProteinName", "PeptideSequence"))
 
   plot_df[, count := .N, by=.(Condition, BioReplicate, fully_TRI)]
-  plot_df <- unique(plot_df[, c("Condition", "BioReplicate", "fully_TRI", "count")])
+  plot_df <- unique(plot_df[, c("Condition", "BioReplicate", "fully_TRI",
+                                "count")])
+
+  plot_df[, sum := sum(count), by = .(Condition, BioReplicate)]
+  plot_df$percent <- plot_df$count / plot_df$sum
 
   if (address != FALSE) {
     allfiles <- list.files()
@@ -64,10 +68,12 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
   }
 
   hist_temp <- ggplot(data = plot_df) +
-    geom_col(aes(x = BioReplicate, y = count, fill = fully_TRI)) +
+    geom_col(aes(x = BioReplicate, y = percent, fill = fully_TRI)) +
     facet_wrap(.~Condition) +
-    labs(title = "Proteotrypticity", x = "Replicate", y = "count") +
-    scale_fill_manual(values = c("red", "blue")) +
+    labs(title = "Proteotrypticity", x = "Replicate", y = "Percent") +
+    scale_fill_manual(values = c("red", "blue"), labels = c("Half", "Full"),
+                      name = "Trypticity") +
+    scale_y_continuous(labels = scales::percent) +
     theme(
       panel.background = element_rect(fill = 'white', colour = "black"),
       legend.key = element_rect(fill = 'white', colour = 'white'),

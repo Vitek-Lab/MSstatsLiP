@@ -1,0 +1,145 @@
+---
+title: "MSstatsLiP_TimeSeries"
+author: "Devon Kohler"
+output:
+  pdf_document: default
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    sef_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## MSstatsLiP Time Series Vignette
+
+This Vignette provides an example workflow for how to model a time series 
+experiment using MSstatsLiP.
+
+```{r message=FALSE, warning=FALSE}
+library(MSstatsLiP)
+library(tidyverse)
+```
+
+## Workflow
+
+### 1. Preprocessing
+
+### 1.1 Raw Data Format
+
+The first step is to load in the raw dataset for both the PTM and Protein 
+datasets. This data can then be converted into MSstatsLiP format with one of the
+built in converters, or manually converted.
+
+The experimental design is critical when modeling time series experiments. The 
+package will automatically detect whether to model the time series by how the 
+design is entered into the raw files.
+
+The table below shows the values of the columns Condition, BioReplicate and Run 
+for a time series experiment. Note the same subject is repeated for different 
+time points (Conditions).
+
+| Condition | BioReplicate | Run |
+|:---------:|:------------:|:---:|
+| Time1     | Subject1     | 1   |
+| Time2     | Subject1     | 2   |
+| Time1     | Subject2     | 3   |
+| Time2     | Subject2     | 4   |
+| Time1     | Subject3     | 5   |
+| Time2     | Subject3     | 6   |
+
+### 1.2 Data Example
+
+``` {r}
+## Include time series data in final package?
+#head(LiPRawData)
+#head(TrPRawData)
+
+raw_lip <- read.delim("F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/210124_FE-413_activity_markers_LiP_Report.csv", sep = ',')
+raw_prot <- read.delim("F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/210124_FE-413_activity_markers_Trp_Report.csv", sep = ',')
+
+raw_lip_sel <- raw_lip  %>%
+  filter(str_detect(R.Condition,"IPTG"))
+raw_prot_sel <- raw_prot  %>%
+  filter(str_detect(R.Condition,"IPTG"))
+raw_prot_sel$R.Condition = substr(raw_prot_sel$R.Condition,1,nchar(raw_prot_sel$R.Condition)-4) 
+raw_lip_sel$R.Condition = substr(raw_lip_sel$R.Condition,1,nchar(raw_lip_sel$R.Condition)-3) 
+
+## Sample proteins to increase speed
+sample <- raw_lip_sel %>% filter(!grepl(";", PG.ProteinAccessions)) %>% distinct(PG.ProteinAccessions) %>% sample_n(250)
+raw_lip_sel <- raw_lip_sel %>% filter(PG.ProteinAccessions %in% sample[[1]])
+raw_prot_sel <- raw_prot_sel %>% filter(PG.ProteinAccessions %in% sample[[1]])
+
+
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(raw_lip_sel, 
+    "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta",
+                                                 raw_prot_sel)
+
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
+
+```
+
+To confirm the data is in the correct format we can take a look at the 
+Condtion, Bioreplicate, and Run columns.
+
+```{r}
+MSstatsLiP_data[["TrP"]] %>% 
+  distinct(BioReplicate,Condition, Run) %>% 
+  arrange(BioReplicate, Condition, Run)
+```
+
+### 2. Summarize
+
+``` {r}
+
+MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
+                                              MBimpute = FALSE)
+names(MSstatsLiP_Summarized[["LiP"]])
+head(MSstatsLiP_Summarized[["LiP"]]$RunlevelData)
+head(MSstatsLiP_Summarized[["TrP"]]$RunlevelData)
+
+```
+
+### 3. Modeling
+
+The modeling function groupComparisonLiP takes as input the output of the 
+summarization function dataSummarizationLiP.
+
+Because this is a time series it makes more sense to define out comparisons of 
+interest, rather than perform a full pairwise comparison.
+
+```{r}
+
+contrast_matrix <- matrix(c(-1,1,0,0,0,0,0,0,
+                         -1,0,1,0,0,0,0,0,
+                         -1,0,0,1,0,0,0,0,
+                         -1,0,0,0,1,0,0,0,
+                         -1,0,0,0,0,1,0,0,
+                         -1,0,0,0,0,0,1,0,
+                         -1,0,0,0,0,0,0,1),
+                         nrow=7, ncol=8, byrow=TRUE)
+
+row.names(contrast_matrix) <- c("T1-T2", "T1-T3", "T1-T4", 
+                                "T1-T5", "T1-T6", "T1-T7", "T1-T8")
+
+MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized, contrast_matrix,
+  fasta = "F:/Northeastern/Research/MSstats/MSstatsLiP/Ecoli_Val/200331_ecoli.fasta")
+
+head(MSstatsLiP_model[["LiP.Model"]])
+head(MSstatsLiP_model[["TrP.Model"]])
+head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
+
+```
+
+#### 3.1 Volcano Plot
+
+``` {r}
+groupComparisonPlotsLiP(MSstatsLiP_model, 
+                        type = "VolcanoPlot", 
+                        ProteinName = FALSE, 
+                        address = FALSE)
+```
