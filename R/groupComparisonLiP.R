@@ -11,18 +11,22 @@
 #' @importFrom data.table as.data.table `:=`
 #'
 #' @param data list of summarized datasets. Can be output of MSstatsLiP
-#' summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}.
+#' summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}. Must
+#' include dataset named "LiP" as minimum.
 #' @param contrast.matrix comparison between conditions of interests. Default
 #' models full pairwise comparison between all conditions
-#'
+#' @param fasta.path a file path to a fasta file that includes the proteins
+#' listed in the data
 #' @return list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
 #'         data.tables with their corresponding model results.
 #' @examples
 #' Add example
-groupComparisonLiP <- function(data, contrast.matrix = "pairwise"){
+groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
+                               fasta.path = NA){
 
-
+  ## TODO: Logging
   ## Put into format for MSstatsPTM function
+  .groupComparisonCheck(data)
   data.LiP <- data[["LiP"]]
   Lip.processed <- as.data.table(data.LiP[["ProcessedData"]])
   Lip.run <- as.data.table(data.LiP[["RunlevelData"]])
@@ -56,11 +60,54 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise"){
   Adjusted.model$FULL_PEPTIDE <- Adjusted.model$Protein
   Adjusted.model[,Protein:=NULL]
 
+  if (!is.na(fasta.path)){
+    ## Extracted protein name from LiP data
+    ## Find unique proteins and peptide combinations
+    available_proteins <- unique(as.character(Trp.model$Protein))
+    available_proteins <- available_proteins[order(nchar(available_proteins),
+                                                   available_proteins,
+                                                   decreasing = TRUE)]
+    available_ptms <- unique(as.character(Adjusted.model$FULL_PEPTIDE))
+
+    ## Call Rcpp function to extract protein name
+    ptm_proteins <- extract_protein_name(available_ptms,
+                                         available_proteins)
+    global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
+                                        ProteinName = ptm_proteins)
+
+    ## Add extracted protein name into dataset
+    Adjusted.model <- merge(Adjusted.model, global_protein_lookup,
+                            all.x = TRUE, by = 'FULL_PEPTIDE')
+
+    setnames(Adjusted.model, old = "FULL_PEPTIDE", new = "PeptideSequence")
+    Adjusted.model$PeptideSequence <- mapply(function(x,y){gsub(paste0(x, "_"),
+                                                                "", y)},
+                                             Adjusted.model$ProteinName,
+                                             Adjusted.model$PeptideSequence)
+
+    ## Load fasta
+    format_fasta <- tidyFasta(fasta.path)
+    format_fasta <- as.data.table(format_fasta)
+
+    ## Get tryptic labels
+    tryptic.label <- calculateTrypticity(Adjusted.model, format_fasta)
+
+    ## Merge back into model
+    Adjusted.model <- merge(Adjusted.model, tryptic.label, all.x = TRUE,
+                            by = c("ProteinName", "PeptideSequence"))
+    Adjusted.model$PeptideSequence <- paste(Adjusted.model$ProteinName,
+                                            Adjusted.model$PeptideSequence,
+                                            sep = "_")
+    setnames(Adjusted.model, old = "PeptideSequence", new = "FULL_PEPTIDE")
+    Adjusted.model[,ProteinName:=NULL]
+    Adjusted.model[,GlobalProtein:=NULL]
+  }
+
   ## Return models
   MSstats.Models <- list(
     LiP.Model = LiP.model,
     TrP.Model = Trp.model,
     Adjusted.LiP.Model = Adjusted.model
   )
-
+  return(MSstats.Models)
 }

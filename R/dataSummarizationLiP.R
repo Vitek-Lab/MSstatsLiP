@@ -21,7 +21,7 @@
 #' 'globalStandards' represents normalization with global standards proteins.
 #' FALSE represents no normalization is performed
 #' @param normalization.LiP normalization for LiP level dataset. Default is
-#' FALSE. Can be adjusted to any of the options described above.
+#' 'equalizeMedians'. Can be adjusted to any of the options described above.
 #' @param nameStandards vector of global standard peptide names for protein
 #' dataset. only for normalization with global standard peptides.
 #' @param nameStandards.LiP Same as above for LiP dataset.
@@ -88,7 +88,7 @@ dataSummarizationLiP <- function(
   data,
   logTrans = 2,
   normalization = "equalizeMedians",
-  normalization.LiP = FALSE,
+  normalization.LiP = "equalizeMedians",
   nameStandards = NULL,
   nameStandards.LiP = NULL,
   fillIncompleteRows = TRUE,
@@ -112,14 +112,11 @@ dataSummarizationLiP <- function(
 ) {
 
   ## TODO: Add logging
-  ## TODO: Add parameter checking
-  #.checkDataProcessParams()
+  # Check PTM and PROTEIN data for correct format
+  .summarizeCheck(data)
 
   LiP.dataset <- data[["LiP"]]
   protein.dataset <- data[["TrP"]]
-
-  # Check PTM and PROTEIN data for correct format
-  #adj.protein <- .summarizeCheck(data, 'LF')
 
   LiP.dataset$ProteinName <- LiP.dataset$FULL_PEPTIDE
 

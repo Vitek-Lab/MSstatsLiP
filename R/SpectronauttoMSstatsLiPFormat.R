@@ -8,10 +8,11 @@
 #' @importFrom data.table as.data.table
 #' @importFrom stringr str_extract str_count str_locate_all
 #' @importFrom purrr map_int
+#' @importFrom checkmate assertChoice assertLogical assertNumeric
 #'
 #' @param LiP.data name of LiP Spectronaut output, which is long-format.
-#' @param Trp.data name of TrP Spectronaut output, which is long-format.
 #' @param fasta A string of path to a FASTA file, used to match LiP peptides.
+#' @param Trp.data name of TrP Spectronaut output, which is long-format.
 #' @param annotation name of 'annotation.txt' data which includes Condition,
 #' BioReplicate, Run. If annotation is already complete in Spectronaut, use
 #' annotation=NULL (default). It will use the annotation information from input.
@@ -37,8 +38,8 @@
 #' @examples
 #' Add example
 SpectronauttoMSstatsLiPFormat <- function(LiP.data,
-                                          Trp.data,
                                           fasta,
+                                          Trp.data = NULL,
                                           annotation = NULL,
                                           intensity = 'PeakArea',
                                           filter_with_Qvalue = TRUE,
@@ -49,19 +50,43 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           summaryforMultipleRows=max,
                                           which.Conditions = 'all'){
 
-  ## TODO: Add in function to check input
-  #.check.input.data(LiP.data)
-  #.check.input.data(Trp.data)
   ## TODO: Add logging
-  ## TODO: Add variable checks
+  ## Check variable input
+  .checkSpectronautConverterParams(intensity, filter_with_Qvalue,
+                                   qvalue_cutoff, useUniquePeptide,
+                                   removeProtein_with1Feature,
+                                   summaryforMultipleRows)
 
+  ## Ensure format of input data
   LiP.data <- as.data.table(LiP.data)
-  Trp.data <- as.data.table(Trp.data)
+  if (!is.null(Trp.data)){
+    Trp.data <- as.data.table(Trp.data)
+  }
 
+  ## Check and filter for available conditons
   if (which.Conditions != 'all') {
 
+    LiP_conditions <- unique(LiP.data$R.Condition)
+    if (!is.null(Trp.data)){
+      TrP_conditions <- unique(Trp.data$R.Condition)
+    } else {
+      TrP_conditions <- LiP_conditions
+    }
+    if((length(setdiff(LiP_conditions, which.Conditions)
+               ) == length(LiP_conditions)) |
+       (length(setdiff(TrP_conditions, which.Conditions)
+               ) == length(TrP_conditions))){
+         msg = (paste("None of the conditions specified in which.Conditions",
+                      "available in one or both of LiP/TrP datasets. Please",
+                      "ensure the conditions listed in which.Conditions appear",
+                      "in the input datasets"))
+         stop(msg)
+       }
+
     LiP.data <- LiP.data[(R.Condition %in% which.Conditions)]
-    Trp.data <- Trp.data[(R.Condition %in% which.Conditions)]
+    if (!is.null(Trp.data)){
+      Trp.data <- Trp.data[(R.Condition %in% which.Conditions)]
+    }
 
   }
 
@@ -72,21 +97,16 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                        removeProtein_with1Feature,
                                        summaryforMultipleRows)
   df.lip <- as.data.table(df.lip) ## Temp
-  df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation, intensity,
-                                       filter_with_Qvalue, qvalue_cutoff,
-                                       useUniquePeptide, fewMeasurements,
-                                       removeProtein_with1Feature,
-                                       summaryforMultipleRows)
-  df.trp <- as.data.table(df.trp) ## Temp
+  if (!is.null(Trp.data)){
+    df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation, intensity,
+                                         filter_with_Qvalue, qvalue_cutoff,
+                                         useUniquePeptide, fewMeasurements,
+                                         removeProtein_with1Feature,
+                                         summaryforMultipleRows)
+    df.trp <- as.data.table(df.trp) ## Temp
+  }
 
   ## Remove non-unique proteins and modified peptides
-  df.trp <- df.trp[which(!grepl(";", df.trp$ProteinName) &
-                         !grepl("\\[", df.trp$PeptideSequence) &
-                         !grepl("iRT", df.trp$ProteinName)),]
-  df.trp$PeptideSequence <- str_extract(df.trp$PeptideSequence,
-                                        "([ACDEFGHIKLMNPQRSTVWY]+)")
-  df.trp$Intensity <- ifelse(df.trp$Intensity <= 1, NA, df.trp$Intensity)
-
   df.lip <- df.lip[which(!grepl(";", df.lip$ProteinName) &
                            !grepl("\\[", df.lip$PeptideSequence) &
                            !grepl("iRT", df.lip$ProteinName)),]
@@ -113,8 +133,19 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                     MSstats_LiP$PeptideSequence, sep = '_')
 
   MSstats_LiP[,ProteinName:=NULL]
-  MSstats_TrP <- merge(df.trp, unique(df.fasta.lip[, "ProteinName"]),
-                       by = "ProteinName")
+
+  if (!is.null(Trp.data)) {
+    df.trp <- df.trp[which(!grepl(";", df.trp$ProteinName) &
+                             !grepl("\\[", df.trp$PeptideSequence) &
+                             !grepl("iRT", df.trp$ProteinName)),]
+    df.trp$PeptideSequence <- str_extract(df.trp$PeptideSequence,
+                                          "([ACDEFGHIKLMNPQRSTVWY]+)")
+    df.trp$Intensity <- ifelse(df.trp$Intensity <= 1, NA, df.trp$Intensity)
+    MSstats_TrP <- merge(df.trp, unique(df.fasta.lip[, "ProteinName"]),
+                         by = "ProteinName")
+  } else {
+    MSstats_TrP = NULL
+  }
 
   LipExpt <- list(
     LiP = MSstats_LiP,
