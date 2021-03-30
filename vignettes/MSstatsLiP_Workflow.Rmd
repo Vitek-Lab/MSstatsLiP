@@ -1,17 +1,21 @@
 ---
 title: "MSstatsLiP_Workflow"
-author: "Devon Kohler"
-output:
-  html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
-    sef_contained: true
-  pdf_document: default
+author: "Devon Kohler (<kohler.d@northeastern.edu>)"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MSstatsTMTPTM Example: An example workflow and analysis of the MSstatsTMTPTM package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=8, 
+  fig.height=8
+)
 ```
 
 ## MSstatsLiP Workflow Vignette
@@ -64,7 +68,8 @@ head(MSstatsLiP_data[["LiP"]])
 head(MSstatsLiP_data[["TrP"]])
 
 ## Make conditions match
-MSstatsLiP_data[["LiP"]][MSstatsLiP_data[["LiP"]]$Condition == "Control", "Condition"] = "Ctrl"
+MSstatsLiP_data[["LiP"]][MSstatsLiP_data[["LiP"]]$Condition == "Control", 
+                         "Condition"] = "Ctrl"
 MSstatsLiP_data[["TrP"]]$Condition = substr(MSstatsLiP_data[["TrP"]]$Condition, 
   1, nchar(MSstatsLiP_data[["TrP"]]$Condition)-1)
 
@@ -83,19 +88,8 @@ information about which protein the peptide corresponds to.
 #### 1.3 Barcode plot
 
 MSstatsLiP has a wide variety of plotting functionality to analysis and assess 
-the results of experiments. Here we show a barcode plot, showing the coverage of
-LiP and TrP peptides. This function requires the data in MSstatsLiP format and 
-the path to a fasta file.
-
-```{r}
-BarcodePlotLiP(MSstatsLiP_data, "../data/ExampleFastaFile.fasta", 
-               which.prot = c("Q12429"), address = FALSE)
-
-```
-
-#### 1.4 Half vs Fully Tryptic Plot
-
-Here we plot the number of half vs fully tryptic peptides per replicate.
+the results of experiments. Here we plot the number of half vs fully tryptic 
+peptides per replicate.
 
 ``` {r}
 trypticHistogramLiP(MSstatsLiP_data, "../data/ExampleFastaFile.fasta",
@@ -208,7 +202,7 @@ head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
 
 ```
 
-The groupComparisonLiP function outputs a list with three seperate models. These
+The groupComparisonLiP function outputs a list with three separate models. These
 models are as follows: LiP model, TrP model, and adjusted LiP model.
 
 #### 3.2 Volcano Plot
@@ -220,6 +214,7 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
                         address = FALSE)
 ```
 
+
 #### 3.3 Heatmap
 
 ``` {r}
@@ -227,5 +222,18 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
 #                         type = "HEATMAP",
 #                         numProtein=50,
 #                         address = FALSE)
+```
+
+#### 3.4 Barcode
+
+Here we show a barcode plot, showing the coverage of
+LiP and TrP peptides. This function requires the data in MSstatsLiP format and 
+the path to a fasta file.
+
+```{r}
+BarcodePlotLiP(MSstatsLiP_model, "../data/ExampleFastaFile.fasta", 
+               model_type = "Adjusted", which.prot = "all", 
+               address = "")
+
 ```
 

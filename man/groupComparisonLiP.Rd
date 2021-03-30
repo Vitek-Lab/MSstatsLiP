@@ -5,7 +5,7 @@
 \title{Model LiP and TrP data and make adjustments if needed
 Returns list of three modeled datasets}
 \usage{
-groupComparisonLiP(data, contrast.matrix = "pairwise", fasta.path = NA)
+groupComparisonLiP(data, contrast.matrix = "pairwise", fasta.path = NULL)
 }
 \arguments{
 \item{data}{list of summarized datasets. Can be output of MSstatsLiP

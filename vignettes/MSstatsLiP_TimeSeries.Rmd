@@ -1,17 +1,21 @@
 ---
 title: "MSstatsLiP_TimeSeries"
-author: "Devon Kohler"
-output:
-  pdf_document: default
-  html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
-    sef_contained: true
+author: "Devon Kohler (<kohler.d@northeastern.edu>)"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MSstatsTMTPTM Example: An example workflow and analysis of the MSstatsTMTPTM package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=8, 
+  fig.height=8
+)
 ```
 
 ## MSstatsLiP Time Series Vignette

@@ -10,7 +10,10 @@
 #' format. Can be the output of converters such as
 #' \code{\link[MSstatsLiP]{SpectronauttoMSstatsLiPFormat}}.
 #' @param fasta A string of path to a FASTA file
-#' @param which.prot a list of peptides to be visualized.
+#' @param model_type A string of either "Adjusted" or "Unadjusted", indicating
+#' whether to plot the adjusted or unadjusted models. Default is "Adjusted".
+#' @param which.prot a list of peptides to be visualized. Default is "all" which
+#' will plot a seperate barcode plot for each protein.
 #' @param width width of the saved file. Default is 10.
 #' @param height height of the saved file. Default is 10.
 #' @param address the name of folder that will store the results. Default
@@ -25,61 +28,49 @@
 #' Add example
 BarcodePlotLiP <- function(data,
                            fasta,
+                           model_type = "Adjusted",
                            which.prot = "all",
+                           which.comp = "all",
                            width = 12,
                            height = 4,
                            address = ""){
 
   ## TODO: Add checks on input and parameters
   ## TODO: Add logging
-  lip.data <- data[["LiP"]]
-  trp.data <- data[["TrP"]]
+  if (toupper(model_type) == "ADJUSTED"){
+    model.data <- data[["Adjusted.LiP.Model"]]
+    model.data <- as.data.table(model.data)
+  } else if (toupper(model_type) == "UNADJUSTED") {
+    model.data <- data[["LiP.Model"]]
+    model.data <- as.data.table(model.data)
+  }
 
   formated_fasta <- tidyFasta(fasta)
   formated_fasta <- as.data.table(formated_fasta)
   formated_fasta <- formated_fasta[, c("sequence", "uniprot_iso")]
 
-  ## Extracted protein name from LiP data
-  ## Find unique proteins and peptide combinations
-  available_proteins <- unique(as.character(trp.data$ProteinName))
-  available_proteins <- available_proteins[order(nchar(available_proteins),
-                                                 available_proteins,
-                                                 decreasing = TRUE)]
-  available_ptms <- unique(as.character(lip.data$FULL_PEPTIDE))
-
-  ## Call Rcpp function to extract protein name
-  ptm_proteins <- extract_protein_name(available_ptms,
-                                       available_proteins)
-  global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
-                                      ProteinName = ptm_proteins)
-
-  ## Add extracted protein name into dataset
-  lip.data <- merge(lip.data, global_protein_lookup,
-                    all.x = TRUE, by = 'FULL_PEPTIDE')
-
   ## Test for missing LiP proteins in FASTA file
-  lip.proteins <- unique(lip.data[, ProteinName])
-  trp.proteins <- unique(trp.data[, ProteinName])
+  model.proteins <- unique(model.data[, ProteinName])
   fasta.proteins <- unique(formated_fasta[, uniprot_iso])
 
-  missing.lip <- setdiff(lip.proteins, fasta.proteins)
-  missing.trp <- setdiff(trp.proteins, fasta.proteins)
+  missing <- setdiff(model.proteins, fasta.proteins)
 
-  if (!identical(missing.lip, character(0))){
+  if (!identical(missing, character(0))){
     message(paste0("The following proteins are present in the LiP data but ",
                    "not in the FASTA file. Note proteins must be in the FASTA ",
-                   "in order to be plotted: ", paste(missing.lip,collapse=", "))
+                   "in order to be plotted: ", paste(missing, collapse=", "))
             )
   }
 
   ## Bring sequence into LiP data
-  lip.coverage <- unique(lip.data[, c("PeptideSequence", "ProteinName")])
-  lip.coverage$type <- "lip"
+  sig.coverage <- model.data[adj.pvalue < .05, c("ProteinName",
+                                                 "PeptideSequence", "Label")]
+  sig.coverage$sig <- TRUE
+  insig.coverage <- model.data[adj.pvalue >= .05, c("ProteinName",
+                                                    "PeptideSequence", "Label")]
+  insig.coverage$sig <- FALSE
 
-  trp.coverage <- unique(trp.data[, c("PeptideSequence", "ProteinName")])
-  trp.coverage$type <- "trp"
-
-  coverage.df <- rbindlist(list(lip.coverage, trp.coverage))
+  coverage.df <- rbindlist(list(sig.coverage, insig.coverage))
   coverage.df <- merge(coverage.df, formated_fasta, all.x = TRUE,
                        by.x = "ProteinName", by.y = "uniprot_iso")
 
@@ -98,39 +89,57 @@ BarcodePlotLiP <- function(data,
     pdf(finalfile, width = width, height = height)
   }
 
-  for (protein in which.prot) {
+  ## Determine which proteins to plot
+  if (which.comp == "all"){
+    which.comp <- unique(coverage.df[, Label])
+  }
 
-    ## Build coverage data.table
-    temp.seq <- formated_fasta[uniprot_iso == protein, sequence]
-    coverage.index <- data.table("Index" = 1:nchar(temp.seq), 'Coverage' = "N")
+  for (c in seq(length(which.comp))){
 
-    temp.coverage.df <- coverage.df[ProteinName == protein, ]
+    cond.coverage.df <- coverage.df[Label == which.comp[[c]], ]
 
-    for (idx in 1:nrow(temp.coverage.df)){
-      cov_idx <- gregexpr(pattern = temp.coverage.df[idx, PeptideSequence],
-                         temp.seq)
-      start <- cov_idx[[1]][1] - 1
-      end <- start + attr(cov_idx[[1]],'match.length')
-
-      for (j in start:end){
-        if (temp.coverage.df[idx, type] == 'lip')
-          coverage.index[j, Coverage := 'lip']
-        else if (coverage.index[j, Coverage] == "N"){
-          coverage.index[j, Coverage := 'trp']
-        }
-      }
+    if (which.prot == "all"){
+      which.prot <- unique(cond.coverage.df[, ProteinName])
     }
 
-    barcode_plot <- ggplot(data = coverage.index) +
-      geom_col(aes(x = Index, y = 10, fill = Coverage)) +
-      scale_fill_manual(values=c("#FF0000", "#808080", "#000000")) +
-      labs(title = paste0(protein, " Coverage"), x = "Sequence", y = "") +
-      theme(axis.text.y = element_blank(),
-            axis.ticks.y = element_blank(),
-            panel.background = element_rect(fill = 'white', colour = 'white')) +
-      scale_x_continuous(breaks = 1:nchar(temp.seq),
-                         labels = strsplit(temp.seq, split = "")[[1]])
-    print(barcode_plot)
+    for (i in seq(length(which.prot))){
+
+      ## Build coverage data.table
+      temp.seq <- formated_fasta[uniprot_iso == which.prot[[i]], sequence]
+      coverage.index <- data.table("Index" = 1:nchar(temp.seq),
+                                   "Coverage" = "No Coverage")
+
+      temp.coverage.df <- cond.coverage.df[ProteinName == which.prot[[i]], ]
+
+      for (idx in seq(nrow(temp.coverage.df))){
+        cov_idx <- gregexpr(pattern = temp.coverage.df[idx, PeptideSequence],
+                           temp.seq)
+        start <- cov_idx[[1]][1] - 1
+        end <- start + attr(cov_idx[[1]],'match.length')
+
+        for (j in start:end){
+          if (temp.coverage.df[idx, sig] == TRUE)
+            coverage.index[j, Coverage := 'Significant']
+          else if (temp.coverage.df[idx, sig] == FALSE){
+            coverage.index[j, Coverage := 'Insignificant']
+          }
+        }
+      }
+
+      barcode_plot <- ggplot(data = coverage.index) +
+        geom_col(aes(x = Index, y = 10, fill = Coverage)) +
+        scale_fill_manual(values = c('Significant' = '#FF0000',
+                                     'Insignificant' = '#808080',
+                                     'No Coverage' = '#000000')) +
+        labs(title = paste0(which.prot[[i]], " Coverage"), x = "Sequence",
+             y = "") +
+        theme(axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              panel.background = element_rect(fill = 'white', colour = 'white')) +
+        scale_x_continuous(breaks = 1:nchar(temp.seq),
+                           labels = strsplit(temp.seq, split = "")[[1]])
+      print(barcode_plot)
+    }
   }
 
   if (address != FALSE) {

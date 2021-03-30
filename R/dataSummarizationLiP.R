@@ -118,6 +118,7 @@ dataSummarizationLiP <- function(
   LiP.dataset <- data[["LiP"]]
   protein.dataset <- data[["TrP"]]
 
+  lookup_table <- unique(LiP.dataset[, c("ProteinName", "FULL_PEPTIDE")])
   LiP.dataset$ProteinName <- LiP.dataset$FULL_PEPTIDE
 
   format.data <- list(PTM = LiP.dataset, PROTEIN = protein.dataset)
@@ -155,6 +156,14 @@ dataSummarizationLiP <- function(
   Lip.processed[,PROTEIN:=NULL]
   Lip.run$FULL_PEPTIDE <- Lip.run$Protein
   Lip.run[,Protein:=NULL]
+
+  ## Add protein name back into data
+  Lip.processed <- merge(Lip.processed, lookup_table,
+                         all.x = TRUE, by = "FULL_PEPTIDE")
+  Lip.run <- merge(Lip.run, lookup_table, all.x = TRUE, by = "FULL_PEPTIDE")
+  setnames(Lip.processed, "ProteinName", "PROTEIN")
+  setnames(Lip.run, "ProteinName", "Protein")
+
   Lip.summarized.format <- list(ProcessedData = Lip.processed,
                                 RunlevelData = Lip.run,
                                 SummaryMethod = Lip.summarized[["SummaryMethod"]],
