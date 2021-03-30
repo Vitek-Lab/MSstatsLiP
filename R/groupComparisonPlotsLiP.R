@@ -100,17 +100,25 @@ groupComparisonPlotsLiP <- function(data = data,
 
   ## Format into PTM
   LiP.model <- data[['LiP.Model']]
+  LiP.model <- as.data.table(LiP.model)
   Trp.model <- data[['TrP.Model']]
+  Trp.model <- as.data.table(Trp.model)
   Adjusted.model <- data[['Adjusted.LiP.Model']]
+  Adjusted.model <- as.data.table(Adjusted.model)
+
   keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
              "Tvalue", "DF", "pvalue", "adj.pvalue")
-  Adjusted.model[, ..keep]
-
+  LiP.model <- LiP.model[, ..keep]
   LiP.model <- cbind(data.table(Protein = LiP.model$FULL_PEPTIDE), LiP.model)
-  Adjusted.model <- cbind(data.table(Protein = Adjusted.model$FULL_PEPTIDE),
-                          Adjusted.model)
   LiP.model[, FULL_PEPTIDE := NULL]
-  Adjusted.model[, FULL_PEPTIDE := NULL]
+
+  ## Format TrP and adjusted if they are available
+  if (nrow(Adjusted.model) > 0){
+    Adjusted.model <- Adjusted.model[, ..keep]
+    Adjusted.model <- cbind(data.table(Protein = Adjusted.model$FULL_PEPTIDE),
+                            Adjusted.model)
+    Adjusted.model[, FULL_PEPTIDE := NULL]
+  }
 
   formated.data <- list(PTM.Model = LiP.model,
                         PROTEIN.Model = Trp.model,

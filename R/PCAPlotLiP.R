@@ -75,12 +75,16 @@ PCAPlotLiP <- function(data,
 
   if (which.comparison[[1]] != "all"){
     lip.data <- lip.data[lip.data$GROUP_ORIGINAL %in% which.comparison, ]
-    trp.data <- trp.data[trp.data$GROUP_ORIGINAL %in% which.comparison, ]
+    if (!is.null(trp.data)){
+      trp.data <- trp.data[trp.data$GROUP_ORIGINAL %in% which.comparison, ]
+    }
   }
 
   ## Run PCA
   lip.pca <- calculate.pc(lip.data, center.pca, scale.pca)
-  trp.pca <- calculate.pc(trp.data, center.pca, scale.pca)
+  if (!is.null(trp.data)){
+    trp.pca <- calculate.pc(trp.data, center.pca, scale.pca)
+  }
 
   ## Create PDF to save plots if requested
   if (address != FALSE) {
@@ -101,36 +105,50 @@ PCAPlotLiP <- function(data,
   if (bar.plot){
     lip.bar <- pca.component.bar.plot(lip.pca, n.components,
                                       "LiP Explained Variance")
-    trp.bar <- pca.component.bar.plot(trp.pca, n.components,
-                                      "TrP Explained Variance")
-    grid.arrange(lip.bar, trp.bar, ncol=2)
+    if (!is.null(trp.data)){
+      trp.bar <- pca.component.bar.plot(trp.pca, n.components,
+                                        "TrP Explained Variance")
+      grid.arrange(lip.bar, trp.bar, ncol=2)
+    } else {
+      print(lip.bar)
+    }
   }
 
-  ## Bar plot showing variance of each component
+  ## PCA plot showing variance of each protein
   if (which.pep[[1]] != "all") {
     lip.pca$x <- lip.pca$x[rownames(lip.pca$x) %in% which.pep, , drop=FALSE]
-    ## TODO: Replace this with more robust Rcpp function
-    regex_protein <- '([^-]+)(?:_[^-]+){1}$'
-    which.prot <- sapply(which.pep,
-                         function(x) {str_match(x, regex_protein)[[2]]})
-    which.prot <- unique(as.vector(which.prot))
-    trp.pca$x <- trp.pca$x[rownames(trp.pca$x) %in% which.prot, , drop=FALSE]
+
+    ## Extract corresponding protein in TrP dataset
+    if (!is.null(trp.data)){
+      keep <- lip.data[FULL_PEPTIDE %in% which.pep, c("FULL_PEPTIDE", "Protein")]
+      which.prot <- unique(keep[, Protein])
+      trp.pca$x <- trp.pca$x[rownames(trp.pca$x) %in% which.prot, , drop=FALSE]
+    }
   }
 
   if (protein.pca){
     lip.prot.plot <- pca.component.prot.plot(lip.pca, "LiP Peptide PCA")
-    if (nrow(trp.pca$x) > 1){
-      trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
-      grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
-    } else{
+    if (!is.null(trp.data)){
+      if (nrow(trp.pca$x) > 1){
+        trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
+        grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
+      } else {
+        print(lip.prot.plot)
+      }
+    } else {
       print(lip.prot.plot)
     }
   }
 
   if (comparison.pca){
     lip.comp.plot <- pca.component.comparison.plot(lip.pca, "LiP Component PCA")
-    trp.comp.plot <- pca.component.comparison.plot(trp.pca, "TrP Component PCA")
-    grid.arrange(lip.comp.plot, trp.comp.plot, ncol=2)
+    if (!is.null(trp.data)){
+      trp.comp.plot <- pca.component.comparison.plot(trp.pca,
+                                                     "TrP Component PCA")
+      grid.arrange(lip.comp.plot, trp.comp.plot, ncol=2)
+    } else {
+      print(lip.comp.plot)
+    }
   }
 
   if (address != FALSE) {

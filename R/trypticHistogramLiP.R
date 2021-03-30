@@ -21,21 +21,21 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
 
   ## Extracted protein name from LiP data
   ## Find unique proteins and peptide combinations
-  available_proteins <- unique(as.character(trp.data$ProteinName))
-  available_proteins <- available_proteins[order(nchar(available_proteins),
-                                                 available_proteins,
-                                                 decreasing = TRUE)]
-  available_ptms <- unique(as.character(lip.data$FULL_PEPTIDE))
-
-  ## Call Rcpp function to extract protein name
-  ptm_proteins <- extract_protein_name(available_ptms,
-                                       available_proteins)
-  global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
-                                      ProteinName = ptm_proteins)
-
-  ## Add extracted protein name into dataset
-  lip.data <- merge(lip.data, global_protein_lookup,
-                    all.x = TRUE, by = 'FULL_PEPTIDE')
+  # available_proteins <- unique(as.character(trp.data$ProteinName))
+  # available_proteins <- available_proteins[order(nchar(available_proteins),
+  #                                                available_proteins,
+  #                                                decreasing = TRUE)]
+  # available_ptms <- unique(as.character(lip.data$FULL_PEPTIDE))
+  #
+  # ## Call Rcpp function to extract protein name
+  # ptm_proteins <- extract_protein_name(available_ptms,
+  #                                      available_proteins)
+  # global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
+  #                                     ProteinName = ptm_proteins)
+  #
+  # ## Add extracted protein name into dataset
+  # lip.data <- merge(lip.data, global_protein_lookup,
+  #                   all.x = TRUE, by = 'FULL_PEPTIDE')
 
   ## Add tryptic data
   tryptic.label <- calculateTrypticity(lip.data, format_fasta)
@@ -69,7 +69,7 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
 
   hist_temp <- ggplot(data = plot_df) +
     geom_col(aes(x = BioReplicate, y = percent, fill = fully_TRI)) +
-    facet_wrap(.~Condition) +
+    facet_wrap(.~Condition, scales = "free") +
     labs(title = "Proteotrypticity", x = "Replicate", y = "Percent") +
     scale_fill_manual(values = c("red", "blue"), labels = c("Half", "Full"),
                       name = "Trypticity") +

@@ -63,7 +63,7 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
     Trp.data <- as.data.table(Trp.data)
   }
 
-  ## Check and filter for available conditons
+  ## Check and filter for available conditions
   if (which.Conditions != 'all') {
 
     LiP_conditions <- unique(LiP.data$R.Condition)
@@ -131,8 +131,6 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                        by = c("ProteinName", "PeptideSequence"))
   MSstats_LiP$FULL_PEPTIDE <- paste(MSstats_LiP$ProteinName,
                                     MSstats_LiP$PeptideSequence, sep = '_')
-
-  MSstats_LiP[,ProteinName:=NULL]
 
   if (!is.null(Trp.data)) {
     df.trp <- df.trp[which(!grepl(";", df.trp$ProteinName) &
