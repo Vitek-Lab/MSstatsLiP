@@ -7,7 +7,9 @@
 BarcodePlotLiP(
   data,
   fasta,
+  model_type = "Adjusted",
   which.prot = "all",
+  which.comp = "all",
   width = 12,
   height = 4,
   address = ""
@@ -20,7 +22,11 @@ format. Can be the output of converters such as
 
 \item{fasta}{A string of path to a FASTA file}
 
-\item{which.prot}{a list of peptides to be visualized.}
+\item{model_type}{A string of either "Adjusted" or "Unadjusted", indicating
+whether to plot the adjusted or unadjusted models. Default is "Adjusted".}
+
+\item{which.prot}{a list of peptides to be visualized. Default is "all" which
+will plot a seperate barcode plot for each protein.}
 
 \item{width}{width of the saved file. Default is 10.}
 
