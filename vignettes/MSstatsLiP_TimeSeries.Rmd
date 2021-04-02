@@ -1,5 +1,5 @@
 ---
-title: "MSstatsLiP_TimeSeries"
+title: "MSstatsLiP TimeSeries: An example workflow for a timeseries experiment"
 author: "Devon Kohler (<kohler.d@northeastern.edu>)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
