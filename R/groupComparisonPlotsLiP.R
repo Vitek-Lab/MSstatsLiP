@@ -95,7 +95,6 @@ groupComparisonPlotsLiP <- function(data = data,
                                     height=10,
                                     which.Comparison="all",
                                     which.Protein="all",
-                                    which.Models="all",
                                     address="") {
 
   ## Format into PTM
@@ -129,5 +128,5 @@ groupComparisonPlotsLiP <- function(data = data,
                           dot.size, text.size, text.angle, legend.size,
                           ProteinName, colorkey, numProtein,
                           width, height, which.Comparison, which.Protein,
-                          which.Models, address)
+                          address)
 }
