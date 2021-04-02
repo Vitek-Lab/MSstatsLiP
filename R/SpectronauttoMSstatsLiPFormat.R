@@ -36,7 +36,7 @@
 #' @param which.Conditions list of conditions to format into MSstatsPTM format.
 #' If "all" all conditions will be used. Default is "all".
 #' @examples
-#' Add example
+#' #Add example
 SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           fasta,
                                           Trp.data = NULL,

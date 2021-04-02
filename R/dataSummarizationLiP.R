@@ -83,7 +83,7 @@
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
 #' @examples
-#' TODO: Add Examples
+#' #TODO: Add Examples
 dataSummarizationLiP <- function(
   data,
   logTrans = 2,

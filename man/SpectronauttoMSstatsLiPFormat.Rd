@@ -62,5 +62,5 @@ If "all" all conditions will be used. Default is "all".}
 Takes as as input both raw LiP and Trp outputs from Spectronautt.
 }
 \examples{
-Add example
+#Add example
 }
