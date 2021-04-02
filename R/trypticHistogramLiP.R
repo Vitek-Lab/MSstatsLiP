@@ -19,24 +19,6 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
   format_fasta <- tidyFasta(fasta)
   format_fasta <- as.data.table(format_fasta)
 
-  ## Extracted protein name from LiP data
-  ## Find unique proteins and peptide combinations
-  # available_proteins <- unique(as.character(trp.data$ProteinName))
-  # available_proteins <- available_proteins[order(nchar(available_proteins),
-  #                                                available_proteins,
-  #                                                decreasing = TRUE)]
-  # available_ptms <- unique(as.character(lip.data$FULL_PEPTIDE))
-  #
-  # ## Call Rcpp function to extract protein name
-  # ptm_proteins <- extract_protein_name(available_ptms,
-  #                                      available_proteins)
-  # global_protein_lookup <- data.table(FULL_PEPTIDE = available_ptms,
-  #                                     ProteinName = ptm_proteins)
-  #
-  # ## Add extracted protein name into dataset
-  # lip.data <- merge(lip.data, global_protein_lookup,
-  #                   all.x = TRUE, by = 'FULL_PEPTIDE')
-
   ## Add tryptic data
   tryptic.label <- calculateTrypticity(lip.data, format_fasta)
 

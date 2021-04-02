@@ -5,8 +5,6 @@
 \title{Locate modified sites with a peptide}
 \usage{
 locateMod(peptide, aaStart, residueSymbol)
-
-locateMod(peptide, aaStart, residueSymbol)
 }
 \arguments{
 \item{peptide}{A string. Peptide sequence.}
@@ -17,17 +15,11 @@ locateMod(peptide, aaStart, residueSymbol)
 }
 \value{
 A string.
-
-A string.
 }
 \description{
 \code{locateMod} locates modified sites with a peptide.
-
-\code{locateMod} locates modified sites with a peptide.
 }
 \examples{
-locateMod("P*EP*TIDE", 3, "\\\\*")
-
 locateMod("P*EP*TIDE", 3, "\\\\*")
 
 }

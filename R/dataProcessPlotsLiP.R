@@ -57,7 +57,7 @@
 #' If address=FALSE, plot will be not saved as pdf file but showed in window.
 #' @return plot or pdf
 #' @examples
-#' Add example
+#' #Add example
 dataProcessPlotsLiP <- function(data,
                                 type = 'PROFILEPLOT',
                                 ylimUp = FALSE,

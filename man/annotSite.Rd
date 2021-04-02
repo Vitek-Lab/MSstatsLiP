@@ -5,8 +5,6 @@
 \title{Annotate modification site}
 \usage{
 annotSite(aaIndex, residue, lenIndex = NULL)
-
-annotSite(aaIndex, residue, lenIndex = NULL)
 }
 \arguments{
 \item{aaIndex}{An integer vector. Location of the sites.}
@@ -17,18 +15,11 @@ annotSite(aaIndex, residue, lenIndex = NULL)
 }
 \value{
 A string.
-
-A string.
 }
 \description{
 \code{annotSite} annotates modified sites as their residues and locations.
-
-\code{annotSite} annotates modified sites as their residues and locations.
 }
 \examples{
-annotSite(10, "K")
-annotSite(10, "K", 3L)
-
 annotSite(10, "K")
 annotSite(10, "K", 3L)
 

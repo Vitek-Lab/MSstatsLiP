@@ -28,6 +28,7 @@
   }
 }
 
+#' @noRd
 .summarizeCheck <- function(data) {
   # Check the LiP data
   if (is.null(data[["LiP"]])) {
@@ -61,6 +62,7 @@
   }
 }
 
+#' @noRd
 .groupComparisonCheck <- function(data){
   # Check the LiP data
   if (is.null(data[["LiP"]])) {
