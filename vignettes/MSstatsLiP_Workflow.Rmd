@@ -4,7 +4,7 @@ author: "Devon Kohler (<kohler.d@northeastern.edu>)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MSstatsTMTPTM Example: An example workflow and analysis of the MSstatsTMTPTM package}
+  %\VignetteIndexEntry{MSstatsLiP Workflow: An example workflow and analysis of the MSstatsLiP package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -59,6 +59,7 @@ head(TrPRawData)
 ### 1.2 Converter
 
 ``` {r}
+## TODO: ensure condition isnt continuous
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
                                                  "../data/ExampleFastaFile.fasta",

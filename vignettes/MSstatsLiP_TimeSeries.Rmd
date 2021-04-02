@@ -4,7 +4,7 @@ author: "Devon Kohler (<kohler.d@northeastern.edu>)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MSstatsTMTPTM Example: An example workflow and analysis of the MSstatsTMTPTM package}
+  %\VignetteIndexEntry{MSstatsLiP TimeSeries: An example workflow for a timeseries experiment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
