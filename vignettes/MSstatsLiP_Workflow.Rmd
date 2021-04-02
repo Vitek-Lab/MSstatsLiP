@@ -142,9 +142,9 @@ potential systemic issues.
 ``` {r}
 ## Quality Control Plot
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
-                  type = 'QCPLOT',
-                  which.Protein = "allonly",
-                  address = FALSE)
+                    type = 'QCPLOT',
+                    which.Protein = "allonly",
+                    address = FALSE)
 ```
 
 #### 2.3 Profile Plot
@@ -233,8 +233,8 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../data/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = "all", 
-               address = "")
+               model_type = "Adjusted", which.prot = c("P04050"), 
+               address = FALSE)
 
 ```
 
