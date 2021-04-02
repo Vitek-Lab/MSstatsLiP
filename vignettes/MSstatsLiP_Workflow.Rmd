@@ -1,5 +1,5 @@
 ---
-title: "MSstatsLiP_Workflow"
+title: "MSstatsLiP Workflow: An example workflow and analysis of the MSstatsLiP package"
 author: "Devon Kohler (<kohler.d@northeastern.edu>)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
