@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @importFrom MSstatsPTM dataSummarizationPTM
-#' @importFrom data.table as.data.table `:=`
+#' @importFrom data.table as.data.table `:=` setnames
 #'
 #' @param data name of the list with LiP and TrP data.tables, which can be
 #' the output of the MSstatsPTM converter functions
