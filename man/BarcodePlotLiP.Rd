@@ -51,21 +51,21 @@ Barcode plot. Shows protein coverge of LiP modified peptides.
 }
 \examples{
 # Convert and summarize data
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
 
 # Convert into MSstatsLiP format
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
+#MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#                                                  fasta_path,
+#                                                  TrPRawData)
 # Run summarization without LiP missing value imputation
-QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#QuantData <- dataSummarizationLiP(MSstatsLiP_data)
 
 # Test for pairwise comparison
-ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-                                   fasta_path)
+#ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
+#                                    fasta_path)
 
 # Barcode Plot
-BarcodePlotLiP(MSstatsLiP_model, fasta_path,
-               model_type = "Adjusted")
+#BarcodePlotLiP(MSstatsLiP_model, fasta_path,
+#              model_type = "Adjusted")
 
 }
