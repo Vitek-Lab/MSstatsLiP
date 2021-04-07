@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @importFrom MSstatsPTM groupComparisonPTM
-#' @importFrom data.table as.data.table `:=` tstrsplit
+#' @importFrom data.table as.data.table `:=` tstrsplit setnames setDT
 #'
 #' @param data list of summarized datasets. Can be output of MSstatsLiP
 #' summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}. Must
