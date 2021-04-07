@@ -2,7 +2,7 @@
 #'
 #' @export
 #' @import ggplot2
-#' @importFrom data.table as.data.table `:=`
+#' @importFrom data.table data.table as.data.table `:=`
 #' @importFrom grDevices dev.off pdf
 #'
 #' @param data output of MSstatsLiP converter function. Must include at least

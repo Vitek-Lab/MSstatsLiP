@@ -102,7 +102,7 @@ trypticHistogramLiP(MSstatsLiP_data, "../inst/extdata/ExampleFastaFile.fasta",
 MSstatsLiP also provides a function to plot run correlation.
 
 ``` {r}
-correlationPlotLiP(MSstatsLiP_data, method = "kendall", address = FALSE)
+correlationPlotLiP(MSstatsLiP_data, address = FALSE)
 ```
 
 #### 1.5 Coefficient of Variation
