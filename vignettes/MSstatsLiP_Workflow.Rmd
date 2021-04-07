@@ -48,7 +48,7 @@ library(tidyverse)
 The first step is to load in the raw dataset for both the PTM and Protein 
 datasets. This data can then be converted into MSstatsLiP format with one of the
 built in converters, or manually converted. In this case we use the converter 
-for Spectronaut
+for Spectronaut.
 
 ``` {r}
 ## Read in raw data files
@@ -62,8 +62,8 @@ head(TrPRawData)
 ## TODO: ensure condition isnt continuous
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
-                                                 "../data/ExampleFastaFile.fasta",
-                                                 TrPRawData)
+                                              "../inst/extdata/ExampleFastaFile.fasta",
+                                              TrPRawData)
 
 head(MSstatsLiP_data[["LiP"]])
 head(MSstatsLiP_data[["TrP"]])
@@ -86,15 +86,23 @@ contains both the Protein and Peptide information, seperated by an underscore.
 This allows us to summarize up to the peptide level, while keeping important 
 information about which protein the peptide corresponds to.
 
-#### 1.3 Barcode plot
+#### 1.3 Tryptic barplot
 
 MSstatsLiP has a wide variety of plotting functionality to analysis and assess 
 the results of experiments. Here we plot the number of half vs fully tryptic 
 peptides per replicate.
 
 ``` {r}
-trypticHistogramLiP(MSstatsLiP_data, "../data/ExampleFastaFile.fasta",
+trypticHistogramLiP(MSstatsLiP_data, "../inst/extdata/ExampleFastaFile.fasta",
                     address = FALSE)
+```
+
+#### 1.4 Run Correlation Plot
+
+MSstatsLiP also provides a function to plot run correlation.
+
+``` {r}
+correlationPlotLiP(MSstatsLiP_data, method = "kendall", address = FALSE)
 ```
 
 #### 1.5 Coefficient of Variation
@@ -195,7 +203,7 @@ summarization function dataSummarizationLiP.
 ```{r}
 
 MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
-                                       fasta = "../data/ExampleFastaFile.fasta")
+                                       fasta = "../inst/extdata/ExampleFastaFile.fasta")
 
 head(MSstatsLiP_model[["LiP.Model"]])
 head(MSstatsLiP_model[["TrP.Model"]])
@@ -232,9 +240,8 @@ LiP and TrP peptides. This function requires the data in MSstatsLiP format and
 the path to a fasta file.
 
 ```{r}
-BarcodePlotLiP(MSstatsLiP_model, "../data/ExampleFastaFile.fasta", 
+BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
                model_type = "Adjusted", which.prot = c("P04050"), 
                address = FALSE)
 
 ```
-

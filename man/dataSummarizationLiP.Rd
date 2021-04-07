@@ -25,7 +25,6 @@ dataSummarizationLiP(
   MBimpute = TRUE,
   MBimpute.LiP = FALSE,
   remove50missing = FALSE,
-  fix_missing = NULL,
   address = "",
   maxQuantileforCensored = 0.999,
   clusters = NULL
@@ -85,6 +84,13 @@ featureSubset='topN'. Default is 3, which means to use top 3 features.}
 \item{summaryMethod}{"TMP"(default) means Tukey's median polish, which is
 robust estimation method. "linear" uses linear mixed model.}
 
+\item{equalFeatureVar}{only for summaryMethod="linear". default is TRUE.
+Logical variable for whether the model should account for heterogeneous
+variation among intensities from different features. Default is TRUE, which
+assume equal variance among intensities from features. FALSE means that we
+cannot assume equal variance among intensities from features, then we will
+account for heterogeneous variation from different features.}
+
 \item{censoredInt}{Missing values are censored or at random. 'NA' (default)
 assumes that all 'NA's in 'Intensity' column are censored. '0' uses zero
 intensities as censored intensity. In this case, NA intensities are missing
@@ -108,20 +114,16 @@ FALSE.}
 \item{remove50missing}{only for summaryMethod="TMP". TRUE removes the runs
 which have more than 50\% missing values. FALSE is default.}
 
-\item{maxQuantileforCensored}{Maximum quantile for deciding censored missing
-values. default is 0.999}
-
-\item{equalFeatureVaronly}{for summaryMethod="linear". default is TRUE.
-Logical variable for whether the model should account for heterogeneous
-variation among intensities from different features. Default is TRUE, which
-assume equal variance among intensities from features. FALSE means that we
-cannot assume equal variance among intensities from features, then we will
-account for heterogeneous variation from different features.}
-
-\item{addressthe}{name of folder that will store the results. Default folder
+\item{address}{the name of folder that will store the results. Default folder
 is the current working directory. The command address can help to specify
 where to store the file as well as how to modify the beginning of the file
 name.}
+
+\item{maxQuantileforCensored}{Maximum quantile for deciding censored missing
+values. default is 0.999}
+
+\item{clusters}{a user specified number of clusters. default is NULL, which
+does not use cluster.}
 }
 \value{
 list of summarized LiP and TrP results. These results contain
@@ -136,5 +138,19 @@ quantification. Applies global median normalization on peptide level data and
 normalizes between runs. Returns list of two summarized datasets.
 }
 \examples{
-#TODO: Add Examples
+# Specify fasta file
+fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+
+# Convert into MSstatsLiP format
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+                                                 fasta_path,
+                                                 TrPRawData)
+# Run summarization without LiP missing value imputation
+QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+
+# Run summarization with LiP and TrP missing value imputation
+QuantData1 <- dataSummarizationLiP(MSstatsLiP_data,
+                                   MBimpute = TRUE,
+                                   MBimpute.LiP = TRUE)
+
 }

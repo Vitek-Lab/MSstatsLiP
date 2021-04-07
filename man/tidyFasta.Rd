@@ -6,6 +6,12 @@
 \usage{
 tidyFasta(path)
 }
+\arguments{
+\item{path}{a string of path pointing towards a fasta file}
+}
 \description{
 reads and tidys FASTA file.
+}
+\examples{
+tidyFasta("https://www.uniprot.org/uniprot/P02407.fasta")
 }

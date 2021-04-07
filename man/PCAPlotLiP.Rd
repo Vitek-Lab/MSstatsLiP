@@ -80,5 +80,24 @@ peptides and proteins.
 different comparisons
 }
 \examples{
-Add example
+# Convert and summarize data
+#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+
+# Convert into MSstatsLiP format
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+                                                 fasta_path,
+                                                 TrPRawData)
+# Run summarization without LiP missing value imputation
+QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+
+# BarPlot
+PCAPlotLiP(QuantData, bar.plot = TRUE, protein.pca = FALSE)
+
+# Protein/Peptide PCA Plot
+PCAPlotLiP(QuantData, bar.plot = FALSE, protein.pca = TRUE)
+
+# Condition PCA Plot
+PCAPlotLiP(QuantData, bar.plot = FALSE, protein.pca = FALSE,
+           comparison.pca = TRUE)
+
 }

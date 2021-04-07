@@ -49,7 +49,7 @@
 #' @param n_top_feature.LiP For LiP dataset only. Options same as above.
 #' @param summaryMethod "TMP"(default) means Tukey's median polish, which is
 #' robust estimation method. "linear" uses linear mixed model.
-#' @param equalFeatureVaronly for summaryMethod="linear". default is TRUE.
+#' @param equalFeatureVar only for summaryMethod="linear". default is TRUE.
 #' Logical variable for whether the model should account for heterogeneous
 #' variation among intensities from different features. Default is TRUE, which
 #' assume equal variance among intensities from features. FALSE means that we
@@ -73,17 +73,33 @@
 #' FALSE.
 #' @param remove50missing only for summaryMethod="TMP". TRUE removes the runs
 #' which have more than 50% missing values. FALSE is default.
-#' @param addressthe name of folder that will store the results. Default folder
+#' @param address the name of folder that will store the results. Default folder
 #' is the current working directory. The command address can help to specify
 #' where to store the file as well as how to modify the beginning of the file
 #' name.
 #' @param maxQuantileforCensored Maximum quantile for deciding censored missing
 #' values. default is 0.999
+#' @param clusters a user specified number of clusters. default is NULL, which
+#' does not use cluster.
 #' @return list of summarized LiP and TrP results. These results contain
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
 #' @examples
-#' #TODO: Add Examples
+#' # Specify fasta file
+#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#'
+#' # Convert into MSstatsLiP format
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#' # Run summarization without LiP missing value imputation
+#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#'
+#' # Run summarization with LiP and TrP missing value imputation
+#' QuantData1 <- dataSummarizationLiP(MSstatsLiP_data,
+#'                                    MBimpute = TRUE,
+#'                                    MBimpute.LiP = TRUE)
+#'
 dataSummarizationLiP <- function(
   data,
   logTrans = 2,
@@ -105,7 +121,6 @@ dataSummarizationLiP <- function(
   MBimpute = TRUE,
   MBimpute.LiP = FALSE,
   remove50missing = FALSE,
-  fix_missing = NULL,
   address = "",
   maxQuantileforCensored = 0.999,
   clusters = NULL

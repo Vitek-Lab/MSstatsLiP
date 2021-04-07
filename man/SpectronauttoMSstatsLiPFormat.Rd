@@ -62,5 +62,14 @@ If "all" all conditions will be used. Default is "all".}
 Takes as as input both raw LiP and Trp outputs from Spectronautt.
 }
 \examples{
-#Add example
+# Output datasets of Spectronaut
+head(LiPRawData)
+head(TrPRawData)
+
+fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+                                                 fasta_path,
+                                                 TrPRawData)
+
 }

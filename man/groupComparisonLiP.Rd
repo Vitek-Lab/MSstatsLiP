@@ -16,7 +16,8 @@ include dataset named "LiP" as minimum.}
 models full pairwise comparison between all conditions}
 
 \item{fasta.path}{a file path to a fasta file that includes the proteins
-listed in the data}
+listed in the data. Default is NULL. Include this parameter to determine
+trypticity of peptides in LiP models.}
 }
 \value{
 list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
@@ -29,5 +30,24 @@ function. Including protein data allows for adjusting LiP Fold Change by the
 change in global protein abundance..
 }
 \examples{
-#Add example
+# Convert and summarize data
+fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+
+# Convert into MSstatsLiP format
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+                                                 fasta_path,
+                                                 TrPRawData)
+# Run summarization without LiP missing value imputation
+QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+
+# Test for pairwise comparison
+ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
+                                   fasta.path = fasta_path)
+
+# Returns list of three models
+names(ModelResults)
+head(MSstatsLiP_model$LiP.Model)
+head(MSstatsLiP_model$TrP.Model)
+head(MSstatsLiP_model$Adjusted.LiP.Model)
+
 }

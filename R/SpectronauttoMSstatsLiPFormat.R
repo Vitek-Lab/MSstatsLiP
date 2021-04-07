@@ -36,7 +36,16 @@
 #' @param which.Conditions list of conditions to format into MSstatsPTM format.
 #' If "all" all conditions will be used. Default is "all".
 #' @examples
-#' #Add example
+#' # Output datasets of Spectronaut
+#' head(LiPRawData)
+#' head(TrPRawData)
+#'
+#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#'
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#'
 SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           fasta,
                                           Trp.data = NULL,

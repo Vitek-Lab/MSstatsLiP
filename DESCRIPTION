@@ -1,6 +1,6 @@
 Type: Package
 Package: MSstatsLiP
-Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments.
+Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
 Version: 0.1.0
 Date: 2021-03-04
 Description: Tools for Post Translational Modification (PTM) and protein 
@@ -15,11 +15,11 @@ Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role
           	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
           	person("Olga", "Vitek", email = "o.vitek@northeastern.edu", role = "aut"))
 License: Artistic-2.0
-Depends: R (>= 4.0), data.table
+Depends: R (>= 4.0)
 Imports: dplyr, gridExtra, stringr, reshape2, stats, utils, 
           ggplot2, grDevices, graphics, MSstats,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, cluster,
-          factoextra, ggpubr, purrr, tibble, tidyr, tidyverse
+          factoextra, ggpubr, purrr, tibble, tidyr, tidyverse, scales
 Suggests: 
     BiocStyle,
     knitr,

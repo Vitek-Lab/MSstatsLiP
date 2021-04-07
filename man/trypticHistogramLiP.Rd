@@ -14,7 +14,39 @@ trypticHistogramLiP(
   address = ""
 )
 }
+\arguments{
+\item{data}{output of MSstatsLiP converter function. Must include at least
+ProteinName, PeptideSequence, BioReplicate, and Condition columns}
+
+\item{fasta}{A string of path to a FASTA file, used to match LiP peptides.}
+
+\item{x.axis.size}{size of x-axis labeling for plot. Default is 10.}
+
+\item{y.axis.size}{size of y-axis labeling for plot. Default is 10.}
+
+\item{legend.size}{size of feature legend for half vs fully tryptic peptides
+below graph. Default is 7.}
+
+\item{address}{the name of folder that will store the results. Default folder
+is the current working directory. The other assigned folder has to be
+existed under the current working directory. An output pdf file is
+automatically created with the default name of "TyrpticPlot.pdf". If
+address=FALSE, plot will be not saved as pdf file but shown in window..}
+}
+\value{
+plot or pdf
+}
 \description{
 Histogram of Half vs Fully tryptic peptides. Calculates proteotypicity,
 and then uses calcualtions in histogram.
+}
+\examples{
+# Specify fasta file
+fasta_path <- "../data/ExampleFastaFile.fasta"
+
+MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+                                                 fasta_path,
+                                                 TrPRawData)
+trypticHistogramLiP(MSstatsLiP_data, fasta_path, address = FALSE)
+
 }

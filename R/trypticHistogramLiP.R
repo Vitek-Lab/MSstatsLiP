@@ -5,6 +5,30 @@
 #' @import ggplot2
 #' @importFrom data.table as.data.table `:=`
 #' @importFrom grDevices dev.off pdf
+#' @importFrom scales percent
+#'
+#' @param data output of MSstatsLiP converter function. Must include at least
+#' ProteinName, PeptideSequence, BioReplicate, and Condition columns
+#' @param fasta A string of path to a FASTA file, used to match LiP peptides.
+#' @param x.axis.size size of x-axis labeling for plot. Default is 10.
+#' @param y.axis.size size of y-axis labeling for plot. Default is 10.
+#' @param legend.size size of feature legend for half vs fully tryptic peptides
+#' below graph. Default is 7.
+#' @param address the name of folder that will store the results. Default folder
+#'  is the current working directory. The other assigned folder has to be
+#'  existed under the current working directory. An output pdf file is
+#'  automatically created with the default name of "TyrpticPlot.pdf". If
+#'  address=FALSE, plot will be not saved as pdf file but shown in window..
+#' @return plot or pdf
+#' @examples
+#' # Specify fasta file
+#' fasta_path <- "../data/ExampleFastaFile.fasta"
+#'
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#' trypticHistogramLiP(MSstatsLiP_data, fasta_path, address = FALSE)
+#'
 trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 y.axis.size = 10, legend.size = 10,
                                 address = "") {
@@ -32,7 +56,7 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 "count")])
 
   plot_df[, sum := sum(count), by = .(Condition, BioReplicate)]
-  plot_df$percent <- plot_df$count / plot_df$sum
+  plot_df$percent_plot <- plot_df$count / plot_df$sum
 
   if (address != FALSE) {
     allfiles <- list.files()
@@ -50,19 +74,17 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
   }
 
   hist_temp <- ggplot(data = plot_df) +
-    geom_col(aes(x = BioReplicate, y = percent, fill = fully_TRI)) +
+    geom_col(aes(x = BioReplicate, y = percent_plot, fill = fully_TRI)) +
     facet_wrap(.~Condition, scales = "free") +
     labs(title = "Proteotrypticity", x = "Replicate", y = "Percent") +
     scale_fill_manual(values = c("red", "blue"), labels = c("Half", "Full"),
                       name = "Trypticity") +
-    scale_y_continuous(labels = scales::percent) +
+    scale_y_continuous(labels = percent) +
     theme(
       panel.background = element_rect(fill = 'white', colour = "black"),
       legend.key = element_rect(fill = 'white', colour = 'white'),
       panel.grid.minor = element_blank(),
       strip.background = element_rect(fill = 'gray95'),
-      #axis.ticks.x = element_blank(),
-      #axis.text.x = element_blank(),
       axis.text.y = element_text(size = y.axis.size, colour = "black"),
       axis.ticks = element_line(colour = "black"),
       axis.title.x = element_text(size = x.axis.size + 5, vjust = -0.4),
