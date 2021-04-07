@@ -6,6 +6,9 @@
 #' @importFrom Biostrings readAAStringSet
 #' @import tidyverse
 #' @import tibble
+#' @param path a string of path pointing towards a fasta file
+#' @examples
+#' tidyFasta("https://www.uniprot.org/uniprot/P02407.fasta")
 tidyFasta <- function(path) {
 
   # Check input
@@ -18,7 +21,7 @@ tidyFasta <- function(path) {
   # if (!file.exists(path))
   #     stop(paste0("The file ", sQuote(path), " does not exist"))
 
-  aa <- Biostrings::readAAStringSet(path)
+  aa <- readAAStringSet(path)
   aa <- as.character(aa)  # named vector
   header <- names(aa)
 

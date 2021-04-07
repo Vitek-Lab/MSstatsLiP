@@ -52,7 +52,26 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
-#' Add example
+#' # Convert and summarize data
+#' #' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#'
+#' # Convert into MSstatsLiP format
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#' # Run summarization without LiP missing value imputation
+#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#'
+#' # BarPlot
+#' PCAPlotLiP(QuantData, bar.plot = TRUE, protein.pca = FALSE)
+#'
+#' # Protein/Peptide PCA Plot
+#' PCAPlotLiP(QuantData, bar.plot = FALSE, protein.pca = TRUE)
+#'
+#' # Condition PCA Plot
+#' PCAPlotLiP(QuantData, bar.plot = FALSE, protein.pca = FALSE,
+#'            comparison.pca = TRUE)
+#'
 PCAPlotLiP <- function(data,
                        center.pca = TRUE,
                        scale.pca = TRUE,

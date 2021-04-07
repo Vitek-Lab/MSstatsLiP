@@ -17,8 +17,8 @@ BarcodePlotLiP(
 }
 \arguments{
 \item{data}{list of data.tables containing LiP and TrP data in MSstatsLiP
-format. Can be the output of converters such as
-\code{\link[MSstatsLiP]{SpectronauttoMSstatsLiPFormat}}.}
+format. Should be output of modeling function such as
+\code{\link[MSstatsLiP]{groupComparisonLiP}}.}
 
 \item{fasta}{A string of path to a FASTA file}
 
@@ -26,7 +26,10 @@ format. Can be the output of converters such as
 whether to plot the adjusted or unadjusted models. Default is "Adjusted".}
 
 \item{which.prot}{a list of peptides to be visualized. Default is "all" which
-will plot a seperate barcode plot for each protein.}
+will plot a separate barcode plot for each protein.}
+
+\item{which.comp}{a list of comparisons to be visualized. Default is "all"
+which will plot a separate barcode plot for each condition and protein.}
 
 \item{width}{width of the saved file. Default is 10.}
 
@@ -47,5 +50,22 @@ plot or pdf
 Barcode plot. Shows protein coverge of LiP modified peptides.
 }
 \examples{
-Add example
+# Convert and summarize data
+#fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+
+# Convert into MSstatsLiP format
+#MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#                                                  fasta_path,
+#                                                  TrPRawData)
+# Run summarization without LiP missing value imputation
+#QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+
+# Test for pairwise comparison
+#ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
+#                                    fasta_path)
+
+# Barcode Plot
+#BarcodePlotLiP(MSstatsLiP_model, fasta_path,
+#              model_type = "Adjusted")
+
 }

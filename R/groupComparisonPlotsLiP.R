@@ -73,11 +73,30 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
-#' #Add examples
+#' # Convert and summarize data
+#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#'
+#' # Convert into MSstatsLiP format
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#' # Run summarization without LiP missing value imputation
+#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#'
+#' # Test for pairwise comparison
+#' ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
+#'                                    fasta_path)
+#'
+#' # Volcano Plot
+#' groupComparisonPlotsLiP(ModelResults, type = "VolcanoPlot")
+#'
+#' # Heatmap Plot
+#' groupComparisonPlotsLiP(ModelResults, type = "HEATMAP")
+#'
 groupComparisonPlotsLiP <- function(data = data,
                                     type = type,
                                     sig=0.05,
-                                    FCcutoff=FALSE,
+                                    FCcutoff=1,
                                     logBase.pvalue=10,
                                     ylimUp=FALSE,
                                     ylimDown=FALSE,

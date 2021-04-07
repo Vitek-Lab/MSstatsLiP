@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @importFrom MSstatsPTM groupComparisonPTM
-#' @importFrom data.table as.data.table `:=` tstrsplit
+#' @importFrom data.table as.data.table `:=` tstrsplit setnames setDT
 #'
 #' @param data list of summarized datasets. Can be output of MSstatsLiP
 #' summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}. Must
@@ -16,11 +16,31 @@
 #' @param contrast.matrix comparison between conditions of interests. Default
 #' models full pairwise comparison between all conditions
 #' @param fasta.path a file path to a fasta file that includes the proteins
-#' listed in the data
+#' listed in the data. Default is NULL. Include this parameter to determine
+#' trypticity of peptides in LiP models.
 #' @return list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
 #'         data.tables with their corresponding model results.
 #' @examples
-#' #Add example
+#' # Convert and summarize data
+#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#'
+#' # Convert into MSstatsLiP format
+#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
+#'                                                  fasta_path,
+#'                                                  TrPRawData)
+#' # Run summarization without LiP missing value imputation
+#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#'
+#' # Test for pairwise comparison
+#' ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
+#'                                    fasta.path = fasta_path)
+#'
+#' # Returns list of three models
+#' names(ModelResults)
+#' head(MSstatsLiP_model$LiP.Model)
+#' head(MSstatsLiP_model$TrP.Model)
+#' head(MSstatsLiP_model$Adjusted.LiP.Model)
+#'
 groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                                fasta.path = NULL){
 
