@@ -2,7 +2,7 @@
 #'
 #' @export
 #' @import ggplot2
-#' @importFrom data.table as.data.table `:=`
+#' @importFrom data.table as.data.table `:=` rbindlist
 #' @importFrom stringr str_match
 #' @importFrom grDevices dev.off hcl pdf
 #'
