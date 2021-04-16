@@ -59,10 +59,9 @@ head(TrPRawData)
 ### 1.2 Converter
 
 ``` {r}
-## TODO: ensure condition isnt continuous
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
-                                              "../inst/extdata/ExampleFastaFile.fasta",
+                                              "../inst/extdata/ExampleFastaFile.fasta", 
                                               TrPRawData)
 
 head(MSstatsLiP_data[["LiP"]])
@@ -227,10 +226,11 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
 #### 3.3 Heatmap
 
 ``` {r}
-# groupComparisonPlotsLiP(MSstatsLiP_model, 
-#                         type = "HEATMAP",
-#                         numProtein=50,
-#                         address = FALSE)
+groupComparisonPlotsLiP(MSstatsLiP_model,
+                        type = "HEATMAP",
+                        numProtein=49,
+                        which.Protein = 1:50,
+                        address = FALSE)
 ```
 
 #### 3.4 Barcode
@@ -241,7 +241,7 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = c("P04050"), 
+               model_type = "Unadjusted", which.prot = c("P04050"),
                address = FALSE)
 
 ```

@@ -136,11 +136,15 @@ groupComparisonPlotsLiP <- function(data = data,
     Adjusted.model <- cbind(data.table(Protein = Adjusted.model$FULL_PEPTIDE),
                             Adjusted.model)
     Adjusted.model[, FULL_PEPTIDE := NULL]
-  }
 
-  formated.data <- list(PTM.Model = LiP.model,
-                        PROTEIN.Model = Trp.model,
-                        ADJUSTED.Model = Adjusted.model)
+    formated.data <- list(PTM.Model = LiP.model,
+                          PROTEIN.Model = Trp.model,
+                          ADJUSTED.Model = Adjusted.model)
+  } else {
+    formated.data <- list(PTM.Model = LiP.model,
+                          PROTEIN.Model = NULL,
+                          ADJUSTED.Model = NULL)
+  }
 
   groupComparisonPlotsPTM(formated.data, type, sig, FCcutoff, logBase.pvalue,
                           ylimUp, ylimDown, xlimUp, x.axis.size, y.axis.size,

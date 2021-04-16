@@ -16,6 +16,9 @@ SpectronauttoMSstatsLiPFormat(
   useUniquePeptide = TRUE,
   fewMeasurements = "remove",
   removeProtein_with1Feature = FALSE,
+  removeNonUniqueProteins = TRUE,
+  removeModifications = TRUE,
+  removeiRT = TRUE,
   summaryforMultipleRows = max,
   which.Conditions = "all"
 )
@@ -50,6 +53,15 @@ more than one proteins. We assume to use unique peptide for each protein.}
 \item{removeProtein_with1Feature}{TRUE will remove the proteins which have
 only 1 feature, which is the combination of peptide, precursor charge,
 fragment and charge. FALSE is default.}
+
+\item{removeNonUniqueProteins}{TRUE will remove proteins that were not
+uniquely identified. IE if the protein column contains multiple proteins
+seperated by ";". TRUE is default}
+
+\item{removeModifications}{TRUE will remove peptide that contain a
+modification. Modification must be indicated by "[". TRUE is default}
+
+\item{removeiRT}{TRUE will remove proteins that contain iRT. True is default}
 
 \item{summaryforMultipleRows}{max(default) or sum - when there are multiple
 measurements for certain feature and certain run, use highest or sum of
