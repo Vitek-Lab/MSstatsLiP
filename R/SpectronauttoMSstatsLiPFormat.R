@@ -30,6 +30,12 @@
 #' @param removeProtein_with1Feature TRUE will remove the proteins which have
 #' only 1 feature, which is the combination of peptide, precursor charge,
 #' fragment and charge. FALSE is default.
+#' @param removeNonUniqueProteins TRUE will remove proteins that were not
+#' uniquely identified. IE if the protein column contains multiple proteins
+#' seperated by ";". TRUE is default
+#' @param removeModifications TRUE will remove peptide that contain a
+#' modification. Modification must be indicated by "\[". TRUE is default
+#' @param removeiRT TRUE will remove proteins that contain iRT. True is default
 #' @param summaryforMultipleRows max(default) or sum - when there are multiple
 #' measurements for certain feature and certain run, use highest or sum of
 #' multiple intensities.
@@ -56,6 +62,9 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           useUniquePeptide = TRUE,
                                           fewMeasurements="remove",
                                           removeProtein_with1Feature = FALSE,
+                                          removeNonUniqueProteins = TRUE,
+                                          removeModifications = TRUE,
+                                          removeiRT = TRUE,
                                           summaryforMultipleRows=max,
                                           which.Conditions = 'all'){
 
@@ -115,10 +124,17 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
     df.trp <- as.data.table(df.trp) ## Temp
   }
 
-  ## Remove non-unique proteins and modified peptides
-  df.lip <- df.lip[which(!grepl(";", df.lip$ProteinName) &
-                           !grepl("\\[", df.lip$PeptideSequence) &
-                           !grepl("iRT", df.lip$ProteinName)),]
+  ## Remove non-unique proteins and modified peptides if requested
+  if (removeNonUniqueProteins){
+    df.lip <- df.lip[!grepl(";", df.lip$ProteinName),]
+  }
+  if (removeModifications){
+    df.lip <- df.lip[!grepl("\\[", df.lip$PeptideSequence)]
+  }
+  if (removeiRT){
+    df.lip <- df.lip[!grepl("iRT", df.lip$ProteinName)]
+  }
+
   df.lip$PeptideSequence <- str_extract(df.lip$PeptideSequence,
                                         "([ACDEFGHIKLMNPQRSTVWY]+)")
   df.lip$Intensity <- ifelse(df.lip$Intensity <= 1, NA, df.lip$Intensity)

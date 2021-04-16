@@ -98,8 +98,6 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                             by = c("ProteinName", "PeptideSequence"))
   }
 
-  MSstats.Models <- list(LiP.Model = LiP.model)
-
   Trp.model <- model.data[['PROTEIN.Model']]
   Trp.model <- as.data.table(Trp.model)
   Adjusted.model <- model.data[['ADJUSTED.Model']]
@@ -134,6 +132,14 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
       TrP.Model = Trp.model,
       Adjusted.LiP.Model = Adjusted.model
     )
+  } else {
+    ## Return models
+    MSstats.Models <- list(
+      LiP.Model = LiP.model,
+      TrP.Model = NULL,
+      Adjusted.LiP.Model = NULL
+    )
   }
+
   return(MSstats.Models)
 }

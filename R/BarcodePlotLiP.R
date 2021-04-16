@@ -54,8 +54,10 @@ BarcodePlotLiP <- function(data,
                            height = 4,
                            address = ""){
 
-  ## TODO: Add checks on input and parameters
   ## TODO: Add logging
+  .checkBarcodeParams(data, fasta, model_type, which.prot, which.comp,
+                      width, height, address)
+
   if (toupper(model_type) == "ADJUSTED"){
     model.data <- data[["Adjusted.LiP.Model"]]
     model.data <- as.data.table(model.data)

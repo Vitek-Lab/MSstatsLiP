@@ -132,15 +132,20 @@ groupComparisonPlotsLiP <- function(data = data,
 
   ## Format TrP and adjusted if they are available
   if (nrow(Adjusted.model) > 0){
-    Adjusted.model <- Adjusted.model[, ..keep]
-    Adjusted.model <- cbind(data.table(Protein = Adjusted.model$FULL_PEPTIDE),
-                            Adjusted.model)
-    Adjusted.model[, FULL_PEPTIDE := NULL]
-  }
+    adjusted.keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
+              "Tvalue", "DF", "pvalue", "adj.pvalue", "ProteinName")
+    Adjusted.model <- Adjusted.model[, ..adjusted.keep]
+    setnames(Adjusted.model, c("FULL_PEPTIDE", "ProteinName"),
+                             c("Protein", "GlobalProtein"))
 
-  formated.data <- list(PTM.Model = LiP.model,
-                        PROTEIN.Model = Trp.model,
-                        ADJUSTED.Model = Adjusted.model)
+    formated.data <- list(PTM.Model = LiP.model,
+                          PROTEIN.Model = Trp.model,
+                          ADJUSTED.Model = Adjusted.model)
+  } else {
+    formated.data <- list(PTM.Model = LiP.model,
+                          PROTEIN.Model = NULL,
+                          ADJUSTED.Model = NULL)
+  }
 
   groupComparisonPlotsPTM(formated.data, type, sig, FCcutoff, logBase.pvalue,
                           ylimUp, ylimDown, xlimUp, x.axis.size, y.axis.size,

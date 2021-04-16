@@ -84,3 +84,56 @@
                "dataProcessLiP function as input in groupComparison."))
   }
 }
+
+#' @noRd
+.checkBarcodeParams <- function(data,
+                                fasta,
+                                model_type = "Adjusted",
+                                which.prot = "all",
+                                which.comp = "all",
+                                width = 12,
+                                height = 4,
+                                address){
+
+  if (model_type == "Adjusted") {
+    if (is.null(data$Adjusted.LiP.Model)){
+      stop(paste("If 'model_type' is Adjusted, the Adjusted.LiP.Model must be",
+                  "included as a name in the data list."))
+    } else {
+      data <- data$Adjusted.LiP.Model
+    }
+  } else if (model_type == "Unadjusted"){
+    if (is.null(data$LiP.Model)){
+      stop(paste("If 'model_type' is Undjusted, the LiP.Model must be",
+                 "included as a name in the data list."))
+    } else {
+      data <- data$LiP.Model
+    }
+  } else {
+    stop("model_type must be one of: Adjusted, Unadjusted")
+  }
+
+  required_cols <- c("ProteinName", "PeptideSequence", "Label", "adj.pvalue")
+  if (length(setdiff(required_cols, colnames(data))) > 0){
+    stop(paste("The following columns are missing in the dataset:",
+               paste(setdiff(required_cols, colnames(data)), collapse = ", ")))
+  }
+
+  if (which.comp[[1]] != "all") {
+    if (length(setdiff(which.comp, unique(data$Label))) > 0) {
+
+      stop(paste0("Please check comparison names ",
+                  "Result does not have all comparisons listed - ",
+                  toString(which.comp)))
+    }
+  }
+  if (which.prot[[1]] != "all") {
+    if (length(setdiff(which.prot, unique(data$ProteinName))) > 0) {
+
+      stop(paste0("Please check labels of proteins ",
+                  "Result does not have all these proteins. - ",
+                  toString(which.prot)))
+    }
+  }
+
+}
