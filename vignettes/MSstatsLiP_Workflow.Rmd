@@ -228,7 +228,7 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
 ``` {r}
 groupComparisonPlotsLiP(MSstatsLiP_model,
                         type = "HEATMAP",
-                        numProtein=49,
+                        numProtein=50,
                         which.Protein = 1:50,
                         address = FALSE)
 ```
