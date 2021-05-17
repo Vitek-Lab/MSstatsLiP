@@ -17,7 +17,7 @@ Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role
 License: Artistic-2.0
 Depends: R (>= 4.0)
 Imports: dplyr, gridExtra, stringr, reshape2, stats, utils, 
-          ggplot2, grDevices, graphics, MSstats,
+          ggplot2, grDevices, graphics, MSstats, MSstatsConvert,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, cluster,
           factoextra, ggpubr, purrr, tibble, tidyr, tidyverse, scales
 Suggests: 
