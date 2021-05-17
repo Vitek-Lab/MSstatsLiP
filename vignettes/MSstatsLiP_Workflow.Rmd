@@ -59,6 +59,8 @@ head(TrPRawData)
 ### 1.2 Converter
 
 ``` {r}
+
+LiPRawData_temp <- read.csv("D:/Northeastern/Research/MSstats/MSstatsLiP/Tsung_Heng_Datasets/osmosis/20210429_Sc_OsmoSentinels_Report_TRI.xls", sep = "\t")
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
                                               "../inst/extdata/ExampleFastaFile.fasta", 
@@ -85,38 +87,6 @@ contains both the Protein and Peptide information, seperated by an underscore.
 This allows us to summarize up to the peptide level, while keeping important 
 information about which protein the peptide corresponds to.
 
-#### 1.3 Tryptic barplot
-
-MSstatsLiP has a wide variety of plotting functionality to analysis and assess 
-the results of experiments. Here we plot the number of half vs fully tryptic 
-peptides per replicate.
-
-``` {r}
-trypticHistogramLiP(MSstatsLiP_data, "../inst/extdata/ExampleFastaFile.fasta",
-                    address = FALSE)
-```
-
-#### 1.4 Run Correlation Plot
-
-MSstatsLiP also provides a function to plot run correlation.
-
-``` {r}
-correlationPlotLiP(MSstatsLiP_data, address = FALSE)
-```
-
-#### 1.5 Coefficient of Variation
-
-Here we provide a simple script to exame the coefficient of variance between 
-conditions
-
-``` {r}
-MSstatsLiP_data[["LiP"]] %>% 
-  group_by(PeptideSequence, Condition) %>% 
-  summarize(cv = sd(Intensity) / mean(Intensity)) %>% 
-  ggplot() + geom_violin(aes(x = Condition, y = cv, fill = Condition)) + 
-  labs(title = "Coefficient of Variation between Condtions", 
-       y = "Coefficient of Variation", x = "Conditon")
-```
 
 ### 2. Summarization
 
@@ -141,7 +111,41 @@ LiP and TrP. Each LiP and TrP is also a list with additional summary
 information. This summarized data can be used as input into some of the
 plotting functions included in the package.
 
-#### 2.2 QCPlot
+#### 2.2 Tryptic barplot
+
+MSstatsLiP has a wide variety of plotting functionality to analysis and assess 
+the results of experiments. Here we plot the number of half vs fully tryptic 
+peptides per replicate.
+
+``` {r}
+trypticHistogramLiP(MSstatsLiP_Summarized, "../inst/extdata/ExampleFastaFile.fasta",
+                    color_scale = "bright",
+                    address = FALSE)
+```
+
+#### 2.3 Run Correlation Plot
+
+MSstatsLiP also provides a function to plot run correlation.
+
+``` {r}
+correlationPlotLiP(MSstatsLiP_Summarized, address = FALSE)
+```
+
+#### 2.4 Coefficient of Variation
+
+Here we provide a simple script to examine the coefficient of variance between 
+conditions
+
+``` {r}
+MSstatsLiP_Summarized[["LiP"]]$FeatureLevelData %>% 
+  group_by(PEPTIDE, GROUP) %>% 
+  summarize(cv = sd(INTENSITY) / mean(INTENSITY)) %>% 
+  ggplot() + geom_violin(aes(x = GROUP, y = cv, fill = GROUP)) + 
+  labs(title = "Coefficient of Variation between Condtions", 
+       y = "Coefficient of Variation", x = "Conditon")
+```
+
+#### 2.5 QCPlot
 
 The following plots are used to view the summarized data and check for 
 potential systemic issues.
@@ -150,22 +154,22 @@ potential systemic issues.
 ## Quality Control Plot
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
                     type = 'QCPLOT',
-                    which.Protein = "allonly",
+                    which.Peptide = "allonly",
                     address = FALSE)
 ```
 
-#### 2.3 Profile Plot
+#### 2.6 Profile Plot
 
 ``` {r}
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
                     type = 'ProfilePlot',
-                    which.Protein = 10,
-                    ylimUp=20,
-                    ylimDown=10,
+                    which.Peptide = c("O14455_KVTQMTPAPK"),
+                    ylimUp=22,
+                    ylimDown=15,
                     address = FALSE)
 ```
 
-#### 2.4 PCA Plot
+#### 2.7 PCA Plot
 
 In addition, Priciple Component Analysis can also be done on the summarized 
 dataset. Three different PCA plots can be created one each for: Percent of 
@@ -218,10 +222,8 @@ models are as follows: LiP model, TrP model, and adjusted LiP model.
 ``` {r}
 groupComparisonPlotsLiP(MSstatsLiP_model, 
                         type = "VolcanoPlot", 
-                        ProteinName = FALSE, 
                         address = FALSE)
 ```
-
 
 #### 3.3 Heatmap
 
@@ -229,7 +231,7 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
 groupComparisonPlotsLiP(MSstatsLiP_model,
                         type = "HEATMAP",
                         numProtein=50,
-                        which.Protein = 1:50,
+                        which.Protein = c("P04050"),
                         address = FALSE)
 ```
 

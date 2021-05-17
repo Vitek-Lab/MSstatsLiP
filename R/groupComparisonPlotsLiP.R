@@ -113,7 +113,8 @@ groupComparisonPlotsLiP <- function(data = data,
                                     width=10,
                                     height=10,
                                     which.Comparison="all",
-                                    which.Protein="all",
+                                    which.Peptide="all",
+                                    which.Protein=NULL,
                                     address="") {
 
   ## Format into PTM
@@ -124,6 +125,10 @@ groupComparisonPlotsLiP <- function(data = data,
   Adjusted.model <- data[['Adjusted.LiP.Model']]
   Adjusted.model <- as.data.table(Adjusted.model)
 
+  if (!is.null(which.Protein)){
+    LiP.model <- LiP.model[ProteinName %in% which.Protein]
+  }
+
   keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
              "Tvalue", "DF", "pvalue", "adj.pvalue")
   LiP.model <- LiP.model[, ..keep]
@@ -132,6 +137,12 @@ groupComparisonPlotsLiP <- function(data = data,
 
   ## Format TrP and adjusted if they are available
   if (nrow(Adjusted.model) > 0){
+
+    if (!is.null(which.Protein)){
+      Trp.model <- Trp.model[Protein %in% which.Protein]
+      Adjusted.model <- Adjusted.model[ProteinName %in% which.Protein]
+    }
+
     adjusted.keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
               "Tvalue", "DF", "pvalue", "adj.pvalue", "ProteinName")
     Adjusted.model <- Adjusted.model[, ..adjusted.keep]
@@ -151,6 +162,6 @@ groupComparisonPlotsLiP <- function(data = data,
                           ylimUp, ylimDown, xlimUp, x.axis.size, y.axis.size,
                           dot.size, text.size, text.angle, legend.size,
                           ProteinName, colorkey, numProtein,
-                          width, height, which.Comparison, which.Protein,
+                          width, height, which.Comparison, which.Peptide,
                           address)
 }

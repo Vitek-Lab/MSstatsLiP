@@ -25,7 +25,8 @@ groupComparisonPlotsLiP(
   width = 10,
   height = 10,
   which.Comparison = "all",
-  which.Protein = "all",
+  which.Peptide = "all",
+  which.Protein = NULL,
   address = ""
 )
 }

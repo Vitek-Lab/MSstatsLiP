@@ -9,6 +9,7 @@
 #' @export
 #' @importFrom MSstatsPTM dataSummarizationPTM
 #' @importFrom data.table as.data.table `:=` setnames
+#' @importFrom MSstatsConvert MSstatsLogsSettings
 #'
 #' @param data name of the list with LiP and TrP data.tables, which can be
 #' the output of the MSstatsPTM converter functions
@@ -25,9 +26,6 @@
 #' @param nameStandards vector of global standard peptide names for protein
 #' dataset. only for normalization with global standard peptides.
 #' @param nameStandards.LiP Same as above for LiP dataset.
-#' @param fillIncompleteRows If the input dataset has incomplete rows,
-#' TRUE(default) adds the rows with intensity value=NA for missing peaks. FALSE
-#' reports error message with list of features which have incomplete rows
 #' @param featureSubset For protein dataset only.
 #' "all"(default) uses all features that the data set has.
 #' "top3" uses top 3 features which have highest average of log2(intensity)
@@ -44,6 +42,10 @@
 #'  run-level summarization.
 #' @param remove_uninformative_feature_outlier.LiP For LiP dataset only. Options
 #' same as above.
+#' @param min_feature_count optional. Only required if featureSubset = "highQuality".
+#' Defines a minimum number of informative features a protein needs to be considered
+#' in the feature selection algorithm.
+#' @param min_feature_count.PTM For PTM dataset only. Options the same as above.
 #' @param n_top_feature For protein dataset only. The number of top features for
 #'  featureSubset='topN'. Default is 3, which means to use top 3 features.
 #' @param n_top_feature.LiP For LiP dataset only. Options same as above.
@@ -60,11 +62,6 @@
 #' intensities as censored intensity. In this case, NA intensities are missing
 #' at random. The output from Skyline should use '0'. Null assumes that all NA
 #' intensites are randomly missing.
-#' @param cutoffCensored Cutoff value for censoring. only with censoredInt='NA'
-#' or '0'. Default is 'minFeature', which uses minimum value for each feature.
-#' 'minFeatureNRun' uses the smallest between minimum value of corresponding
-#' feature and minimum value of corresponding run. 'minRun' uses minumum value
-#' for each run.
 #' @param MBimpute For protein dataset only. only for summaryMethod="TMP" and
 #' censoredInt='NA' or '0'. TRUE (default) imputes 'NA' or '0' (depending on
 #' censoredInt option) by Accelated failure model. FALSE uses the values
@@ -73,14 +70,21 @@
 #' FALSE.
 #' @param remove50missing only for summaryMethod="TMP". TRUE removes the runs
 #' which have more than 50% missing values. FALSE is default.
-#' @param address the name of folder that will store the results. Default folder
-#' is the current working directory. The command address can help to specify
-#' where to store the file as well as how to modify the beginning of the file
-#' name.
 #' @param maxQuantileforCensored Maximum quantile for deciding censored missing
 #' values. default is 0.999
-#' @param clusters a user specified number of clusters. default is NULL, which
-#' does not use cluster.
+#' @param fix_missing Default is Null. Optional, same as the 'fix_missing'
+#' parameter in MSstatsConvert::MSstatsBalancedDesign function
+#' @param use_log_file logical. If TRUE, information about data processing
+#' will be saved to a file.
+#' @param append logical. If TRUE, information about data processing will be
+#' added to an existing log file.
+#' @param verbose logical. If TRUE, information about data processing will be
+#' printed to the console.
+#' @param log_file_path character. Path to a file to which information about
+#' data processing will be saved.
+#' If not provided, such a file will be created automatically.
+#' If `append = TRUE`, has to be a valid path to a file.
+#' @param base start of the file name.
 #' @return list of summarized LiP and TrP results. These results contain
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
@@ -107,26 +111,39 @@ dataSummarizationLiP <- function(
   normalization.LiP = "equalizeMedians",
   nameStandards = NULL,
   nameStandards.LiP = NULL,
-  fillIncompleteRows = TRUE,
   featureSubset = "all",
   featureSubset.LiP = "all",
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
+  min_feature_count = 2,
+  min_feature_count.LiP = 2,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",
   equalFeatureVar = TRUE,
   censoredInt = "NA",
-  cutoffCensored = "minFeature",
   MBimpute = TRUE,
   MBimpute.LiP = FALSE,
   remove50missing = FALSE,
-  address = "",
+  fix_missing = NULL,
   maxQuantileforCensored = 0.999,
-  clusters = NULL
-) {
+  use_log_file = TRUE,
+  append = TRUE,
+  verbose = TRUE,
+  log_file_path = NULL,
+  base = "MSstatsLiP_log_") {
 
-  ## TODO: Add logging
+  ## Start log
+  if (is.null(log_file_path) & use_log_file == TRUE){
+    time_now <- Sys.time()
+    path <- paste0(base, gsub("[ :\\-]", "_", time_now),
+                   ".log")
+    file.create(path)
+  } else {path <- log_file_path}
+
+  MSstatsLogsSettings(use_log_file, append,
+                      verbose, log_file_path = path)
+
   # Check PTM and PROTEIN data for correct format
   .summarizeCheck(data)
 
@@ -144,27 +161,31 @@ dataSummarizationLiP <- function(
                                           normalization.LiP,
                                           nameStandards,
                                           nameStandards.LiP,
-                                          fillIncompleteRows,
                                           featureSubset,
                                           featureSubset.LiP,
                                           remove_uninformative_feature_outlier,
                                           remove_uninformative_feature_outlier.LiP,
+                                          min_feature_count,
+                                          min_feature_count.LiP,
                                           n_top_feature,
                                           n_top_feature.LiP,
                                           summaryMethod,
                                           equalFeatureVar,
                                           censoredInt,
-                                          cutoffCensored,
                                           MBimpute,
                                           MBimpute.LiP,
                                           remove50missing,
-                                          address,
+                                          fix_missing,
                                           maxQuantileforCensored,
-                                          clusters)
+                                          use_log_file,
+                                          append,
+                                          verbose,
+                                          log_file_path = path,
+                                          base)
 
   Lip.summarized <- summarized.data[["PTM"]]
-  Lip.processed <- as.data.table(Lip.summarized[["ProcessedData"]])
-  Lip.run <- as.data.table(Lip.summarized[["RunlevelData"]])
+  Lip.processed <- as.data.table(Lip.summarized[["FeatureLevelData"]])
+  Lip.run <- as.data.table(Lip.summarized[["ProteinLevelData"]])
 
   ## Naming convention for LiP
   Lip.processed$FULL_PEPTIDE <- Lip.processed$PROTEIN
@@ -179,8 +200,8 @@ dataSummarizationLiP <- function(
   setnames(Lip.processed, "ProteinName", "PROTEIN")
   setnames(Lip.run, "ProteinName", "Protein")
 
-  Lip.summarized.format <- list(ProcessedData = Lip.processed,
-                                RunlevelData = Lip.run,
+  Lip.summarized.format <- list(FeatureLevelData = Lip.processed,
+                                ProteinLevelData = Lip.run,
                                 SummaryMethod = Lip.summarized[["SummaryMethod"]],
                                 ModelQC = Lip.summarized[["ModelQC"]],
                                 PredictBySurvival = Lip.summarized[["PredictBySurvival"]])

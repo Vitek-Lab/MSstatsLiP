@@ -14,7 +14,7 @@ SpectronauttoMSstatsLiPFormat(
   filter_with_Qvalue = TRUE,
   qvalue_cutoff = 0.01,
   useUniquePeptide = TRUE,
-  fewMeasurements = "remove",
+  removeFewMeasurements = TRUE,
   removeProtein_with1Feature = FALSE,
   removeNonUniqueProteins = TRUE,
   removeModifications = TRUE,
@@ -47,8 +47,8 @@ imputation purpose.}
 \item{useUniquePeptide}{TRUE(default) removes peptides that are assigned for
 more than one proteins. We assume to use unique peptide for each protein.}
 
-\item{fewMeasurements}{'remove' (default) will remove the features that have
-1 or 2 measurements across runs.}
+\item{removeFewMeasurements}{TRUE (default) will remove the features that
+have 1 or 2 measurements across runs.}
 
 \item{removeProtein_with1Feature}{TRUE will remove the proteins which have
 only 1 feature, which is the combination of peptide, precursor charge,

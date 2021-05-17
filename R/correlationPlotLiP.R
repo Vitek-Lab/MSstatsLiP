@@ -37,22 +37,21 @@ correlationPlotLiP <- function(data,
 
 
   ##TODO: Add checks and logging
-
-  lip_data <- data$LiP[, c("Run", "Intensity")]
-  runs <- unique(lip_data$Run)
+  lip_data <- data$LiP$FeatureLevelData[, c("originalRUN", "INTENSITY")]
+  runs <- unique(lip_data$originalRUN)
 
   ## Create and fill correlation matrix
   cor_mat <- data.table(matrix(0, nrow = length(runs), ncol = length(runs)))
   for (i in seq(runs)){
     for (j in seq(runs)){
-      cor_mat[i, j] = cor(lip_data[Run == runs[i], Intensity],
-                          lip_data[Run == runs[j], Intensity],
+      cor_mat[i, j] = cor(lip_data[originalRUN == runs[i], INTENSITY],
+                          lip_data[originalRUN == runs[j], INTENSITY],
                           use = "complete.obs", method = method)
     }
   }
 
-  rownames(cor_mat) <- runs
-  colnames(cor_mat) <- runs
+  rownames(cor_mat) <- as.character(runs)
+  colnames(cor_mat) <- as.character(runs)
 
   cor_mat <- melt(cor_mat, measure.vars = runs, na.rm = TRUE)
   cor_mat$variable2 <- rep(runs,length(runs))

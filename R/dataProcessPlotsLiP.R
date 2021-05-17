@@ -38,7 +38,7 @@
 #' @param height height of the saved pdf file. Default is 10.
 #' @param lip.title title of all LiP QC plot
 #' @param protein.title title of all Protein QC plot
-#' @param which.Protein LiP peptide list to draw plots. List can be names of
+#' @param which.Peptide LiP peptide list to draw plots. List can be names of
 #' LiP peptides or order numbers of LiPs.
 #' Default is "all", which generates all plots for each protein. For QC plot,
 #' "allonly" will generate one QC plot with all proteins.
@@ -88,24 +88,25 @@ dataProcessPlotsLiP <- function(data,
                                 height = 12,
                                 lip.title = "All Peptides",
                                 protein.title = "All Proteins",
-                                which.Protein = "all",
+                                which.Peptide = "all",
+                                which.Protein = NULL,
                                 originalPlot = TRUE,
                                 summaryPlot = TRUE,
                                 address = "") {
 
   ## Format into PTM format
   Lip.data <- data[["LiP"]]
-  Lip.data.Processed <- Lip.data$ProcessedData
+  Lip.data.Processed <- Lip.data$FeatureLevelData
   Lip.data.Processed$PROTEIN <- Lip.data.Processed$FULL_PEPTIDE
   Lip.data.Processed[, FULL_PEPTIDE := NULL]
-  Lip.data.Run <- Lip.data$RunlevelData
+  Lip.data.Run <- Lip.data$ProteinLevelData
   Lip.data.Run$Protein <- Lip.data.Run$FULL_PEPTIDE
   Lip.data.Run[, FULL_PEPTIDE := NULL]
 
   TrP.data <- data[["TrP"]]
 
-  format.data <- list(PTM = list(ProcessedData = Lip.data.Processed,
-                                 RunlevelData = Lip.data.Run,
+  format.data <- list(PTM = list(FeatureLevelData = Lip.data.Processed,
+                                 ProteinLevelData = Lip.data.Run,
                                  SummaryMethod = Lip.data[["SummaryMethod"]],
                                  ModelQC = Lip.data[["ModelQC"]],
                                  PredictBySurvival = Lip.data[["PredictBySurvival"]]),
@@ -115,7 +116,7 @@ dataProcessPlotsLiP <- function(data,
   dataProcessPlotsPTM(format.data, type, ylimUp, ylimDown, x.axis.size,
                       y.axis.size, text.size, text.angle, legend.size,
                       dot.size.profile, ncol.guide, width, height, lip.title,
-                      protein.title, which.Protein, originalPlot, summaryPlot,
-                      address)
+                      protein.title, which.Peptide, which.Protein, originalPlot,
+                      summaryPlot, address)
 
 }
