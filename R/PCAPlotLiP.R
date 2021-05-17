@@ -89,13 +89,13 @@ PCAPlotLiP <- function(data,
   ## TODO: Add logging
 
   ## Format Dataset
-  lip.data <- data[["LiP"]]$RunlevelData
-  trp.data <- data[["TrP"]]$RunlevelData
+  lip.data <- data[["LiP"]]$ProteinLevelData
+  trp.data <- data[["TrP"]]$ProteinLevelData
 
   if (which.comparison[[1]] != "all"){
-    lip.data <- lip.data[lip.data$GROUP_ORIGINAL %in% which.comparison, ]
+    lip.data <- lip.data[lip.data$GROUP %in% which.comparison, ]
     if (!is.null(trp.data)){
-      trp.data <- trp.data[trp.data$GROUP_ORIGINAL %in% which.comparison, ]
+      trp.data <- trp.data[trp.data$GROUP %in% which.comparison, ]
     }
   }
 

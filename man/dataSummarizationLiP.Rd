@@ -27,7 +27,12 @@ dataSummarizationLiP(
   remove50missing = FALSE,
   address = "",
   maxQuantileforCensored = 0.999,
-  clusters = NULL
+  clusters = NULL,
+  use_log_file = TRUE,
+  append = TRUE,
+  verbose = TRUE,
+  log_file_path = NULL,
+  base = "MSstatsLiP_log_"
 )
 }
 \arguments{

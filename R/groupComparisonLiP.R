@@ -42,26 +42,41 @@
 #' head(MSstatsLiP_model$Adjusted.LiP.Model)
 #'
 groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
-                               fasta.path = NULL){
+                               fasta.path = NULL,
+                               log_base = 2,
+                               use_log_file = TRUE,
+                               append = FALSE,
+                               verbose = TRUE,
+                               log_file_path = NULL,
+                               base = "MSstatsLiP_log_"){
+
+  ## Start log
+  if (is.null(log_file_path) & use_log_file == TRUE){
+    time_now <- Sys.time()
+    path <- paste0(base, gsub("[ :\\-]", "_", time_now),
+                   ".log")
+    file.create(path)
+  } else {path <- log_file_path}
 
   ## TODO: Logging
   ## Put into format for MSstatsPTM function
   .groupComparisonCheck(data)
   data.LiP <- data[["LiP"]]
-  Lip.processed <- as.data.table(data.LiP[["ProcessedData"]])
-  Lip.run <- as.data.table(data.LiP[["RunlevelData"]])
+  Lip.processed <- as.data.table(data.LiP[["FeatureLevelData"]])
+  Lip.run <- as.data.table(data.LiP[["ProteinLevelData"]])
 
   ## keep peptide, protein match info
   lookup_table <- unique(Lip.processed[, c("PROTEIN", "FULL_PEPTIDE",
                                            "PEPTIDE")])
   setDT(lookup_table)[, "PEPTIDE" := tstrsplit(PEPTIDE, "_", keep = 1)]
+  lookup_table <- unique(lookup_table)
 
-  Lip.processed$PROTEIN <- Lip.processed$FULL_PEPTIDE
-  Lip.run$Protein <- Lip.run$FULL_PEPTIDE
+  Lip.processed$PROTEIN <- as.factor(Lip.processed$FULL_PEPTIDE)
+  Lip.run$Protein <- as.factor(Lip.run$FULL_PEPTIDE)
 
   data.protein <- data[["TrP"]]
-  format.data <- list(PTM = list(ProcessedData = as.data.frame(Lip.processed), ## TODO: Replace when new MSstats version comes out
-                                 RunlevelData = as.data.frame(Lip.run),
+  format.data <- list(PTM = list(FeatureLevelData = as.data.frame(Lip.processed),
+                                 ProteinLevelData = as.data.frame(Lip.run),
                                  SummaryMethod = data.LiP[["SummaryMethod"]],
                                  ModelQC = data.LiP[["ModelQC"]],
                                  PredictBySurvival =
@@ -69,7 +84,9 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                       PROTEIN = data.protein)
 
   ## Model
-  model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix)
+  model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix,
+                                   FALSE, "BH", log_base, use_log_file, append,
+                                   verbose, path, base)
 
   ## Format into LiP
   LiP.model <- model.data[['PTM.Model']]

@@ -25,8 +25,8 @@
 #' @param qvalue_cutoff Cutoff for EG.Qvalue. default is 0.01.
 #' @param useUniquePeptide TRUE(default) removes peptides that are assigned for
 #' more than one proteins. We assume to use unique peptide for each protein.
-#' @param fewMeasurements 'remove' (default) will remove the features that have
-#' 1 or 2 measurements across runs.
+#' @param removeFewMeasurements TRUE (default) will remove the features that
+#' have 1 or 2 measurements across runs.
 #' @param removeProtein_with1Feature TRUE will remove the proteins which have
 #' only 1 feature, which is the combination of peptide, precursor charge,
 #' fragment and charge. FALSE is default.
@@ -60,7 +60,7 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           filter_with_Qvalue = TRUE,
                                           qvalue_cutoff = 0.01,
                                           useUniquePeptide = TRUE,
-                                          fewMeasurements="remove",
+                                          removeFewMeasurements = TRUE,
                                           removeProtein_with1Feature = FALSE,
                                           removeNonUniqueProteins = TRUE,
                                           removeModifications = TRUE,
@@ -94,7 +94,7 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                ) == length(LiP_conditions)) |
        (length(setdiff(TrP_conditions, which.Conditions)
                ) == length(TrP_conditions))){
-         msg = (paste("None of the conditions specified in which.Conditions",
+         msg = (paste("None of the conditions specified in which.Conditions are",
                       "available in one or both of LiP/TrP datasets. Please",
                       "ensure the conditions listed in which.Conditions appear",
                       "in the input datasets"))
@@ -108,20 +108,22 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
 
   }
 
+  # setnames(LiP.data, c("R.Condition", "R.FileName", "R.Replicate"),
+  #          c("R.Condition", "R.FileName", "R.BioReplicate"))
   ## MSstats process
-  df.lip <- SpectronauttoMSstatsFormat(as.data.frame(LiP.data), annotation, intensity,
+  df.lip <- SpectronauttoMSstatsFormat(LiP.data, annotation, intensity,
                                        filter_with_Qvalue, qvalue_cutoff,
-                                       useUniquePeptide, fewMeasurements,
+                                       useUniquePeptide, removeFewMeasurements,
                                        removeProtein_with1Feature,
                                        summaryforMultipleRows)
-  df.lip <- as.data.table(df.lip) ## Temp
+  df.lip <- as.data.table(as.matrix(df.lip))
   if (!is.null(Trp.data)){
     df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation, intensity,
                                          filter_with_Qvalue, qvalue_cutoff,
-                                         useUniquePeptide, fewMeasurements,
+                                         useUniquePeptide, removeFewMeasurements,
                                          removeProtein_with1Feature,
                                          summaryforMultipleRows)
-    df.trp <- as.data.table(df.trp) ## Temp
+    df.trp <- as.data.table(as.matrix(df.trp))
   }
 
   ## Remove non-unique proteins and modified peptides if requested
@@ -129,10 +131,10 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
     df.lip <- df.lip[!grepl(";", df.lip$ProteinName),]
   }
   if (removeModifications){
-    df.lip <- df.lip[!grepl("\\[", df.lip$PeptideSequence)]
+    df.lip <- df.lip[!grepl("\\[", df.lip$PeptideSequence),]
   }
   if (removeiRT){
-    df.lip <- df.lip[!grepl("iRT", df.lip$ProteinName)]
+    df.lip <- df.lip[!grepl("iRT", df.lip$ProteinName),]
   }
 
   df.lip$PeptideSequence <- str_extract(df.lip$PeptideSequence,

@@ -9,6 +9,7 @@
 #' @export
 #' @importFrom MSstatsPTM dataSummarizationPTM
 #' @importFrom data.table as.data.table `:=` setnames
+#' @importFrom MSstatsConvert MSstatsLogsSettings
 #'
 #' @param data name of the list with LiP and TrP data.tables, which can be
 #' the output of the MSstatsPTM converter functions
@@ -107,26 +108,39 @@ dataSummarizationLiP <- function(
   normalization.LiP = "equalizeMedians",
   nameStandards = NULL,
   nameStandards.LiP = NULL,
-  fillIncompleteRows = TRUE,
   featureSubset = "all",
   featureSubset.LiP = "all",
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
+  min_feature_count = 2,
+  min_feature_count.LiP = 2,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",
   equalFeatureVar = TRUE,
   censoredInt = "NA",
-  cutoffCensored = "minFeature",
   MBimpute = TRUE,
   MBimpute.LiP = FALSE,
   remove50missing = FALSE,
-  address = "",
+  fix_missing = NULL,
   maxQuantileforCensored = 0.999,
-  clusters = NULL
-) {
+  use_log_file = TRUE,
+  append = TRUE,
+  verbose = TRUE,
+  log_file_path = NULL,
+  base = "MSstatsLiP_log_") {
 
-  ## TODO: Add logging
+  ## Start log
+  if (is.null(log_file_path) & use_log_file == TRUE){
+    time_now <- Sys.time()
+    path <- paste0(base, gsub("[ :\\-]", "_", time_now),
+                   ".log")
+    file.create(path)
+  } else {path <- log_file_path}
+
+  MSstatsLogsSettings(use_log_file, append,
+                      verbose, log_file_path = path)
+
   # Check PTM and PROTEIN data for correct format
   .summarizeCheck(data)
 
@@ -144,27 +158,31 @@ dataSummarizationLiP <- function(
                                           normalization.LiP,
                                           nameStandards,
                                           nameStandards.LiP,
-                                          fillIncompleteRows,
                                           featureSubset,
                                           featureSubset.LiP,
                                           remove_uninformative_feature_outlier,
                                           remove_uninformative_feature_outlier.LiP,
+                                          min_feature_count,
+                                          min_feature_count.LiP,
                                           n_top_feature,
                                           n_top_feature.LiP,
                                           summaryMethod,
                                           equalFeatureVar,
                                           censoredInt,
-                                          cutoffCensored,
                                           MBimpute,
                                           MBimpute.LiP,
                                           remove50missing,
-                                          address,
+                                          fix_missing,
                                           maxQuantileforCensored,
-                                          clusters)
+                                          use_log_file,
+                                          append,
+                                          verbose,
+                                          log_file_path = path,
+                                          base)
 
   Lip.summarized <- summarized.data[["PTM"]]
-  Lip.processed <- as.data.table(Lip.summarized[["ProcessedData"]])
-  Lip.run <- as.data.table(Lip.summarized[["RunlevelData"]])
+  Lip.processed <- as.data.table(Lip.summarized[["FeatureLevelData"]])
+  Lip.run <- as.data.table(Lip.summarized[["ProteinLevelData"]])
 
   ## Naming convention for LiP
   Lip.processed$FULL_PEPTIDE <- Lip.processed$PROTEIN
@@ -179,8 +197,8 @@ dataSummarizationLiP <- function(
   setnames(Lip.processed, "ProteinName", "PROTEIN")
   setnames(Lip.run, "ProteinName", "Protein")
 
-  Lip.summarized.format <- list(ProcessedData = Lip.processed,
-                                RunlevelData = Lip.run,
+  Lip.summarized.format <- list(FeatureLevelData = Lip.processed,
+                                ProteinLevelData = Lip.run,
                                 SummaryMethod = Lip.summarized[["SummaryMethod"]],
                                 ModelQC = Lip.summarized[["ModelQC"]],
                                 PredictBySurvival = Lip.summarized[["PredictBySurvival"]])

@@ -20,7 +20,8 @@ dataProcessPlotsLiP(
   height = 12,
   lip.title = "All Peptides",
   protein.title = "All Proteins",
-  which.Protein = "all",
+  which.Peptide = "all",
+  which.Protein = NULL,
   originalPlot = TRUE,
   summaryPlot = TRUE,
   address = ""
@@ -68,7 +69,7 @@ is 5.}
 
 \item{protein.title}{title of all Protein QC plot}
 
-\item{which.Protein}{LiP peptide list to draw plots. List can be names of
+\item{which.Peptide}{LiP peptide list to draw plots. List can be names of
 LiP peptides or order numbers of LiPs.
 Default is "all", which generates all plots for each protein. For QC plot,
 "allonly" will generate one QC plot with all proteins.}

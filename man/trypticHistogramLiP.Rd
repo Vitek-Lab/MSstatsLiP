@@ -11,6 +11,9 @@ trypticHistogramLiP(
   x.axis.size = 10,
   y.axis.size = 10,
   legend.size = 10,
+  width = 12,
+  height = 4,
+  color_scale = "bright",
   address = ""
 )
 }
@@ -26,6 +29,9 @@ ProteinName, PeptideSequence, BioReplicate, and Condition columns}
 
 \item{legend.size}{size of feature legend for half vs fully tryptic peptides
 below graph. Default is 7.}
+
+\item{color_scale}{colors of bar chart. Must be one of "bright" or "grey".
+Default is "bright".}
 
 \item{address}{the name of folder that will store the results. Default folder
 is the current working directory. The other assigned folder has to be
