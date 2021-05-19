@@ -20,7 +20,12 @@ SpectronauttoMSstatsLiPFormat(
   removeModifications = TRUE,
   removeiRT = TRUE,
   summaryforMultipleRows = max,
-  which.Conditions = "all"
+  which.Conditions = "all",
+  use_log_file = TRUE,
+  append = TRUE,
+  verbose = TRUE,
+  log_file_path = NULL,
+  base = "MSstatsLiP_log_"
 )
 }
 \arguments{
@@ -69,6 +74,22 @@ multiple intensities.}
 
 \item{which.Conditions}{list of conditions to format into MSstatsPTM format.
 If "all" all conditions will be used. Default is "all".}
+
+\item{use_log_file}{logical. If TRUE, information about data processing
+will be saved to a file.}
+
+\item{append}{logical. If TRUE, information about data processing will be
+added to an existing log file.}
+
+\item{verbose}{logical. If TRUE, information about data processing will be
+printed to the console.}
+
+\item{log_file_path}{character. Path to a file to which information about
+data processing will be saved.
+If not provided, such a file will be created automatically.
+If \code{append = TRUE}, has to be a valid path to a file.}
+
+\item{base}{start of the file name.}
 }
 \description{
 Takes as as input both raw LiP and Trp outputs from Spectronautt.

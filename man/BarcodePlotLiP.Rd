@@ -10,6 +10,7 @@ BarcodePlotLiP(
   model_type = "Adjusted",
   which.prot = "all",
   which.comp = "all",
+  FT.only = FALSE,
   width = 12,
   height = 4,
   address = ""
@@ -30,6 +31,9 @@ will plot a separate barcode plot for each protein.}
 
 \item{which.comp}{a list of comparisons to be visualized. Default is "all"
 which will plot a separate barcode plot for each condition and protein.}
+
+\item{FT.only}{FALSE plots all FT and HT peptides, TRUE plots FT peptides
+only. Default is FALSE.}
 
 \item{width}{width of the saved file. Default is 10.}
 

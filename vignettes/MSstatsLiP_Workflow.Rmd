@@ -60,7 +60,7 @@ head(TrPRawData)
 
 ``` {r}
 
-LiPRawData_temp <- read.csv("D:/Northeastern/Research/MSstats/MSstatsLiP/Tsung_Heng_Datasets/osmosis/20210429_Sc_OsmoSentinels_Report_TRI.xls", sep = "\t")
+# LiPRawData_temp <- read.csv("D:/Northeastern/Research/MSstats/MSstatsLiP/Tsung_Heng_Datasets/osmosis/20210429_Sc_OsmoSentinels_Report_TRI.xls", sep = "\t")
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
                                               "../inst/extdata/ExampleFastaFile.fasta", 
@@ -161,9 +161,15 @@ dataProcessPlotsLiP(MSstatsLiP_Summarized,
 #### 2.6 Profile Plot
 
 ``` {r}
+temp <- MSstatsLiP_Summarized
+temp$Trp <- NULL
+
+MSstatsLiP_Summarized$TrP$FeatureLevelData %>% head()
+MSstatsLiP_Summarized$LiP$FeatureLevelData %>% head()
+
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
                     type = 'ProfilePlot',
-                    which.Peptide = c("O14455_KVTQMTPAPK"),
+                    which.Protein = c("O14455"),
                     ylimUp=22,
                     ylimDown=15,
                     address = FALSE)
@@ -243,7 +249,7 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Unadjusted", which.prot = c("P04050"),
+               model_type = "Adjusted", which.prot = c("P10622"),# FT.only = FALSE,
                address = FALSE)
 
 ```

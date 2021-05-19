@@ -8,6 +8,9 @@
 #' @param data output of MSstatsLiP converter function. Must include at least
 #' ProteinName, Run, and Intensity columns
 #' @param method one of "pearson", "kendall", "spearman". Default is pearson.
+#' @param value_columns one of "INTENSITY" or "ABUNDANCE". INTENSITY is the raw
+#' data, whereas ABUNDANCE is the log transformed INTENSITY column. INTENSITY is
+#' default.
 #' @param x.axis.size size of axes labels, e.g. name of the comparisons in
 #' heatmap, and in comparison plot. Default is 10.
 #' @param y.axis.size size of axes labels, e.g. name of targeted proteins in
@@ -28,6 +31,7 @@
 #' # add example
 correlationPlotLiP <- function(data,
                                method = "pearson",
+                               value_columns = "INTENSITY",
                                x.axis.size = 10,
                                y.axis.size = 10,
                                legend.size = 10,
@@ -37,15 +41,16 @@ correlationPlotLiP <- function(data,
 
 
   ##TODO: Add checks and logging
-  lip_data <- data$LiP$FeatureLevelData[, c("originalRUN", "INTENSITY")]
-  runs <- unique(lip_data$originalRUN)
+  lip_data <- data$LiP$FeatureLevelData[, c("SUBJECT", value_columns),
+                                        with = FALSE]
+  runs <- unique(lip_data$SUBJECT)
 
   ## Create and fill correlation matrix
   cor_mat <- data.table(matrix(0, nrow = length(runs), ncol = length(runs)))
   for (i in seq(runs)){
     for (j in seq(runs)){
-      cor_mat[i, j] = cor(lip_data[originalRUN == runs[i], INTENSITY],
-                          lip_data[originalRUN == runs[j], INTENSITY],
+      cor_mat[i, j] = cor(lip_data[SUBJECT == runs[i], value_columns, with = FALSE],
+                          lip_data[SUBJECT == runs[j], value_columns, with = FALSE],
                           use = "complete.obs", method = method)
     }
   }

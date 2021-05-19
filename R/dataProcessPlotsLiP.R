@@ -42,6 +42,9 @@
 #' LiP peptides or order numbers of LiPs.
 #' Default is "all", which generates all plots for each protein. For QC plot,
 #' "allonly" will generate one QC plot with all proteins.
+#' @param which.Protein String of protein's to plot if the user would like to
+#' plot all Peptides associated with a given Protein. Default is NULL. Please do
+#' not include "all" or "allonly" here.
 #' @param originalPlot TRUE(default) draws original profile plots, without
 #' normalization.
 #' @param summaryPlot TRUE(default) draws profile plots with protein
@@ -93,6 +96,26 @@ dataProcessPlotsLiP <- function(data,
                                 originalPlot = TRUE,
                                 summaryPlot = TRUE,
                                 address = "") {
+
+
+  ## Filter for all PTMs in one protein
+  if (!is.null(which.Protein)){
+
+    data$LiP$FeatureLevelData <- data$LiP$FeatureLevelData[PROTEIN %in% which.Protein]
+    data$LiP$ProteinLevelData <- data$LiP$ProteinLevelData[Protein %in% which.Protein]
+
+    if (!is.null(data$TrP)){
+      data$TrP$FeatureLevelData <- as.data.table(data$TrP$FeatureLevelData)[PROTEIN %in% which.Protein]
+      data$TrP$ProteinLevelData <- as.data.table(data$TrP$ProteinLevelData)[Protein %in% which.Protein]
+      if (sum(nrow(data$TrP$ProteinLevelData),
+              nrow(data$TrP$FeatureLevelData)) == 0){
+        data$TrP <- NULL
+      }
+    }
+
+    which.Protein <- NULL
+
+  }
 
   ## Format into PTM format
   Lip.data <- data[["LiP"]]
