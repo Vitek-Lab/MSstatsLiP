@@ -7,6 +7,7 @@
 correlationPlotLiP(
   data,
   method = "pearson",
+  value_columns = "INTENSITY",
   x.axis.size = 10,
   y.axis.size = 10,
   legend.size = 10,
@@ -20,6 +21,10 @@ correlationPlotLiP(
 ProteinName, Run, and Intensity columns}
 
 \item{method}{one of "pearson", "kendall", "spearman". Default is pearson.}
+
+\item{value_columns}{one of "INTENSITY" or "ABUNDANCE". INTENSITY is the raw
+data, whereas ABUNDANCE is the log transformed INTENSITY column. INTENSITY is
+default.}
 
 \item{x.axis.size}{size of axes labels, e.g. name of the comparisons in
 heatmap, and in comparison plot. Default is 10.}

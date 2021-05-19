@@ -16,6 +16,8 @@
 #' will plot a separate barcode plot for each protein.
 #' @param which.comp a list of comparisons to be visualized. Default is "all"
 #' which will plot a separate barcode plot for each condition and protein.
+#' @param FT.only FALSE plots all FT and HT peptides, TRUE plots FT peptides
+#' only. Default is FALSE.
 #' @param width width of the saved file. Default is 10.
 #' @param height height of the saved file. Default is 10.
 #' @param address the name of folder that will store the results. Default
@@ -50,11 +52,11 @@ BarcodePlotLiP <- function(data,
                            model_type = "Adjusted",
                            which.prot = "all",
                            which.comp = "all",
+                           FT.only = FALSE,
                            width = 12,
                            height = 4,
                            address = ""){
 
-  ## TODO: Add logging
   .checkBarcodeParams(data, fasta, model_type, which.prot, which.comp,
                       width, height, address)
 
@@ -64,6 +66,10 @@ BarcodePlotLiP <- function(data,
   } else if (toupper(model_type) == "UNADJUSTED") {
     model.data <- data[["LiP.Model"]]
     model.data <- as.data.table(model.data)
+  }
+
+  if (FT.only){
+    model.data <- model.data[fully_TRI == TRUE]
   }
 
   formated_fasta <- tidyFasta(fasta)
@@ -148,17 +154,17 @@ BarcodePlotLiP <- function(data,
       }
 
       barcode_plot <- ggplot(data = coverage.index) +
-        geom_col(aes(x = Index, y = 10, fill = Coverage)) +
+        geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
         scale_fill_manual(values = c('Significant' = '#FF0000',
                                      'Insignificant' = '#808080',
                                      'No Coverage' = '#000000')) +
-        labs(title = paste0(which.prot[[i]], " Coverage"), x = "Sequence",
-             y = "") +
+        labs(title = paste0(which.prot[[i]], " Coverage - ", which.comp[[c]]),
+             x = "Amino Acid Sequence", y = "") +
         theme(axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
-              panel.background = element_rect(fill = 'white', colour = 'white')) +
-        scale_x_continuous(breaks = 1:nchar(temp.seq),
-                           labels = strsplit(temp.seq, split = "")[[1]])
+              panel.background = element_rect(fill = 'white', colour = 'white'))# +
+        # scale_x_continuous(breaks = 1:nchar(temp.seq),
+        #                    labels = strsplit(temp.seq, split = "")[[1]])
       print(barcode_plot)
     }
   }

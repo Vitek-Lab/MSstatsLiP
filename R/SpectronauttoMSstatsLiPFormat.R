@@ -41,6 +41,17 @@
 #' multiple intensities.
 #' @param which.Conditions list of conditions to format into MSstatsPTM format.
 #' If "all" all conditions will be used. Default is "all".
+#' @param use_log_file logical. If TRUE, information about data processing
+#' will be saved to a file.
+#' @param append logical. If TRUE, information about data processing will be
+#' added to an existing log file.
+#' @param verbose logical. If TRUE, information about data processing will be
+#' printed to the console.
+#' @param log_file_path character. Path to a file to which information about
+#' data processing will be saved.
+#' If not provided, such a file will be created automatically.
+#' If `append = TRUE`, has to be a valid path to a file.
+#' @param base start of the file name.
 #' @examples
 #' # Output datasets of Spectronaut
 #' head(LiPRawData)
@@ -66,9 +77,26 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           removeModifications = TRUE,
                                           removeiRT = TRUE,
                                           summaryforMultipleRows=max,
-                                          which.Conditions = 'all'){
+                                          which.Conditions = 'all',
+                                          use_log_file = TRUE,
+                                          append = TRUE,
+                                          verbose = TRUE,
+                                          log_file_path = NULL,
+                                          base = "MSstatsLiP_log_"){
 
-  ## TODO: Add logging
+  ## Start log
+  if (is.null(log_file_path) & use_log_file == TRUE){
+    time_now <- Sys.time()
+    path <- paste0(base, gsub("[ :\\-]", "_", time_now),
+                   ".log")
+    file.create(path)
+  } else {path <- log_file_path}
+
+  MSstatsLogsSettings(use_log_file, append,
+                      verbose, log_file_path = path)
+
+  getOption("MSstatsLog")("INFO", "Starting parameter and data checks..")
+
   ## Check variable input
   .checkSpectronautConverterParams(intensity, filter_with_Qvalue,
                                    qvalue_cutoff, useUniquePeptide,
@@ -98,6 +126,7 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                       "available in one or both of LiP/TrP datasets. Please",
                       "ensure the conditions listed in which.Conditions appear",
                       "in the input datasets"))
+         getOption("MSstatsLog")("ERROR", msg)
          stop(msg)
        }
 
@@ -108,23 +137,30 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
 
   }
 
-  # setnames(LiP.data, c("R.Condition", "R.FileName", "R.Replicate"),
-  #          c("R.Condition", "R.FileName", "R.BioReplicate"))
+  getOption("MSstatsLog")("INFO", "Formatting LiP data..")
   ## MSstats process
   df.lip <- SpectronauttoMSstatsFormat(LiP.data, annotation, intensity,
                                        filter_with_Qvalue, qvalue_cutoff,
                                        useUniquePeptide, removeFewMeasurements,
                                        removeProtein_with1Feature,
-                                       summaryforMultipleRows)
+                                       summaryforMultipleRows, use_log_file,
+                                       append, verbose, log_file_path = path,
+                                       base)
   df.lip <- as.data.table(as.matrix(df.lip))
   if (!is.null(Trp.data)){
+
+    getOption("MSstatsLog")("INFO", "Formatting TrP data..")
     df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation, intensity,
                                          filter_with_Qvalue, qvalue_cutoff,
                                          useUniquePeptide, removeFewMeasurements,
                                          removeProtein_with1Feature,
-                                         summaryforMultipleRows)
+                                         summaryforMultipleRows, use_log_file,
+                                         append, verbose, log_file_path = path,
+                                         base)
     df.trp <- as.data.table(as.matrix(df.trp))
   }
+
+  getOption("MSstatsLog")("INFO", "Cleaning formatted LiP data..")
 
   ## Remove non-unique proteins and modified peptides if requested
   if (removeNonUniqueProteins){
@@ -140,6 +176,8 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
   df.lip$PeptideSequence <- str_extract(df.lip$PeptideSequence,
                                         "([ACDEFGHIKLMNPQRSTVWY]+)")
   df.lip$Intensity <- ifelse(df.lip$Intensity <= 1, NA, df.lip$Intensity)
+
+  getOption("MSstatsLog")("INFO", "Joining with FASTA file..")
 
   ## Load and format FASTA file
   formated_fasta <- tidyFasta(fasta)
@@ -171,6 +209,8 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
   } else {
     MSstats_TrP = NULL
   }
+
+  getOption("MSstatsLog")("INFO", "Converter finished, returning data.")
 
   LipExpt <- list(
     LiP = MSstats_LiP,

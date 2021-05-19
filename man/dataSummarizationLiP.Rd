@@ -11,23 +11,22 @@ dataSummarizationLiP(
   normalization.LiP = "equalizeMedians",
   nameStandards = NULL,
   nameStandards.LiP = NULL,
-  fillIncompleteRows = TRUE,
   featureSubset = "all",
   featureSubset.LiP = "all",
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
+  min_feature_count = 2,
+  min_feature_count.LiP = 2,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",
   equalFeatureVar = TRUE,
   censoredInt = "NA",
-  cutoffCensored = "minFeature",
   MBimpute = TRUE,
   MBimpute.LiP = FALSE,
   remove50missing = FALSE,
-  address = "",
+  fix_missing = NULL,
   maxQuantileforCensored = 0.999,
-  clusters = NULL,
   use_log_file = TRUE,
   append = TRUE,
   verbose = TRUE,
@@ -57,10 +56,6 @@ dataset. only for normalization with global standard peptides.}
 
 \item{nameStandards.LiP}{Same as above for LiP dataset.}
 
-\item{fillIncompleteRows}{If the input dataset has incomplete rows,
-TRUE(default) adds the rows with intensity value=NA for missing peaks. FALSE
-reports error message with list of features which have incomplete rows}
-
 \item{featureSubset}{For protein dataset only.
 "all"(default) uses all features that the data set has.
 "top3" uses top 3 features which have highest average of log2(intensity)
@@ -80,6 +75,10 @@ run-level summarization.}
 
 \item{remove_uninformative_feature_outlier.LiP}{For LiP dataset only. Options
 same as above.}
+
+\item{min_feature_count}{optional. Only required if featureSubset = "highQuality".
+Defines a minimum number of informative features a protein needs to be considered
+in the feature selection algorithm.}
 
 \item{n_top_feature}{For protein dataset only. The number of top features for
 featureSubset='topN'. Default is 3, which means to use top 3 features.}
@@ -102,12 +101,6 @@ intensities as censored intensity. In this case, NA intensities are missing
 at random. The output from Skyline should use '0'. Null assumes that all NA
 intensites are randomly missing.}
 
-\item{cutoffCensored}{Cutoff value for censoring. only with censoredInt='NA'
-or '0'. Default is 'minFeature', which uses minimum value for each feature.
-'minFeatureNRun' uses the smallest between minimum value of corresponding
-feature and minimum value of corresponding run. 'minRun' uses minumum value
-for each run.}
-
 \item{MBimpute}{For protein dataset only. only for summaryMethod="TMP" and
 censoredInt='NA' or '0'. TRUE (default) imputes 'NA' or '0' (depending on
 censoredInt option) by Accelated failure model. FALSE uses the values
@@ -119,16 +112,29 @@ FALSE.}
 \item{remove50missing}{only for summaryMethod="TMP". TRUE removes the runs
 which have more than 50\% missing values. FALSE is default.}
 
-\item{address}{the name of folder that will store the results. Default folder
-is the current working directory. The command address can help to specify
-where to store the file as well as how to modify the beginning of the file
-name.}
+\item{fix_missing}{Default is Null. Optional, same as the 'fix_missing'
+parameter in MSstatsConvert::MSstatsBalancedDesign function}
 
 \item{maxQuantileforCensored}{Maximum quantile for deciding censored missing
 values. default is 0.999}
 
-\item{clusters}{a user specified number of clusters. default is NULL, which
-does not use cluster.}
+\item{use_log_file}{logical. If TRUE, information about data processing
+will be saved to a file.}
+
+\item{append}{logical. If TRUE, information about data processing will be
+added to an existing log file.}
+
+\item{verbose}{logical. If TRUE, information about data processing will be
+printed to the console.}
+
+\item{log_file_path}{character. Path to a file to which information about
+data processing will be saved.
+If not provided, such a file will be created automatically.
+If \code{append = TRUE}, has to be a valid path to a file.}
+
+\item{base}{start of the file name.}
+
+\item{min_feature_count.PTM}{For PTM dataset only. Options the same as above.}
 }
 \value{
 list of summarized LiP and TrP results. These results contain

@@ -74,6 +74,10 @@ LiP peptides or order numbers of LiPs.
 Default is "all", which generates all plots for each protein. For QC plot,
 "allonly" will generate one QC plot with all proteins.}
 
+\item{which.Protein}{String of protein's to plot if the user would like to
+plot all Peptides associated with a given Protein. Default is NULL. Please do
+not include "all" or "allonly" here.}
+
 \item{originalPlot}{TRUE(default) draws original profile plots, without
 normalization.}
 

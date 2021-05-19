@@ -143,6 +143,12 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
       Adjusted.model[,GlobalProtein:=NULL]
     }
 
+    ## Add issue into adjusted model
+    Adjusted.model <- merge(Adjusted.model, unique(LiP.model[,c("FULL_PEPTIDE",
+                                                                "Label",
+                                                                "issue")]),
+                            by = c("FULL_PEPTIDE", "Label"), all.x = TRUE)
+
     ## Return models
     MSstats.Models <- list(
       LiP.Model = LiP.model,
