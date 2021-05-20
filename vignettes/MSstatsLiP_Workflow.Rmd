@@ -37,6 +37,7 @@ BiocManager::install("MSstatsTMTPTM")
 ```{r}
 library(MSstatsLiP)
 library(tidyverse)
+library(data.table)
 ```
 
 ## Workflow
@@ -202,6 +203,22 @@ PCAPlotLiP(MSstatsLiP_Summarized,
 
 ```
 
+#### 2.8 Calculate Trypticity
+
+Finally, the trypticity of a peptide can also be calculated and added to any 
+dataframe with the ProteinName and PeptideSequence column.
+
+``` {r}
+
+feature_data <- copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
+setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
+feature_data$PeptideSequence <- substr(feature_data$PeptideSequence, 
+                                       1, nchar(as.character(feature_data$PeptideSequence)) - 2)
+
+calculateTrypticity(feature_data, "../inst/extdata/ExampleFastaFile.fasta")
+
+```
+
 ### 3. Modeling
 
 The modeling function groupComparisonLiP takes as input the output of the 
@@ -249,7 +266,28 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = c("P10622"),# FT.only = FALSE,
+               model_type = "Adjusted", which.prot = c("P04050"),# FT.only = FALSE,
                address = FALSE)
+
+```
+
+``` {r}
+MSstatsLiP_model$Adjusted.LiP.Model %>% mutate(significant=case_when(abs(log2FC)>0&adj.pvalue<.05~"Yes",TRUE~"No"
+)) %>%
+ filter(ProteinName%in%c("P04050"))%>%
+  filter(fully_TRI==TRUE) %>%
+  ggplot()+
+  geom_vline(xintercept = "", size=20, color="black") +
+  geom_linerange(aes(x="", ymin=StartPos, ymax=EndPos, color=significant, group=significant), size=20) +
+  #gghighlight(significant=="Yes", calculate_per_facet = TRUE, use_direct_label = FALSE, use_group_by = FALSE) +
+  coord_flip()+
+  facet_grid(.~Label)+
+  scale_color_manual(values = c("Yes"="darkgreen", "No"="grey"))+
+  theme_classic()+
+  labs(x="", y="amino acid sequence")+
+  guides(color=FALSE)+
+  theme(strip.text.y = element_text(angle=0),
+        axis.ticks.y =element_blank())+
+  ylim(0,1800)
 
 ```

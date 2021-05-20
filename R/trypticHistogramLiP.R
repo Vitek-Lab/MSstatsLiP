@@ -39,7 +39,6 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 address = "") {
 
   ## TODO: Add checks on input and parameters
-  ## TODO: Add logging
 
   ## Format input data
   lip.data <- copy(data[["LiP"]]$FeatureLevelData)
