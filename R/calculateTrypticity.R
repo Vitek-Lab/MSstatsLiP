@@ -20,6 +20,10 @@ calculateTrypticity <- function(LiP_data, fasta_file){
   unique_pep <- unique(LiP_data[, c("PeptideSequence",
                                     "ProteinName")])
 
+  if (identical(typeof(fasta_file), "character")){
+    fasta_file <- tidyFasta(fasta_file)
+  }
+
   ## Add fasta file to get full sequence
   combined_df <- merge(unique_pep, fasta_file, all.x = TRUE,
                        by.x = "ProteinName", by.y = "uniprot_iso")
