@@ -15,6 +15,15 @@ This development version is only available on Github:
 devtools::install_github("Vitek-Lab/MSstatsLiP", build_vignettes = TRUE)
 ```
 
+Please install the dependency MSstatsPTM from Bioconductor:
+
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("MSstatsPTM")
+```
+
 ## Contributing
 
 We welcome contributions from the community. For details on how to contribute to the
