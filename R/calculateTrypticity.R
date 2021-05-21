@@ -50,10 +50,11 @@ calculateTrypticity <- function(LiP_data, fasta_file){
                                     combined_df$endAA %in% c("K", "R"),
                                   TRUE, FALSE)
   combined_df$CTERMINUS <- ifelse(combined_df$postAA == "", TRUE, FALSE)
+  combined_df$NTERMINUS <- ifelse(combined_df$start == 1, TRUE, FALSE)
   combined_df$StartPos <- combined_df$start
   combined_df$EndPos <- combined_df$end
 
   return(combined_df[, c("ProteinName", "PeptideSequence", "fully_TRI",
-                         "NSEMI_TRI", "CSEMI_TRI", "CTERMINUS", "StartPos",
-                         "EndPos")])
+                         "NSEMI_TRI", "CSEMI_TRI", "CTERMINUS", "NTERMINUS",
+                         "StartPos", "EndPos")])
 }

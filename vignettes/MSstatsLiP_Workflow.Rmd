@@ -102,8 +102,8 @@ as input the formatted data from the converter.
 MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
                                               MBimpute = FALSE)
 names(MSstatsLiP_Summarized[["LiP"]])
-head(MSstatsLiP_Summarized[["LiP"]]$RunlevelData)
-head(MSstatsLiP_Summarized[["TrP"]]$RunlevelData)
+head(MSstatsLiP_Summarized[["LiP"]]$PeptideLevelData)
+head(MSstatsLiP_Summarized[["TrP"]]$PeptideLevelData)
 
 ```
 
@@ -162,17 +162,10 @@ dataProcessPlotsLiP(MSstatsLiP_Summarized,
 #### 2.6 Profile Plot
 
 ``` {r}
-temp <- MSstatsLiP_Summarized
-temp$Trp <- NULL
-
-MSstatsLiP_Summarized$TrP$FeatureLevelData %>% head()
-MSstatsLiP_Summarized$LiP$FeatureLevelData %>% head()
 
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
                     type = 'ProfilePlot',
-                    which.Protein = c("O14455"),
-                    ylimUp=22,
-                    ylimDown=15,
+                    which.Peptide = c("O14455_KVTQMTPAPK"),
                     address = FALSE)
 ```
 
@@ -217,6 +210,13 @@ feature_data$PeptideSequence <- substr(feature_data$PeptideSequence,
 
 calculateTrypticity(feature_data, "../inst/extdata/ExampleFastaFile.fasta")
 
+
+MSstatsLiP_Summarized$LiP$FeatureLevelData%>%
+  rename(PeptideSequence=PEPTIDE, ProteinName=PROTEIN)%>%
+  mutate(PeptideSequence=substr(PeptideSequence, 1,nchar(as.character(PeptideSequence))-2))%>%
+calculateTrypticity("../inst/extdata/ExampleFastaFile.fasta")
+
+  
 ```
 
 ### 3. Modeling
