@@ -121,8 +121,10 @@ dataProcessPlotsLiP <- function(data,
   Lip.data <- data[["LiP"]]
   Lip.data.Processed <- Lip.data$FeatureLevelData
   Lip.data.Processed$PROTEIN <- Lip.data.Processed$FULL_PEPTIDE
+  Lip.data.Processed <- as.data.table(Lip.data.Processed)
   Lip.data.Processed[, FULL_PEPTIDE := NULL]
   Lip.data.Run <- Lip.data$ProteinLevelData
+  Lip.data.Run <- as.data.table(Lip.data.Run)
   Lip.data.Run$Protein <- Lip.data.Run$FULL_PEPTIDE
   Lip.data.Run[, FULL_PEPTIDE := NULL]
 

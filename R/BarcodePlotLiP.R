@@ -16,6 +16,10 @@
 #' will plot a separate barcode plot for each protein.
 #' @param which.comp a list of comparisons to be visualized. Default is "all"
 #' which will plot a separate barcode plot for each condition and protein.
+#' @param adj.pvalue.cutoff Defualt is .05. Alpha value for testing significance
+#' of model output.
+#' @param FC.cutoff Default is 0. Minimum absolute FC before a comparison will
+#' be considered significant.
 #' @param FT.only FALSE plots all FT and HT peptides, TRUE plots FT peptides
 #' only. Default is FALSE.
 #' @param width width of the saved file. Default is 10.
@@ -52,6 +56,8 @@ BarcodePlotLiP <- function(data,
                            model_type = "Adjusted",
                            which.prot = "all",
                            which.comp = "all",
+                           adj.pvalue.cutoff = .05,
+                           FC.cutoff = 0,
                            FT.only = FALSE,
                            width = 12,
                            height = 4,
@@ -90,10 +96,12 @@ BarcodePlotLiP <- function(data,
   }
 
   ## Bring sequence into LiP data
-  sig.coverage <- model.data[adj.pvalue < .05, c("ProteinName",
+  sig.coverage <- model.data[adj.pvalue < adj.pvalue.cutoff &
+                               abs(log2FC) >= FC.cutoff, c("ProteinName",
                                                  "PeptideSequence", "Label")]
   sig.coverage$sig <- TRUE
-  insig.coverage <- model.data[adj.pvalue >= .05, c("ProteinName",
+  insig.coverage <- model.data[adj.pvalue >= adj.pvalue.cutoff |
+                                 abs(log2FC) < FC.cutoff, c("ProteinName",
                                                     "PeptideSequence", "Label")]
   insig.coverage$sig <- FALSE
 
@@ -145,9 +153,10 @@ BarcodePlotLiP <- function(data,
         end <- start + attr(cov_idx[[1]],'match.length')
 
         for (j in start:end){
-          if (temp.coverage.df[idx, sig] == TRUE)
+          if (temp.coverage.df[idx, sig] == TRUE){
             coverage.index[j, Coverage := 'Significant']
-          else if (temp.coverage.df[idx, sig] == FALSE){
+          } else if (temp.coverage.df[idx, sig] == FALSE &
+                   coverage.index[j, Coverage] != 'Significant'){
             coverage.index[j, Coverage := 'Insignificant']
           }
         }
