@@ -2,6 +2,7 @@
 
 export(BarcodePlotLiP)
 export(PCAPlotLiP)
+export(SkylinetoMSstatsLiPFormat)
 export(SpectronauttoMSstatsLiPFormat)
 export(annotSite)
 export(calculateTrypticity)

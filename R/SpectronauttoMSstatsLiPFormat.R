@@ -39,7 +39,7 @@
 #' @param summaryforMultipleRows max(default) or sum - when there are multiple
 #' measurements for certain feature and certain run, use highest or sum of
 #' multiple intensities.
-#' @param which.Conditions list of conditions to format into MSstatsPTM format.
+#' @param which.Conditions list of conditions to format into MSstatsLiP format.
 #' If "all" all conditions will be used. Default is "all".
 #' @param use_log_file logical. If TRUE, information about data processing
 #' will be saved to a file.

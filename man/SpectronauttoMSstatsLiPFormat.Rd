@@ -72,7 +72,7 @@ modification. Modification must be indicated by "[". TRUE is default}
 measurements for certain feature and certain run, use highest or sum of
 multiple intensities.}
 
-\item{which.Conditions}{list of conditions to format into MSstatsPTM format.
+\item{which.Conditions}{list of conditions to format into MSstatsLiP format.
 If "all" all conditions will be used. Default is "all".}
 
 \item{use_log_file}{logical. If TRUE, information about data processing
