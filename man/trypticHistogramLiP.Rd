@@ -47,12 +47,9 @@ Histogram of Half vs Fully tryptic peptides. Calculates proteotypicity,
 and then uses calcualtions in histogram.
 }
 \examples{
-# Specify fasta file
-fasta_path <- "../data/ExampleFastaFile.fasta"
-
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-trypticHistogramLiP(MSstatsLiP_data, fasta_path, address = FALSE)
+# Use output of summarization function
+trypticHistogramLiP(MSstatsLiP_Summarized,
+                    system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"),
+                    color_scale = "bright", address = FALSE)
 
 }

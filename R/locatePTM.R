@@ -4,6 +4,7 @@
 #'
 #' @export
 #' @importFrom Biostrings readAAStringSet
+#' @importFrom dplyr left_join
 #' @import tidyverse
 #' @import tibble
 #' @param path a string of path pointing towards a fasta file
@@ -91,7 +92,7 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
   loc <- gregexpr(modResidue, sub_fasta$sequence, fixed = TRUE)
   sub_fasta$idx_site_full <- lapply(loc, .location_start)
   # Locate peptides (use extended AAs for specific matching when possible)
-  peptide_fasta <- left_join(peptide_seq, sub_fasta)
+  peptide_fasta <- dplyr::left_join(peptide_seq, sub_fasta)
   loc <- Map(function(p, s) gregexpr(p, s, fixed = TRUE)[[1]],
              as.list(peptide_fasta$peptide_unmod), as.list(peptide_fasta$sequence))
   n <- vapply(loc, .num_match, FUN.VALUE = integer(1))

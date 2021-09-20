@@ -99,10 +99,11 @@ Takes as as input both raw LiP and Trp outputs from Spectronautt.
 head(LiPRawData)
 head(TrPRawData)
 
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
                                                  fasta_path,
                                                  TrPRawData)
-
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
 }

@@ -28,7 +28,8 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
-#' # add example
+#' ## Use output of dataSummarizationLiP function
+#' correlationPlotLiP(MSstatsLiP_Summarized, address = FALSE)
 correlationPlotLiP <- function(data,
                                method = "pearson",
                                value_columns = "INTENSITY",

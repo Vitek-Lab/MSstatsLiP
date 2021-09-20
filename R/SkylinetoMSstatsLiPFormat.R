@@ -21,12 +21,10 @@
 #' @param base start of the file name.
 #' @examples
 #'
-#' #fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
-#'
-#' #MSstatsLiP_data <- SkylinetoMSstatsLiPFormat(LiPRawData,
-#' #                                              fasta_path,
-#' #                                              TrPRawData)
-#'
+#' ## Output will be in format
+#' head(MSstatsLiP_data[["LiP"]])
+#' head(MSstatsLiP_data[["TrP"]])
+
 SkylinetoMSstatsLiPFormat <- function(LiP.data,
                                       TrP.data = NULL){
 

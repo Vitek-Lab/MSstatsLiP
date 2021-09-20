@@ -33,23 +33,13 @@
 #' address=FALSE, plot will be not saved as pdf file but showed in window
 #' @return plot or pdf
 #' @examples
-#' # Convert and summarize data
-#' #fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#' # Specify Fasta path
+#' fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 #'
-#' # Convert into MSstatsLiP format
-#' #MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#' #                                                  fasta_path,
-#' #                                                  TrPRawData)
-#' # Run summarization without LiP missing value imputation
-#' #QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-#'
-#' # Test for pairwise comparison
-#' #ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-#' #                                    fasta_path)
-#'
-#' # Barcode Plot
-#' #BarcodePlotLiP(MSstatsLiP_model, fasta_path,
-#' #              model_type = "Adjusted")
+#' # Use model data to create Barcode Plot
+#' BarcodePlotLiP(MSstatsLiP_model, fasta_path,
+#'               model_type = "Adjusted",
+#'               address=FALSE)
 #'
 BarcodePlotLiP <- function(data,
                            fasta,

@@ -33,10 +33,7 @@ Takes as as input both raw LiP and Trp outputs from Skyline.
 }
 \examples{
 
-#fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
-
-#MSstatsLiP_data <- SkylinetoMSstatsLiPFormat(LiPRawData,
-#                                              fasta_path,
-#                                              TrPRawData)
-
+## Output will be in format
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
 }

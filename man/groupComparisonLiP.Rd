@@ -40,22 +40,17 @@ function. Including protein data allows for adjusting LiP Fold Change by the
 change in global protein abundance..
 }
 \examples{
-# Convert and summarize data
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
 
-# Convert into MSstatsLiP format
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-# Run summarization without LiP missing value imputation
-QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+## Use output of dataSummarizationLiP function
+fasta <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
 # Test for pairwise comparison
-ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-                                   fasta.path = fasta_path)
+MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
+                                   contrast.matrix = "pairwise",
+                                   fasta.path = fasta)
 
 # Returns list of three models
-names(ModelResults)
+names(MSstatsLiP_model)
 head(MSstatsLiP_model$LiP.Model)
 head(MSstatsLiP_model$TrP.Model)
 head(MSstatsLiP_model$Adjusted.LiP.Model)

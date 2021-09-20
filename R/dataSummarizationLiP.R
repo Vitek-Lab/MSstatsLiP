@@ -89,20 +89,12 @@
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
 #' @examples
-#' # Specify fasta file
-#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#' # Use output of converter
+#' head(MSstatsLiP_data[["LiP"]])
+#' head(MSstatsLiP_data[["TrP"]])
 #'
-#' # Convert into MSstatsLiP format
-#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#'                                                  fasta_path,
-#'                                                  TrPRawData)
-#' # Run summarization without LiP missing value imputation
-#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-#'
-#' # Run summarization with LiP and TrP missing value imputation
-#' QuantData1 <- dataSummarizationLiP(MSstatsLiP_data,
-#'                                    MBimpute = TRUE,
-#'                                    MBimpute.LiP = TRUE)
+#' # Run summarization
+#' MSstatsLiP_model <- dataSummarizationLiP(MSstatsLiP_data)
 #'
 dataSummarizationLiP <- function(
   data,

@@ -54,5 +54,6 @@ plot or pdf
 Plot run correlation for provided LiP and TrP experiment.
 }
 \examples{
-# add example
+## Use output of dataSummarizationLiP function
+correlationPlotLiP(MSstatsLiP_Summarized, address = FALSE)
 }

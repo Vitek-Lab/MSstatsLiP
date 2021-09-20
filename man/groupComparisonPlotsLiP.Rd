@@ -126,24 +126,13 @@ proteins and their significance for each model.
 between conditions and peptides/proteins
 }
 \examples{
-# Convert and summarize data
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
 
-# Convert into MSstatsLiP format
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-# Run summarization without LiP missing value imputation
-QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-
-# Test for pairwise comparison
-ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-                                   fasta_path)
+## Use output of the groupComparisonLiP function
 
 # Volcano Plot
-groupComparisonPlotsLiP(ModelResults, type = "VolcanoPlot")
+groupComparisonPlotsLiP(MSstatsLiP_model, type = "VOLCANOPLOT")
 
 # Heatmap Plot
-groupComparisonPlotsLiP(ModelResults, type = "HEATMAP")
+groupComparisonPlotsLiP(MSstatsLiP_model, type = "HEATMAP")
 
 }
