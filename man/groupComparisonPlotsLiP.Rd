@@ -98,9 +98,12 @@ labels of comparisons or order numbers of comparisons from levels(data$Label)
 , such as levels(testResultMultiComparisons$ComparisonResult$Label).
 Default is "all", which generates all plots for each protein.}
 
-\item{which.Protein}{Peptide list to draw comparison plots. List can be
-names of Proteins/Peptides or order numbers of Proteins/Peptides from
-levels(testResultMultiComparisons$ComparisonResult$Protein). Default is
+\item{which.Peptide}{Peptide list to draw comparison plots. List can be
+names of Peptides or order numbers of Peptides from levels. Default is
+"all", which generates all comparison plots for each protein.}
+
+\item{which.Protein}{Protein list to draw comparison plots. Will draw all
+peptide plots for listed Proteins. List must be names of Proteins. Default is
 "all", which generates all comparison plots for each protein.}
 
 \item{address}{the name of folder that will store the results. Default

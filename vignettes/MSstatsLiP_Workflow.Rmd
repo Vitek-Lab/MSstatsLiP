@@ -202,8 +202,8 @@ dataframe with the ProteinName and PeptideSequence column.
 
 ``` {r}
 
-feature_data <- copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
-setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
+feature_data <- data.table::copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
+data.table::setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
 feature_data$PeptideSequence <- substr(feature_data$PeptideSequence, 
                                        1, nchar(as.character(feature_data$PeptideSequence)) - 2)
 

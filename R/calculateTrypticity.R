@@ -11,7 +11,7 @@
 #' @param fasta_file name of variable containing FASTA data. If FASTA file has
 #' not been processed please run the tidyFasta() function on it before inputting
 #' into this function.
-#'
+#' @return a `data.frame` including protein, peptide, and trypticity metrics.
 #' @examples
 #' fasta <- tidyFasta(system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"))
 #' calculateTrypticity(MSstatsLiP_data$LiP, fasta)

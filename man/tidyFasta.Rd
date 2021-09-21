@@ -9,6 +9,9 @@ tidyFasta(path)
 \arguments{
 \item{path}{a string of path pointing towards a fasta file}
 }
+\value{
+a \code{tibble} of formatted FASTA information
+}
 \description{
 reads and tidys FASTA file.
 }

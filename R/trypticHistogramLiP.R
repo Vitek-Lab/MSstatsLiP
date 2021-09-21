@@ -14,6 +14,8 @@
 #' @param y.axis.size size of y-axis labeling for plot. Default is 10.
 #' @param legend.size size of feature legend for half vs fully tryptic peptides
 #' below graph. Default is 7.
+#' @param width Width of final pdf to be plotted
+#' @param height Height of final pdf to be plotted
 #' @param color_scale colors of bar chart. Must be one of "bright" or "grey".
 #' Default is "bright".
 #' @param address the name of folder that will store the results. Default folder

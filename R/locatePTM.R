@@ -8,6 +8,7 @@
 #' @import tidyverse
 #' @import tibble
 #' @param path a string of path pointing towards a fasta file
+#' @return a `tibble` of formatted FASTA information
 #' @examples
 #' tidyFasta("https://www.uniprot.org/uniprot/P02407.fasta")
 tidyFasta <- function(path) {

@@ -30,6 +30,10 @@ ProteinName, PeptideSequence, BioReplicate, and Condition columns}
 \item{legend.size}{size of feature legend for half vs fully tryptic peptides
 below graph. Default is 7.}
 
+\item{width}{Width of final pdf to be plotted}
+
+\item{height}{Height of final pdf to be plotted}
+
 \item{color_scale}{colors of bar chart. Must be one of "bright" or "grey".
 Default is "bright".}
 

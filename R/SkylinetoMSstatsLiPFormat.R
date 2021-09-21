@@ -8,17 +8,7 @@
 #'
 #' @param LiP.data name of LiP Spectronaut output, which is long-format.
 #' @param TrP.data name of TrP Spectronaut output, which is long-format.
-#' @param use_log_file logical. If TRUE, information about data processing
-#' will be saved to a file.
-#' @param append logical. If TRUE, information about data processing will be
-#' added to an existing log file.
-#' @param verbose logical. If TRUE, information about data processing will be
-#' printed to the console.
-#' @param log_file_path character. Path to a file to which information about
-#' data processing will be saved.
-#' If not provided, such a file will be created automatically.
-#' If `append = TRUE`, has to be a valid path to a file.
-#' @param base start of the file name.
+#' @return a `list` of two data.frames in `MSstatsLiP` format
 #' @examples
 #'
 #' ## Output will be in format

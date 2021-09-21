@@ -45,7 +45,7 @@
 #' @param min_feature_count optional. Only required if featureSubset = "highQuality".
 #' Defines a minimum number of informative features a protein needs to be considered
 #' in the feature selection algorithm.
-#' @param min_feature_count.PTM For PTM dataset only. Options the same as above.
+#' @param min_feature_count.LiP For LiP dataset only. Options the same as above.
 #' @param n_top_feature For protein dataset only. The number of top features for
 #'  featureSubset='topN'. Default is 3, which means to use top 3 features.
 #' @param n_top_feature.LiP For LiP dataset only. Options same as above.
@@ -108,7 +108,7 @@ dataSummarizationLiP <- function(
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
   min_feature_count = 2,
-  min_feature_count.LiP = 2,
+  min_feature_count.LiP = 1,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",

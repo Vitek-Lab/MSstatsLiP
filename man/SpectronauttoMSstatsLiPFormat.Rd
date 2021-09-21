@@ -91,6 +91,9 @@ If \code{append = TRUE}, has to be a valid path to a file.}
 
 \item{base}{start of the file name.}
 }
+\value{
+a \code{list} of two \code{data.frames} in MSstatsLiP format
+}
 \description{
 Takes as as input both raw LiP and Trp outputs from Spectronautt.
 }

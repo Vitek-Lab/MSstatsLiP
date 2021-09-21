@@ -28,6 +28,24 @@ models full pairwise comparison between all conditions}
 \item{fasta.path}{a file path to a fasta file that includes the proteins
 listed in the data. Default is NULL. Include this parameter to determine
 trypticity of peptides in LiP models.}
+
+\item{log_base}{base of the logarithm used in dataProcess.}
+
+\item{use_log_file}{logical. If TRUE, information about data processing
+will be saved to a file.}
+
+\item{append}{logical. If TRUE, information about data processing will be
+added to an existing log file.}
+
+\item{verbose}{logical. If TRUE, information about data processing will be
+printed to the console.}
+
+\item{log_file_path}{character. Path to a file to which information about
+data processing will be saved.
+If not provided, such a file will be created automatically.
+If \code{append = TRUE}, has to be a valid path to a file.}
+
+\item{base}{start of the file name.}
 }
 \value{
 list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP

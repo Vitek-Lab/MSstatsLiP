@@ -52,6 +52,7 @@
 #' If not provided, such a file will be created automatically.
 #' If `append = TRUE`, has to be a valid path to a file.
 #' @param base start of the file name.
+#' @return a `list` of two `data.frames` in MSstatsLiP format
 #' @examples
 #' # Output datasets of Spectronaut
 #' head(LiPRawData)
