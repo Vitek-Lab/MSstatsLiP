@@ -60,21 +60,12 @@
 #' If address=FALSE, plot will be not saved as pdf file but showed in window.
 #' @return plot or pdf
 #' @examples
-#' # Convert and summarize data
-#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
-#'
-#' # Convert into MSstatsLiP format
-#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#'                                                  fasta_path,
-#'                                                  TrPRawData)
-#' # Run summarization without LiP missing value imputation
-#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-#'
+#' # Use the output of the MSstatsLiP_Summarized function
 #' # Profile Plot
-#' dataProcessPlotsLiP(QuantData, type = "ProfilePlot")
+#' dataProcessPlotsLiP(MSstatsLiP_Summarized, type = "ProfilePlot")
 #'
 #' # QCPlot Plot
-#' dataProcessPlotsLiP(QuantData, type = "QCPlot")
+#' dataProcessPlotsLiP(MSstatsLiP_Summarized, type = "QCPlot")
 #'
 dataProcessPlotsLiP <- function(data,
                                 type = 'PROFILEPLOT',

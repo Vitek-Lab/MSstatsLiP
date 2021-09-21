@@ -16,7 +16,7 @@ dataSummarizationLiP(
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
   min_feature_count = 2,
-  min_feature_count.LiP = 2,
+  min_feature_count.LiP = 1,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",
@@ -80,6 +80,8 @@ same as above.}
 Defines a minimum number of informative features a protein needs to be considered
 in the feature selection algorithm.}
 
+\item{min_feature_count.LiP}{For LiP dataset only. Options the same as above.}
+
 \item{n_top_feature}{For protein dataset only. The number of top features for
 featureSubset='topN'. Default is 3, which means to use top 3 features.}
 
@@ -133,8 +135,6 @@ If not provided, such a file will be created automatically.
 If \code{append = TRUE}, has to be a valid path to a file.}
 
 \item{base}{start of the file name.}
-
-\item{min_feature_count.PTM}{For PTM dataset only. Options the same as above.}
 }
 \value{
 list of summarized LiP and TrP results. These results contain
@@ -149,19 +149,11 @@ quantification. Applies global median normalization on peptide level data and
 normalizes between runs. Returns list of two summarized datasets.
 }
 \examples{
-# Specify fasta file
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+# Use output of converter
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
 
-# Convert into MSstatsLiP format
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-# Run summarization without LiP missing value imputation
-QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-
-# Run summarization with LiP and TrP missing value imputation
-QuantData1 <- dataSummarizationLiP(MSstatsLiP_data,
-                                   MBimpute = TRUE,
-                                   MBimpute.LiP = TRUE)
+# Run summarization
+MSstatsLiP_model <- dataSummarizationLiP(MSstatsLiP_data)
 
 }

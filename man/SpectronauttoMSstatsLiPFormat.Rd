@@ -72,7 +72,7 @@ modification. Modification must be indicated by "[". TRUE is default}
 measurements for certain feature and certain run, use highest or sum of
 multiple intensities.}
 
-\item{which.Conditions}{list of conditions to format into MSstatsPTM format.
+\item{which.Conditions}{list of conditions to format into MSstatsLiP format.
 If "all" all conditions will be used. Default is "all".}
 
 \item{use_log_file}{logical. If TRUE, information about data processing
@@ -91,6 +91,9 @@ If \code{append = TRUE}, has to be a valid path to a file.}
 
 \item{base}{start of the file name.}
 }
+\value{
+a \code{list} of two \code{data.frames} in MSstatsLiP format
+}
 \description{
 Takes as as input both raw LiP and Trp outputs from Spectronautt.
 }
@@ -99,10 +102,11 @@ Takes as as input both raw LiP and Trp outputs from Spectronautt.
 head(LiPRawData)
 head(TrPRawData)
 
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
                                                  fasta_path,
                                                  TrPRawData)
-
+head(MSstatsLiP_data[["LiP"]])
+head(MSstatsLiP_data[["TrP"]])
 }

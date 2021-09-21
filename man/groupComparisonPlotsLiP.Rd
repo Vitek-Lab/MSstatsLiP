@@ -98,9 +98,12 @@ labels of comparisons or order numbers of comparisons from levels(data$Label)
 , such as levels(testResultMultiComparisons$ComparisonResult$Label).
 Default is "all", which generates all plots for each protein.}
 
-\item{which.Protein}{Peptide list to draw comparison plots. List can be
-names of Proteins/Peptides or order numbers of Proteins/Peptides from
-levels(testResultMultiComparisons$ComparisonResult$Protein). Default is
+\item{which.Peptide}{Peptide list to draw comparison plots. List can be
+names of Peptides or order numbers of Peptides from levels. Default is
+"all", which generates all comparison plots for each protein.}
+
+\item{which.Protein}{Protein list to draw comparison plots. Will draw all
+peptide plots for listed Proteins. List must be names of Proteins. Default is
 "all", which generates all comparison plots for each protein.}
 
 \item{address}{the name of folder that will store the results. Default
@@ -126,24 +129,13 @@ proteins and their significance for each model.
 between conditions and peptides/proteins
 }
 \examples{
-# Convert and summarize data
-fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
 
-# Convert into MSstatsLiP format
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-# Run summarization without LiP missing value imputation
-QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-
-# Test for pairwise comparison
-ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-                                   fasta_path)
+## Use output of the groupComparisonLiP function
 
 # Volcano Plot
-groupComparisonPlotsLiP(ModelResults, type = "VolcanoPlot")
+groupComparisonPlotsLiP(MSstatsLiP_model, type = "VOLCANOPLOT")
 
 # Heatmap Plot
-groupComparisonPlotsLiP(ModelResults, type = "HEATMAP")
+groupComparisonPlotsLiP(MSstatsLiP_model, type = "HEATMAP")
 
 }

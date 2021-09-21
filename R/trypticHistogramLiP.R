@@ -14,6 +14,8 @@
 #' @param y.axis.size size of y-axis labeling for plot. Default is 10.
 #' @param legend.size size of feature legend for half vs fully tryptic peptides
 #' below graph. Default is 7.
+#' @param width Width of final pdf to be plotted
+#' @param height Height of final pdf to be plotted
 #' @param color_scale colors of bar chart. Must be one of "bright" or "grey".
 #' Default is "bright".
 #' @param address the name of folder that will store the results. Default folder
@@ -23,13 +25,10 @@
 #'  address=FALSE, plot will be not saved as pdf file but shown in window..
 #' @return plot or pdf
 #' @examples
-#' # Specify fasta file
-#' fasta_path <- "../data/ExampleFastaFile.fasta"
-#'
-#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#'                                                  fasta_path,
-#'                                                  TrPRawData)
-#' trypticHistogramLiP(MSstatsLiP_data, fasta_path, address = FALSE)
+#' # Use output of summarization function
+#' trypticHistogramLiP(MSstatsLiP_Summarized,
+#'                     system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"),
+#'                     color_scale = "bright", address = FALSE)
 #'
 trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 y.axis.size = 10, legend.size = 10,

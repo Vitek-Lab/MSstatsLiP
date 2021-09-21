@@ -10,6 +10,8 @@ BarcodePlotLiP(
   model_type = "Adjusted",
   which.prot = "all",
   which.comp = "all",
+  adj.pvalue.cutoff = 0.05,
+  FC.cutoff = 0,
   FT.only = FALSE,
   width = 12,
   height = 4,
@@ -31,6 +33,12 @@ will plot a separate barcode plot for each protein.}
 
 \item{which.comp}{a list of comparisons to be visualized. Default is "all"
 which will plot a separate barcode plot for each condition and protein.}
+
+\item{adj.pvalue.cutoff}{Defualt is .05. Alpha value for testing significance
+of model output.}
+
+\item{FC.cutoff}{Default is 0. Minimum absolute FC before a comparison will
+be considered significant.}
 
 \item{FT.only}{FALSE plots all FT and HT peptides, TRUE plots FT peptides
 only. Default is FALSE.}
@@ -54,22 +62,12 @@ plot or pdf
 Barcode plot. Shows protein coverge of LiP modified peptides.
 }
 \examples{
-# Convert and summarize data
-#fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+# Specify Fasta path
+fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
-# Convert into MSstatsLiP format
-#MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#                                                  fasta_path,
-#                                                  TrPRawData)
-# Run summarization without LiP missing value imputation
-#QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-
-# Test for pairwise comparison
-#ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-#                                    fasta_path)
-
-# Barcode Plot
-#BarcodePlotLiP(MSstatsLiP_model, fasta_path,
-#              model_type = "Adjusted")
+# Use model data to create Barcode Plot
+BarcodePlotLiP(MSstatsLiP_model, fasta_path,
+              model_type = "Adjusted",
+              address=FALSE)
 
 }

@@ -11,10 +11,10 @@
 #' @param fasta_file name of variable containing FASTA data. If FASTA file has
 #' not been processed please run the tidyFasta() function on it before inputting
 #' into this function.
-#'
+#' @return a `data.frame` including protein, peptide, and trypticity metrics.
 #' @examples
-#' #fasta <- tidyFasta(file_path)
-#' #calculateTrypticity(raw.data$LiP, fasta)
+#' fasta <- tidyFasta(system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"))
+#' calculateTrypticity(MSstatsLiP_data$LiP, fasta)
 calculateTrypticity <- function(LiP_data, fasta_file){
 
   unique_pep <- unique(LiP_data[, c("PeptideSequence",
@@ -28,7 +28,7 @@ calculateTrypticity <- function(LiP_data, fasta_file){
   combined_df <- merge(unique_pep, fasta_file, all.x = TRUE,
                        by.x = "ProteinName", by.y = "uniprot_iso")
 
-  ## Identify pre/end/post AA
+    ## Identify pre/end/post AA
   combined_df$start <- mapply(function(x,y){gregexpr(x, y)[[1]][1] - 1},
                               combined_df$PeptideSequence, combined_df$sequence)
   combined_df$end <- combined_df$start + nchar(combined_df$PeptideSequence)

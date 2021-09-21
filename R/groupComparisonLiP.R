@@ -18,25 +18,32 @@
 #' @param fasta.path a file path to a fasta file that includes the proteins
 #' listed in the data. Default is NULL. Include this parameter to determine
 #' trypticity of peptides in LiP models.
+#' @param log_base base of the logarithm used in dataProcess.
+#' @param use_log_file logical. If TRUE, information about data processing
+#' will be saved to a file.
+#' @param append logical. If TRUE, information about data processing will be
+#' added to an existing log file.
+#' @param verbose logical. If TRUE, information about data processing will be
+#' printed to the console.
+#' @param log_file_path character. Path to a file to which information about
+#' data processing will be saved.
+#' If not provided, such a file will be created automatically.
+#' If `append = TRUE`, has to be a valid path to a file.
+#' @param base start of the file name.
 #' @return list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
 #'         data.tables with their corresponding model results.
 #' @examples
-#' # Convert and summarize data
-#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
 #'
-#' # Convert into MSstatsLiP format
-#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#'                                                  fasta_path,
-#'                                                  TrPRawData)
-#' # Run summarization without LiP missing value imputation
-#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
+#' ## Use output of dataSummarizationLiP function
+#' fasta <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 #'
 #' # Test for pairwise comparison
-#' ModelResults <- groupComparisonLiP(QuantData, contrast.matrix = "pairwise",
-#'                                    fasta.path = fasta_path)
+#' MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
+#'                                    contrast.matrix = "pairwise",
+#'                                    fasta.path = fasta)
 #'
 #' # Returns list of three models
-#' names(ModelResults)
+#' names(MSstatsLiP_model)
 #' head(MSstatsLiP_model$LiP.Model)
 #' head(MSstatsLiP_model$TrP.Model)
 #' head(MSstatsLiP_model$Adjusted.LiP.Model)
@@ -58,7 +65,6 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
     file.create(path)
   } else {path <- log_file_path}
 
-  ## TODO: Logging
   ## Put into format for MSstatsPTM function
   .groupComparisonCheck(data)
   data.LiP <- data[["LiP"]]
@@ -87,6 +93,7 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
   model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix,
                                    FALSE, "BH", log_base, use_log_file, append,
                                    verbose, path, base)
+  model.data$ADJUSTED.Model <- model.data$ADJUSTED.Model[!is.na(model.data$ADJUSTED.Model$Protein)]
 
   ## Format into LiP
   LiP.model <- model.data[['PTM.Model']]

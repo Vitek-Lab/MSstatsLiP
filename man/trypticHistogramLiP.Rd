@@ -30,6 +30,10 @@ ProteinName, PeptideSequence, BioReplicate, and Condition columns}
 \item{legend.size}{size of feature legend for half vs fully tryptic peptides
 below graph. Default is 7.}
 
+\item{width}{Width of final pdf to be plotted}
+
+\item{height}{Height of final pdf to be plotted}
+
 \item{color_scale}{colors of bar chart. Must be one of "bright" or "grey".
 Default is "bright".}
 
@@ -47,12 +51,9 @@ Histogram of Half vs Fully tryptic peptides. Calculates proteotypicity,
 and then uses calcualtions in histogram.
 }
 \examples{
-# Specify fasta file
-fasta_path <- "../data/ExampleFastaFile.fasta"
-
-MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-                                                 fasta_path,
-                                                 TrPRawData)
-trypticHistogramLiP(MSstatsLiP_data, fasta_path, address = FALSE)
+# Use output of summarization function
+trypticHistogramLiP(MSstatsLiP_Summarized,
+                    system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"),
+                    color_scale = "bright", address = FALSE)
 
 }

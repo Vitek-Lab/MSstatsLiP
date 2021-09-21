@@ -45,7 +45,7 @@
 #' @param min_feature_count optional. Only required if featureSubset = "highQuality".
 #' Defines a minimum number of informative features a protein needs to be considered
 #' in the feature selection algorithm.
-#' @param min_feature_count.PTM For PTM dataset only. Options the same as above.
+#' @param min_feature_count.LiP For LiP dataset only. Options the same as above.
 #' @param n_top_feature For protein dataset only. The number of top features for
 #'  featureSubset='topN'. Default is 3, which means to use top 3 features.
 #' @param n_top_feature.LiP For LiP dataset only. Options same as above.
@@ -89,20 +89,12 @@
 #' the reformatted input to the summarization function, as well as run-level
 #' summarization results.
 #' @examples
-#' # Specify fasta file
-#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#' # Use output of converter
+#' head(MSstatsLiP_data[["LiP"]])
+#' head(MSstatsLiP_data[["TrP"]])
 #'
-#' # Convert into MSstatsLiP format
-#' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
-#'                                                  fasta_path,
-#'                                                  TrPRawData)
-#' # Run summarization without LiP missing value imputation
-#' QuantData <- dataSummarizationLiP(MSstatsLiP_data)
-#'
-#' # Run summarization with LiP and TrP missing value imputation
-#' QuantData1 <- dataSummarizationLiP(MSstatsLiP_data,
-#'                                    MBimpute = TRUE,
-#'                                    MBimpute.LiP = TRUE)
+#' # Run summarization
+#' MSstatsLiP_model <- dataSummarizationLiP(MSstatsLiP_data)
 #'
 dataSummarizationLiP <- function(
   data,
@@ -116,7 +108,7 @@ dataSummarizationLiP <- function(
   remove_uninformative_feature_outlier = FALSE,
   remove_uninformative_feature_outlier.LiP = FALSE,
   min_feature_count = 2,
-  min_feature_count.LiP = 2,
+  min_feature_count.LiP = 1,
   n_top_feature = 3,
   n_top_feature.LiP = 3,
   summaryMethod = "TMP",

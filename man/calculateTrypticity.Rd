@@ -15,11 +15,14 @@ column must match with what is in the corresponding FASTA file.}
 not been processed please run the tidyFasta() function on it before inputting
 into this function.}
 }
+\value{
+a \code{data.frame} including protein, peptide, and trypticity metrics.
+}
 \description{
 Takes as as input LiP data and a fasta file. These can be the outputs of
 MSstatsLiP functions.
 }
 \examples{
-#fasta <- tidyFasta(file_path)
-#calculateTrypticity(raw.data$LiP, fasta)
+fasta <- tidyFasta(system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP"))
+calculateTrypticity(MSstatsLiP_data$LiP, fasta)
 }

@@ -39,7 +39,7 @@
 #' @param summaryforMultipleRows max(default) or sum - when there are multiple
 #' measurements for certain feature and certain run, use highest or sum of
 #' multiple intensities.
-#' @param which.Conditions list of conditions to format into MSstatsPTM format.
+#' @param which.Conditions list of conditions to format into MSstatsLiP format.
 #' If "all" all conditions will be used. Default is "all".
 #' @param use_log_file logical. If TRUE, information about data processing
 #' will be saved to a file.
@@ -52,17 +52,19 @@
 #' If not provided, such a file will be created automatically.
 #' If `append = TRUE`, has to be a valid path to a file.
 #' @param base start of the file name.
+#' @return a `list` of two `data.frames` in MSstatsLiP format
 #' @examples
 #' # Output datasets of Spectronaut
 #' head(LiPRawData)
 #' head(TrPRawData)
 #'
-#' fasta_path <- "../inst/extdata/ExampleFastaFile.fasta"
+#' fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 #'
 #' MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData,
 #'                                                  fasta_path,
 #'                                                  TrPRawData)
-#'
+#' head(MSstatsLiP_data[["LiP"]])
+#' head(MSstatsLiP_data[["TrP"]])
 SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                                           fasta,
                                           Trp.data = NULL,

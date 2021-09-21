@@ -25,13 +25,13 @@ MSstatsLiP.
 
 ## Installation
 
-To install this package, start R (version "4.0") and enter:
+To install this package, start R (version "4.1") and enter:
 
 ``` {r, eval = FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("MSstatsTMTPTM")
+BiocManager::install("MSstatsLiP")
 ```
 
 ```{r}
@@ -61,7 +61,6 @@ head(TrPRawData)
 
 ``` {r}
 
-# LiPRawData_temp <- read.csv("D:/Northeastern/Research/MSstats/MSstatsLiP/Tsung_Heng_Datasets/osmosis/20210429_Sc_OsmoSentinels_Report_TRI.xls", sep = "\t")
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
                                               "../inst/extdata/ExampleFastaFile.fasta", 
@@ -102,8 +101,8 @@ as input the formatted data from the converter.
 MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
                                               MBimpute = FALSE)
 names(MSstatsLiP_Summarized[["LiP"]])
-head(MSstatsLiP_Summarized[["LiP"]]$PeptideLevelData)
-head(MSstatsLiP_Summarized[["TrP"]]$PeptideLevelData)
+head(MSstatsLiP_Summarized[["LiP"]]$ProteinLevelData)
+head(MSstatsLiP_Summarized[["TrP"]]$ProteinLevelData)
 
 ```
 
@@ -165,7 +164,7 @@ dataProcessPlotsLiP(MSstatsLiP_Summarized,
 
 dataProcessPlotsLiP(MSstatsLiP_Summarized,
                     type = 'ProfilePlot',
-                    which.Peptide = c("O14455_KVTQMTPAPK"),
+                    which.Peptide = c("P14164_ILQNDLK"),
                     address = FALSE)
 ```
 
@@ -190,7 +189,7 @@ PCAPlotLiP(MSstatsLiP_Summarized,
            bar.plot = FALSE,
            protein.pca = TRUE,
            comparison.pca = FALSE,
-           which.pep = c("Q99278_EIQLLDENVGTR", "P10592_AHFSNDRVDIIANDQGNR"),
+           which.pep = c("P14164_ILQNDLK", "P17891_ALQLINQDDADIIGGRDR"),
            #which.comparison = c("Ctrl", "Osmo"),
            address=FALSE)
 
@@ -203,8 +202,8 @@ dataframe with the ProteinName and PeptideSequence column.
 
 ``` {r}
 
-feature_data <- copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
-setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
+feature_data <- data.table::copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
+data.table::setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
 feature_data$PeptideSequence <- substr(feature_data$PeptideSequence, 
                                        1, nchar(as.character(feature_data$PeptideSequence)) - 2)
 
@@ -235,6 +234,8 @@ head(MSstatsLiP_model[["LiP.Model"]])
 head(MSstatsLiP_model[["TrP.Model"]])
 head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
 
+MSstatsLiP_model[["Adjusted.LiP.Model"]] %>% filter(adj.pvalue < .05) %>% nrow()
+
 ```
 
 The groupComparisonLiP function outputs a list with three separate models. These
@@ -254,7 +255,6 @@ groupComparisonPlotsLiP(MSstatsLiP_model,
 groupComparisonPlotsLiP(MSstatsLiP_model,
                         type = "HEATMAP",
                         numProtein=50,
-                        which.Protein = c("P04050"),
                         address = FALSE)
 ```
 
@@ -266,28 +266,8 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = c("P04050"),# FT.only = FALSE,
+               model_type = "Adjusted", which.prot = c("P53235"),# FT.only = FALSE,
                address = FALSE)
 
 ```
 
-``` {r}
-MSstatsLiP_model$Adjusted.LiP.Model %>% mutate(significant=case_when(abs(log2FC)>0&adj.pvalue<.05~"Yes",TRUE~"No"
-)) %>%
- filter(ProteinName%in%c("P04050"))%>%
-  filter(fully_TRI==TRUE) %>%
-  ggplot()+
-  geom_vline(xintercept = "", size=20, color="black") +
-  geom_linerange(aes(x="", ymin=StartPos, ymax=EndPos, color=significant, group=significant), size=20) +
-  #gghighlight(significant=="Yes", calculate_per_facet = TRUE, use_direct_label = FALSE, use_group_by = FALSE) +
-  coord_flip()+
-  facet_grid(.~Label)+
-  scale_color_manual(values = c("Yes"="darkgreen", "No"="grey"))+
-  theme_classic()+
-  labs(x="", y="amino acid sequence")+
-  guides(color=FALSE)+
-  theme(strip.text.y = element_text(angle=0),
-        axis.ticks.y =element_blank())+
-  ylim(0,1800)
-
-```
