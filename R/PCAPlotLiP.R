@@ -131,7 +131,8 @@ PCAPlotLiP <- function(data,
 
     ## Extract corresponding protein in TrP dataset
     if (!is.null(trp.data)){
-      keep <- lip.data[FULL_PEPTIDE %in% which.pep, c("FULL_PEPTIDE", "Protein")]
+      keep <- lip.data[FULL_PEPTIDE %in% which.pep, c("FULL_PEPTIDE",
+                                                      "Protein")]
       which.prot <- unique(keep[, Protein])
       trp.pca$x <- trp.pca$x[rownames(trp.pca$x) %in% which.prot, , drop=FALSE]
     }

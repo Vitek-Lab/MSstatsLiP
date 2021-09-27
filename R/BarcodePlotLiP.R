@@ -131,7 +131,7 @@ BarcodePlotLiP <- function(data,
 
       ## Build coverage data.table
       temp.seq <- formated_fasta[uniprot_iso == which.prot[[i]], sequence]
-      coverage.index <- data.table("Index" = 1:nchar(temp.seq),
+      coverage.index <- data.table("Index" = seq_len(nchar(temp.seq)),
                                    "Coverage" = "No Coverage")
 
       temp.coverage.df <- cond.coverage.df[ProteinName == which.prot[[i]], ]
@@ -161,9 +161,7 @@ BarcodePlotLiP <- function(data,
              x = "Amino Acid Sequence", y = "") +
         theme(axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
-              panel.background = element_rect(fill = 'white', colour = 'white'))# +
-        # scale_x_continuous(breaks = 1:nchar(temp.seq),
-        #                    labels = strsplit(temp.seq, split = "")[[1]])
+              panel.background = element_rect(fill = 'white', colour = 'white'))
       print(barcode_plot)
     }
   }

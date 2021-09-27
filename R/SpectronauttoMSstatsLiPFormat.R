@@ -124,9 +124,10 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
                ) == length(LiP_conditions)) |
        (length(setdiff(TrP_conditions, which.Conditions)
                ) == length(TrP_conditions))){
-         msg = (paste("None of the conditions specified in which.Conditions are",
-                      "available in one or both of LiP/TrP datasets. Please",
-                      "ensure the conditions listed in which.Conditions appear",
+         msg = (
+           paste("None of the conditions specified in which.Conditions are",
+                  "available in one or both of LiP/TrP datasets. Please",
+                  "ensure the conditions listed in which.Conditions appear",
                       "in the input datasets"))
          getOption("MSstatsLog")("ERROR", msg)
          stop(msg)
@@ -152,9 +153,11 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
   if (!is.null(Trp.data)){
 
     getOption("MSstatsLog")("INFO", "Formatting TrP data..")
-    df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation, intensity,
+    df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation,
+                                         intensity,
                                          filter_with_Qvalue, qvalue_cutoff,
-                                         useUniquePeptide, removeFewMeasurements,
+                                         useUniquePeptide,
+                                         removeFewMeasurements,
                                          removeProtein_with1Feature,
                                          summaryforMultipleRows, use_log_file,
                                          append, verbose, log_file_path = path,
@@ -194,7 +197,8 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
       df.fasta.lip$sequence, df.fasta.lip$PeptideSequence) == 1),]
 
   #Data formatting for MSstatsLiP analysis
-  MSstats_LiP <- merge(df.lip, df.fasta.lip[, c("ProteinName", "PeptideSequence")],
+  MSstats_LiP <- merge(df.lip, df.fasta.lip[, c("ProteinName",
+                                                "PeptideSequence")],
                        by = c("ProteinName", "PeptideSequence"))
   MSstats_LiP$FULL_PEPTIDE <- paste(MSstats_LiP$ProteinName,
                                     MSstats_LiP$PeptideSequence, sep = '_')

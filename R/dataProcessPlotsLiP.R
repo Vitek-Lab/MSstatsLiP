@@ -92,12 +92,16 @@ dataProcessPlotsLiP <- function(data,
   ## Filter for all PTMs in one protein
   if (!is.null(which.Protein)){
 
-    data$LiP$FeatureLevelData <- data$LiP$FeatureLevelData[PROTEIN %in% which.Protein]
-    data$LiP$ProteinLevelData <- data$LiP$ProteinLevelData[Protein %in% which.Protein]
+    data$LiP$FeatureLevelData <- data$LiP$FeatureLevelData[
+      PROTEIN %in% which.Protein]
+    data$LiP$ProteinLevelData <- data$LiP$ProteinLevelData[
+      Protein %in% which.Protein]
 
     if (!is.null(data$TrP)){
-      data$TrP$FeatureLevelData <- as.data.table(data$TrP$FeatureLevelData)[PROTEIN %in% which.Protein]
-      data$TrP$ProteinLevelData <- as.data.table(data$TrP$ProteinLevelData)[Protein %in% which.Protein]
+      data$TrP$FeatureLevelData <- as.data.table(data$TrP$FeatureLevelData)[
+        PROTEIN %in% which.Protein]
+      data$TrP$ProteinLevelData <- as.data.table(data$TrP$ProteinLevelData)[
+        Protein %in% which.Protein]
       if (sum(nrow(data$TrP$ProteinLevelData),
               nrow(data$TrP$FeatureLevelData)) == 0){
         data$TrP <- NULL
@@ -122,10 +126,10 @@ dataProcessPlotsLiP <- function(data,
   TrP.data <- data[["TrP"]]
 
   format.data <- list(PTM = list(FeatureLevelData = Lip.data.Processed,
-                                 ProteinLevelData = Lip.data.Run,
-                                 SummaryMethod = Lip.data[["SummaryMethod"]],
-                                 ModelQC = Lip.data[["ModelQC"]],
-                                 PredictBySurvival = Lip.data[["PredictBySurvival"]]),
+                           ProteinLevelData = Lip.data.Run,
+                           SummaryMethod = Lip.data[["SummaryMethod"]],
+                           ModelQC = Lip.data[["ModelQC"]],
+                           PredictBySurvival = Lip.data[["PredictBySurvival"]]),
                       PROTEIN = TrP.data)
 
   ## Plot

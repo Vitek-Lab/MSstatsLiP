@@ -50,8 +50,10 @@ correlationPlotLiP <- function(data,
   cor_mat <- data.table(matrix(0, nrow = length(runs), ncol = length(runs)))
   for (i in seq(runs)){
     for (j in seq(runs)){
-      cor_mat[i, j] = cor(lip_data[SUBJECT == runs[i], value_columns, with = FALSE],
-                          lip_data[SUBJECT == runs[j], value_columns, with = FALSE],
+      cor_mat[i, j] = cor(lip_data[SUBJECT == runs[i], value_columns,
+                                   with = FALSE],
+                          lip_data[SUBJECT == runs[j], value_columns,
+                                   with = FALSE],
                           use = "complete.obs", method = method)
     }
   }

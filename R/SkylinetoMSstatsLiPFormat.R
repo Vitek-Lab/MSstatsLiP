@@ -20,7 +20,8 @@ SkylinetoMSstatsLiPFormat <- function(LiP.data,
 
   LiP.data <- as.data.table(LiP.data)
 
-  LiP.data$FULL_PEPTIDE <- paste(LiP.data$ProteinName, LiP.data$PeptideSequence, sep = "_")
+  LiP.data$FULL_PEPTIDE <- paste(LiP.data$ProteinName,
+                                 LiP.data$PeptideSequence, sep = "_")
   setnames(LiP.data, 'Replicate.Name', 'Run')
 
   LiP.data <- LiP.data[LiP.data[, .I[which.max(Intensity)],

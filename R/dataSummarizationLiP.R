@@ -148,32 +148,32 @@ dataSummarizationLiP <- function(
   format.data <- list(PTM = LiP.dataset, PROTEIN = protein.dataset)
 
   summarized.data <- dataSummarizationPTM(format.data,
-                                          logTrans,
-                                          normalization,
-                                          normalization.LiP,
-                                          nameStandards,
-                                          nameStandards.LiP,
-                                          featureSubset,
-                                          featureSubset.LiP,
-                                          remove_uninformative_feature_outlier,
-                                          remove_uninformative_feature_outlier.LiP,
-                                          min_feature_count,
-                                          min_feature_count.LiP,
-                                          n_top_feature,
-                                          n_top_feature.LiP,
-                                          summaryMethod,
-                                          equalFeatureVar,
-                                          censoredInt,
-                                          MBimpute,
-                                          MBimpute.LiP,
-                                          remove50missing,
-                                          fix_missing,
-                                          maxQuantileforCensored,
-                                          use_log_file,
-                                          append,
-                                          verbose,
-                                          log_file_path = path,
-                                          base)
+                                      logTrans,
+                                      normalization,
+                                      normalization.LiP,
+                                      nameStandards,
+                                      nameStandards.LiP,
+                                      featureSubset,
+                                      featureSubset.LiP,
+                                      remove_uninformative_feature_outlier,
+                                      remove_uninformative_feature_outlier.LiP,
+                                      min_feature_count,
+                                      min_feature_count.LiP,
+                                      n_top_feature,
+                                      n_top_feature.LiP,
+                                      summaryMethod,
+                                      equalFeatureVar,
+                                      censoredInt,
+                                      MBimpute,
+                                      MBimpute.LiP,
+                                      remove50missing,
+                                      fix_missing,
+                                      maxQuantileforCensored,
+                                      use_log_file,
+                                      append,
+                                      verbose,
+                                      log_file_path = path,
+                                      base)
 
   Lip.summarized <- summarized.data[["PTM"]]
   Lip.processed <- as.data.table(Lip.summarized[["FeatureLevelData"]])
@@ -193,10 +193,10 @@ dataSummarizationLiP <- function(
   setnames(Lip.run, "ProteinName", "Protein")
 
   Lip.summarized.format <- list(FeatureLevelData = Lip.processed,
-                                ProteinLevelData = Lip.run,
-                                SummaryMethod = Lip.summarized[["SummaryMethod"]],
-                                ModelQC = Lip.summarized[["ModelQC"]],
-                                PredictBySurvival = Lip.summarized[["PredictBySurvival"]])
+                      ProteinLevelData = Lip.run,
+                      SummaryMethod = Lip.summarized[["SummaryMethod"]],
+                      ModelQC = Lip.summarized[["ModelQC"]],
+                      PredictBySurvival = Lip.summarized[["PredictBySurvival"]])
 
   Trp.summarized <- summarized.data[["PROTEIN"]]
 
