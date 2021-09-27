@@ -37,7 +37,6 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 color_scale = "bright",
                                 address = "") {
 
-  ## TODO: Add checks on input and parameters
 
   ## Format input data
   lip.data <- copy(data[["LiP"]]$FeatureLevelData)
@@ -49,7 +48,7 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
   ## Add tryptic data
   setnames(lip.data, c("PROTEIN", "PEPTIDE"), c("ProteinName", "PeptideSequence"))
   lip.data$PeptideSequence <- as.character(lip.data$PeptideSequence)
-  lip.data$PeptideSequence <- sapply(lip.data$PeptideSequence, function(x) {substr(x, 1, nchar(x)-2)})
+  lip.data$PeptideSequence <- as.character(lapply(lip.data$PeptideSequence, function(x) {substr(x, 1, nchar(x)-2)}))
   tryptic.label <- calculateTrypticity(lip.data, format_fasta)
 
 

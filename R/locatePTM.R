@@ -95,7 +95,8 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
   # Locate peptides (use extended AAs for specific matching when possible)
   peptide_fasta <- dplyr::left_join(peptide_seq, sub_fasta)
   loc <- Map(function(p, s) gregexpr(p, s, fixed = TRUE)[[1]],
-             as.list(peptide_fasta$peptide_unmod), as.list(peptide_fasta$sequence))
+             as.list(peptide_fasta$peptide_unmod),
+             as.list(peptide_fasta$sequence))
   n <- vapply(loc, .num_match, FUN.VALUE = integer(1))
   peptide_fasta <- peptide_fasta[n == 1L, ]
   loc <- loc[n == 1L]
@@ -105,7 +106,8 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
   mod_pattern <- paste0(modResidue, modSymbol)
   # Locate modifiable, modified sites (AA residues) associated with peptides
   peptide_fasta$idx_site <- Map(.covered_set,
-                                peptide_fasta$idx_site_full, peptide_fasta$idx_peptide)
+                                peptide_fasta$idx_site_full,
+                                peptide_fasta$idx_peptide)
   peptide_fasta$idx_mod <- Map(
     function(p, a) locateMod(p, a, residueSymbol = mod_pattern),
     as.list(peptide_fasta$peptide), as.list(peptide_fasta$aa_start)
@@ -119,7 +121,8 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
     peptide_fasta$idx_site_full, function(x) nchar(x[length(x)])
   )
   peptide_fasta$site <- Map(annotSite,
-                            peptide_fasta$idx_mod, peptide_fasta$mod_aa, peptide_fasta$len_site)
+                            peptide_fasta$idx_mod, peptide_fasta$mod_aa,
+                            peptide_fasta$len_site)
   peptide_fasta$site <- as.character(peptide_fasta$site)
   col_fasta <- c("uniprot_iso", "peptide", "peptide_unmod", "is_mod",
                  "idx_site", "idx_mod", "site")
@@ -154,6 +157,7 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
 }
 
 #' @noRd
+#' @importFrom dplyr group_by mutate ungroup bind_rows
 .rmConfounded <- function(peptideFasta, rmConfound) {
   # Handle confounded unmodified sites
   col_res <- c("uniprot_iso", "peptide", "site")

@@ -81,19 +81,20 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
   Lip.run$Protein <- as.factor(Lip.run$FULL_PEPTIDE)
 
   data.protein <- data[["TrP"]]
-  format.data <- list(PTM = list(FeatureLevelData = as.data.frame(Lip.processed),
-                                 ProteinLevelData = as.data.frame(Lip.run),
-                                 SummaryMethod = data.LiP[["SummaryMethod"]],
-                                 ModelQC = data.LiP[["ModelQC"]],
-                                 PredictBySurvival =
-                                   data.LiP[["PredictBySurvival"]]),
+  format.data <- list(PTM = list(
+    FeatureLevelData = as.data.frame(Lip.processed),
+     ProteinLevelData = as.data.frame(Lip.run),
+     SummaryMethod = data.LiP[["SummaryMethod"]],
+     ModelQC = data.LiP[["ModelQC"]],
+     PredictBySurvival = data.LiP[["PredictBySurvival"]]),
                       PROTEIN = data.protein)
 
   ## Model
   model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix,
                                    FALSE, "BH", log_base, use_log_file, append,
                                    verbose, path, base)
-  model.data$ADJUSTED.Model <- model.data$ADJUSTED.Model[!is.na(model.data$ADJUSTED.Model$Protein)]
+  model.data$ADJUSTED.Model <- model.data$ADJUSTED.Model[!is.na(
+    model.data$ADJUSTED.Model$Protein)]
 
   ## Format into LiP
   LiP.model <- model.data[['PTM.Model']]

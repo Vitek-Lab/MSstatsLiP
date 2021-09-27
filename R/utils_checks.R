@@ -77,9 +77,7 @@
                 "Condition", "BioReplicate", "Run", "Intensity")
   if (length(setdiff(toupper(rawinput),
                      toupper(colnames(data[["LiP"]]$ProcessedData)))) == 0) {
-    # processout <- rbind(processout, paste("The required input - LiP data : did",
-    #                                       "not process from dataProcess",
-    #                                       "function. - stop"))
+
     stop(paste("Please use 'dataProcessLiP' first. Then use output of",
                "dataProcessLiP function as input in groupComparison."))
   }
