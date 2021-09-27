@@ -5,7 +5,7 @@
 [![Codecov test coverage](https://codecov.io/gh/Vitek-Lab/MSstatsLiP/branch/master/graph/badge.svg)](https://codecov.io/gh/Vitek-Lab/MSstatsLiP?branch=master)
 <!-- badges: end -->
 
-MSstatsLiP is an R-based package for identifying and analyzing changes in protein structures caused by compound binding in cellur lysates.
+MSstatsLiP is an R-based package for identifying and analyzing changes in protein structures caused by compound binding in celluar lysates.
 
 ## Installation 
 
@@ -21,7 +21,7 @@ Please install the dependency MSstatsPTM from Bioconductor:
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("MSstatsPTM")
+BiocManager::install("MSstatsLiP")
 ```
 
 ## Contributing
