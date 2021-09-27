@@ -19,7 +19,7 @@ Depends: R (>= 4.1)
 Imports: dplyr, gridExtra, stringr, ggplot2, grDevices, MSstats, MSstatsConvert,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, factoextra, 
           ggpubr, purrr, tibble, tidyr, tidyverse, scales
-Suggests: BiocStyle, knitr, rmarkdown, covr, testthat
+Suggests: BiocStyle, knitr, rmarkdown, covr, tinytest
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 biocViews: ImmunoOncology, MassSpectrometry, Proteomics, Software, DifferentialExpression, 

@@ -35,4 +35,3 @@ expect_equal(colnames(group.comp$Adjusted.LiP.Model), c("FULL_PEPTIDE", "Label",
                                                     "GlobalProtein",
                                                     "ProteinName",
                                                     "PeptideSequence", "issue"))
-expect_equal(group.comp$Adjusted.LiP.Model, MSstatsLiP_model$Adjusted.LiP.Model)
