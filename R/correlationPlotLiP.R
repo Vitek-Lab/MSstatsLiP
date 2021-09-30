@@ -41,7 +41,6 @@ correlationPlotLiP <- function(data,
                                address = ""){
 
 
-  ##TODO: Add checks and logging
   lip_data <- data$LiP$FeatureLevelData[, c("SUBJECT", value_columns),
                                         with = FALSE]
   runs <- unique(lip_data$SUBJECT)
