@@ -9,6 +9,7 @@ Description: Tools for Post Translational Modification (PTM) and protein
               of PTM site abundance, and detection of changes in PTMs across 
               conditions. 
 Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
+            person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
             person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
             person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
           	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
