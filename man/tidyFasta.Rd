@@ -16,5 +16,5 @@ a \code{tibble} of formatted FASTA information
 reads and tidys FASTA file.
 }
 \examples{
-tidyFasta("https://www.uniprot.org/uniprot/P02407.fasta")
+tidyFasta(system.file("extdata", "O13297.fasta", package="MSstatsLiP"))
 }
