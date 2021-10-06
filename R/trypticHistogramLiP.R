@@ -3,7 +3,8 @@
 #'
 #' @export
 #' @import ggplot2
-#' @importFrom data.table as.data.table `:=` setnames copy
+#' @importFrom data.table as.data.table `:=` setnames copy .N
+#' @importFrom dplyr count
 #' @importFrom grDevices dev.off pdf
 #' @importFrom scales percent
 #'
