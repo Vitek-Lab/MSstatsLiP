@@ -4,7 +4,7 @@
 #' Takes as as input both raw LiP and Trp outputs from Skyline.
 #'
 #' @export
-#' @importFrom data.table as.data.table `:=`
+#' @importFrom data.table as.data.table `:=` .I
 #'
 #' @param LiP.data name of LiP Spectronaut output, which is long-format.
 #' @param TrP.data name of TrP Spectronaut output, which is long-format.

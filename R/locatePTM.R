@@ -10,7 +10,7 @@
 #' @param path a string of path pointing towards a fasta file
 #' @return a `tibble` of formatted FASTA information
 #' @examples
-#' tidyFasta("https://www.uniprot.org/uniprot/P02407.fasta")
+#' tidyFasta(system.file("extdata", "O13297.fasta", package="MSstatsLiP"))
 tidyFasta <- function(path) {
 
   # Check input
@@ -74,7 +74,7 @@ tidyFasta <- function(path) {
 #'   \code{site}.
 #'
 #' @examples
-#' fasta <- tidyFasta("https://www.uniprot.org/uniprot/O13297.fasta")
+#' fasta <- tidyFasta(system.file("extdata", "O13297.fasta", package="MSstatsLiP"))
 #' locatePTM("DRVSYIHNDSC*TR", "O13297", fasta, "C", "\\*")
 #'
 #' @export
