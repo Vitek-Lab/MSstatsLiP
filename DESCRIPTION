@@ -1,7 +1,7 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 0.99.0
+Version: 0.99.1
 Date: 2021-09-21
 Description: Tools for Post Translational Modification (PTM) and protein 
               significance analysis. Supports DDA, DIA, and tandem mass tag 
