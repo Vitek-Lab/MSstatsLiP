@@ -85,17 +85,14 @@ BarcodePlotLiP <- function(data,
             )
   }
 
-  ## Bring sequence into LiP data
-  sig.coverage <- model.data[adj.pvalue < adj.pvalue.cutoff &
-                               abs(log2FC) >= FC.cutoff, c("ProteinName",
-                                                 "PeptideSequence", "Label")]
-  sig.coverage$sig <- TRUE
-  insig.coverage <- model.data[adj.pvalue >= adj.pvalue.cutoff |
-                                 abs(log2FC) < FC.cutoff, c("ProteinName",
-                                                    "PeptideSequence", "Label")]
-  insig.coverage$sig <- FALSE
+  ## Calculate significance
+  model.data$sig <-  (model.data$adj.pvalue < adj.pvalue.cutoff &
+                        abs(model.data$log2FC) >= FC.cutoff)
 
-  coverage.df <- rbindlist(list(sig.coverage, insig.coverage))
+  coverage.df <- model.data[, c("ProteinName", "PeptideSequence",
+                                "Label", "sig")]
+
+  ## Bring sequence into LiP data
   coverage.df <- merge(coverage.df, formated_fasta, all.x = TRUE,
                        by.x = "ProteinName", by.y = "uniprot_iso")
 

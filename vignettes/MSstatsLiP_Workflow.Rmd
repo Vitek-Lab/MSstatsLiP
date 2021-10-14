@@ -34,7 +34,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("MSstatsLiP")
 ```
 
-```{r}
+```{r,include=TRUE,results="hide",message=FALSE,warning=FALSE}
 library(MSstatsLiP)
 library(tidyverse)
 library(data.table)
@@ -63,8 +63,9 @@ head(TrPRawData)
 
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
-                                              "../inst/extdata/ExampleFastaFile.fasta", 
-                                              TrPRawData)
+                                      "../inst/extdata/ExampleFastaFile.fasta", 
+                                      TrPRawData, use_log_file = FALSE, 
+                                      append = FALSE)
 
 head(MSstatsLiP_data[["LiP"]])
 head(MSstatsLiP_data[["TrP"]])
@@ -99,10 +100,16 @@ as input the formatted data from the converter.
 ``` {r}
 
 MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
-                                              MBimpute = FALSE)
+                                              MBimpute = FALSE, 
+                                              use_log_file = FALSE, 
+                                              append = FALSE)
 names(MSstatsLiP_Summarized[["LiP"]])
-head(MSstatsLiP_Summarized[["LiP"]]$ProteinLevelData)
-head(MSstatsLiP_Summarized[["TrP"]]$ProteinLevelData)
+
+lip_protein_data <- MSstatsLiP_Summarized[["LiP"]]$ProteinLevelData
+trp_protein_data <- MSstatsLiP_Summarized[["TrP"]]$ProteinLevelData
+
+head(lip_protein_data)
+head(trp_protein_data)
 
 ```
 
@@ -118,7 +125,8 @@ the results of experiments. Here we plot the number of half vs fully tryptic
 peptides per replicate.
 
 ``` {r}
-trypticHistogramLiP(MSstatsLiP_Summarized, "../inst/extdata/ExampleFastaFile.fasta",
+trypticHistogramLiP(MSstatsLiP_Summarized, 
+                    "../inst/extdata/ExampleFastaFile.fasta",
                     color_scale = "bright",
                     address = FALSE)
 ```
@@ -181,7 +189,6 @@ PCAPlotLiP(MSstatsLiP_Summarized,
            bar.plot = FALSE,
            protein.pca = FALSE,
            comparison.pca = TRUE,
-           #which.pep = c("Q99278_EIQLLDENVGTR", "P10592_AHFSNDRVDIIANDQGNR"),
            which.comparison = c("Ctrl", "Osmo"),
            address=FALSE)
 
@@ -190,7 +197,6 @@ PCAPlotLiP(MSstatsLiP_Summarized,
            protein.pca = TRUE,
            comparison.pca = FALSE,
            which.pep = c("P14164_ILQNDLK", "P17891_ALQLINQDDADIIGGRDR"),
-           #which.comparison = c("Ctrl", "Osmo"),
            address=FALSE)
 
 ```
@@ -203,17 +209,20 @@ dataframe with the ProteinName and PeptideSequence column.
 ``` {r}
 
 feature_data <- data.table::copy(MSstatsLiP_Summarized$LiP$FeatureLevelData)
-data.table::setnames(feature_data, c("PEPTIDE", "PROTEIN"), c("PeptideSequence", "ProteinName"))
-feature_data$PeptideSequence <- substr(feature_data$PeptideSequence, 
-                                       1, nchar(as.character(feature_data$PeptideSequence)) - 2)
+data.table::setnames(feature_data, c("PEPTIDE", "PROTEIN"), 
+                     c("PeptideSequence", "ProteinName"))
+feature_data$PeptideSequence <- substr(feature_data$PeptideSequence, 1, 
+                                       nchar(as.character(
+                                         feature_data$PeptideSequence)) - 2)
 
 calculateTrypticity(feature_data, "../inst/extdata/ExampleFastaFile.fasta")
 
 
 MSstatsLiP_Summarized$LiP$FeatureLevelData%>%
   rename(PeptideSequence=PEPTIDE, ProteinName=PROTEIN)%>%
-  mutate(PeptideSequence=substr(PeptideSequence, 1,nchar(as.character(PeptideSequence))-2))%>%
-calculateTrypticity("../inst/extdata/ExampleFastaFile.fasta")
+  mutate(PeptideSequence=substr(PeptideSequence, 1, 
+                                nchar(as.character(PeptideSequence))-2)
+         ) %>% calculateTrypticity("../inst/extdata/ExampleFastaFile.fasta")
 
   
 ```
@@ -228,13 +237,20 @@ summarization function dataSummarizationLiP.
 ```{r}
 
 MSstatsLiP_model <- groupComparisonLiP(MSstatsLiP_Summarized,
-                                       fasta = "../inst/extdata/ExampleFastaFile.fasta")
+                               fasta = "../inst/extdata/ExampleFastaFile.fasta",
+                               use_log_file = FALSE, 
+                               append = FALSE)
 
-head(MSstatsLiP_model[["LiP.Model"]])
-head(MSstatsLiP_model[["TrP.Model"]])
-head(MSstatsLiP_model[["Adjusted.LiP.Model"]])
+lip_model <- MSstatsLiP_model[["LiP.Model"]]
+trp_model <- MSstatsLiP_model[["TrP.Model"]]
+adj_lip_model <- MSstatsLiP_model[["Adjusted.LiP.Model"]]
 
-MSstatsLiP_model[["Adjusted.LiP.Model"]] %>% filter(adj.pvalue < .05) %>% nrow()
+head(lip_model)
+head(trp_model)
+head(adj_lip_model)
+
+## Number of significant adjusted lip peptides
+adj_lip_model %>% filter(adj.pvalue < .05) %>% nrow()
 
 ```
 
@@ -266,7 +282,7 @@ the path to a fasta file.
 
 ```{r}
 BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = c("P53235"),# FT.only = FALSE,
+               model_type = "Adjusted", which.prot = c("P53235"),
                address = FALSE)
 
 ```
