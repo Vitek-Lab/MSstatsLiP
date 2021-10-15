@@ -5,12 +5,67 @@
 \title{Converts raw LiP MS data from Skyline into the format needed for
 MSstatsLiP.}
 \usage{
-SkylinetoMSstatsLiPFormat(LiP.data, TrP.data = NULL)
+SkylinetoMSstatsLiPFormat(
+  LiP.data,
+  TrP.data = NULL,
+  annotation = NULL,
+  removeiRT = TRUE,
+  filter_with_Qvalue = TRUE,
+  qvalue_cutoff = 0.01,
+  useUniquePeptide = TRUE,
+  removeFewMeasurements = TRUE,
+  removeOxidationMpeptides = FALSE,
+  removeProtein_with1Feature = FALSE,
+  use_log_file = TRUE,
+  append = FALSE,
+  verbose = TRUE,
+  log_file_path = NULL
+)
 }
 \arguments{
-\item{LiP.data}{name of LiP Spectronaut output, which is long-format.}
+\item{LiP.data}{name of LiP Skyline output, which is long-format.}
 
-\item{TrP.data}{name of TrP Spectronaut output, which is long-format.}
+\item{TrP.data}{name of TrP Skyline output, which is long-format.}
+
+\item{annotation}{name of 'annotation.txt' data which includes Condition,
+BioReplicate, Run. If annotation is already complete in Skyline, use
+annotation=NULL (default). It will use the annotation information from input.}
+
+\item{removeiRT}{TRUE (default) will remove the proteins or peptides which
+are labeld 'iRT' in 'StandardType' column. FALSE will keep them.}
+
+\item{filter_with_Qvalue}{TRUE(default) will filter out the intensities that
+have greater than qvalue_cutoff in DetectionQValue column. Those intensities
+will be replaced with zero and will be considered as censored missing values
+for imputation purpose.}
+
+\item{qvalue_cutoff}{Cutoff for DetectionQValue. default is 0.01.}
+
+\item{useUniquePeptide}{TRUE (default) removes peptides that are assigned
+for more than one proteins. We assume to use unique peptide for each protein.}
+
+\item{removeFewMeasurements}{TRUE (default) will remove the features that
+have 1 or 2 measurements across runs.}
+
+\item{removeOxidationMpeptides}{TRUE will remove the peptides including
+'oxidation (M)' in modification. FALSE is default.}
+
+\item{removeProtein_with1Feature}{TRUE will remove the proteins which have
+only 1 feature, which is the combination of peptide, precursor charge,
+fragment and charge. FALSE is default.}
+
+\item{use_log_file}{logical. If TRUE, information about data processing will
+be saved to a file.}
+
+\item{append}{logical. If TRUE, information about data processing will be
+saved to a file.}
+
+\item{verbose}{logical. If TRUE, information about data processing wil be
+printed to the console.}
+
+\item{log_file_path}{character. Path to a file to which information about
+data processing will be saved. If not provided, such a file will be created
+automatically. If 'append = TRUE', has to be a valid path to a file.}
 }
 \value{
 a \code{list} of two data.frames in \code{MSstatsLiP} format
