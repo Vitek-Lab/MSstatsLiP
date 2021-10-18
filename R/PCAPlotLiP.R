@@ -18,6 +18,7 @@
 #' @importFrom factoextra fviz_eig fviz_pca_ind fviz_pca_var fviz_pca_biplot
 #' @importFrom gridExtra grid.arrange
 #' @importFrom ggpubr ggpar
+#' @importFrom stats prcomp
 #'
 #' @param data data name of the list with LiP and (optionally) Protein data, which
 #' can be the output of the MSstatsLiP.
@@ -77,8 +78,8 @@ PCAPlotLiP <- function(data,
                        height=10,
                        address=""){
 
-  ## TODO: Add input checks
-  ## TODO: Add logging
+
+  FULL_PEPTIDE <- Protein <- NULL
 
   ## Format Dataset
   lip.data <- data[["LiP"]]$ProteinLevelData
@@ -173,6 +174,8 @@ PCAPlotLiP <- function(data,
 #' results of PCA.
 #' @noRd
 calculate.pc <- function(data, center.pca, scale.pca){
+
+  Cond_rep <- LogIntensities <- FULL_PEPTIDE <- Protein <- NULL
 
   ## Create variables
   data$Cond_rep <- paste(data$GROUP_ORIGINAL,

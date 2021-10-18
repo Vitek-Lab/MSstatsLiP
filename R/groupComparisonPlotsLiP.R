@@ -108,6 +108,8 @@ groupComparisonPlotsLiP <- function(data = data,
                                     which.Protein=NULL,
                                     address="") {
 
+  FULL_PEPTIDE <- Protein <- NULL
+
   ## Format into PTM
   LiP.model <- data[['LiP.Model']]
   LiP.model <- as.data.table(LiP.model)
@@ -120,9 +122,10 @@ groupComparisonPlotsLiP <- function(data = data,
     LiP.model <- LiP.model[ProteinName %in% which.Protein]
   }
 
-  keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
-             "Tvalue", "DF", "pvalue", "adj.pvalue")
-  LiP.model <- LiP.model[, ..keep]
+  # keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
+  #            "Tvalue", "DF", "pvalue", "adj.pvalue")
+  LiP.model <- LiP.model[, c("FULL_PEPTIDE", "Label", "log2FC", "SE",
+                               "Tvalue", "DF", "pvalue", "adj.pvalue")]
   LiP.model <- cbind(data.table(Protein = LiP.model$FULL_PEPTIDE), LiP.model)
   LiP.model[, FULL_PEPTIDE := NULL]
 
@@ -134,9 +137,11 @@ groupComparisonPlotsLiP <- function(data = data,
       Adjusted.model <- Adjusted.model[ProteinName %in% which.Protein]
     }
 
-    adjusted.keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
-              "Tvalue", "DF", "pvalue", "adj.pvalue", "ProteinName")
-    Adjusted.model <- Adjusted.model[, ..adjusted.keep]
+    # adjusted.keep <- c("FULL_PEPTIDE", "Label", "log2FC", "SE",
+    #           "Tvalue", "DF", "pvalue", "adj.pvalue", "ProteinName")
+    Adjusted.model <- Adjusted.model[, c("FULL_PEPTIDE", "Label", "log2FC",
+                                         "SE", "Tvalue", "DF", "pvalue",
+                                         "adj.pvalue", "ProteinName")]
     setnames(Adjusted.model, c("FULL_PEPTIDE", "ProteinName"),
                              c("Protein", "GlobalProtein"))
 

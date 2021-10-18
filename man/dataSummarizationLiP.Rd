@@ -27,8 +27,8 @@ dataSummarizationLiP(
   remove50missing = FALSE,
   fix_missing = NULL,
   maxQuantileforCensored = 0.999,
-  use_log_file = TRUE,
-  append = TRUE,
+  use_log_file = FALSE,
+  append = FALSE,
   verbose = TRUE,
   log_file_path = NULL,
   base = "MSstatsLiP_log_"

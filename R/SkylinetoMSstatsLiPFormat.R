@@ -54,7 +54,7 @@ SkylinetoMSstatsLiPFormat <- function(LiP.data,
                                       removeFewMeasurements = TRUE,
                                       removeOxidationMpeptides = FALSE,
                                       removeProtein_with1Feature = FALSE,
-                                      use_log_file = TRUE,
+                                      use_log_file = FALSE,
                                       append = FALSE,
                                       verbose = TRUE,
                                       log_file_path = NULL){

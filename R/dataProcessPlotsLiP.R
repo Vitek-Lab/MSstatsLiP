@@ -89,6 +89,8 @@ dataProcessPlotsLiP <- function(data,
                                 address = "") {
 
 
+  PROTEIN <- Protein <- FULL_PEPTIDE <- NULL
+
   ## Filter for all PTMs in one protein
   if (!is.null(which.Protein)){
 

@@ -1,7 +1,7 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 0.99.4
+Version: 0.99.5
 Date: 2021-10-14
 Description: Tools for LiP peptide and protein significance analysis. Provides 
               functions for summarization, estimation of LiP peptide abundance, 
@@ -19,7 +19,7 @@ License: Artistic-2.0
 Depends: R (>= 4.1)
 Imports: dplyr, gridExtra, stringr, ggplot2, grDevices, MSstats, MSstatsConvert,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, factoextra, 
-          ggpubr, purrr, tibble, tidyr, tidyverse, scales
+          ggpubr, purrr, tibble, tidyr, tidyverse, scales, stats
 Suggests: BiocStyle, knitr, rmarkdown, covr, tinytest
 LinkingTo: Rcpp
 VignetteBuilder: knitr

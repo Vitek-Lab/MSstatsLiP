@@ -51,11 +51,13 @@
 groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                                fasta.path = NULL,
                                log_base = 2,
-                               use_log_file = TRUE,
+                               use_log_file = FALSE,
                                append = FALSE,
                                verbose = TRUE,
                                log_file_path = NULL,
                                base = "MSstatsLiP_log_"){
+
+  PEPTIDE <- Protein <- GlobalProtein <- NULL
 
   ## Start log
   if (is.null(log_file_path) & use_log_file == TRUE){

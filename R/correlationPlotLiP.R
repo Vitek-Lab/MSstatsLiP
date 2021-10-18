@@ -4,6 +4,7 @@
 #' @import ggplot2
 #' @importFrom data.table data.table as.data.table `:=` melt
 #' @importFrom grDevices dev.off pdf
+#' @importFrom stats cor
 #'
 #' @param data output of MSstatsLiP converter function. Must include at least
 #' ProteinName, Run, and Intensity columns
@@ -40,6 +41,7 @@ correlationPlotLiP <- function(data,
                                height = 10,
                                address = ""){
 
+  SUBJECT <- variable2 <- variable <- value <- NULL
 
   lip_data <- data$LiP$FeatureLevelData[, c("SUBJECT", value_columns),
                                         with = FALSE]

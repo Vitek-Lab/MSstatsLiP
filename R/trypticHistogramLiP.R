@@ -38,6 +38,7 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
                                 color_scale = "bright",
                                 address = "") {
 
+  . <- GROUP <- SUBJECT <- fully_TRI <- percent_plot <- NULL
 
   ## Format input data
   lip.data <- copy(data[["LiP"]]$FeatureLevelData)
