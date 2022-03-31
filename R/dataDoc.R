@@ -221,3 +221,32 @@
 #' head(MSstatsLiP_model$Adjusted.LiP.Model)
 #'
 'MSstatsLiP_model'
+
+#' SkylineTest
+#'
+#' Example of input data from Skylinet.
+#'
+#' Input to MSstatsLiP converter SkylinetoMSstatsLiPFormat
+#' Contains the following columns:
+#'
+#' \itemize{
+#'   \item Protein.Name : Name of Proteins identified by Skyline
+#'   \item Peptide.Modified.Sequence : Peptide sequence
+#'   \item Precursor.Charge : Charge of ion
+#'   \item Fragment.Ion : Fragment ion
+#'   \item Product.Charge : Identified Ion charge
+#'   \item Isotope.Label.Type : Label Type
+#'   \item Condition : Name of condition
+#'   \item BioReplicate : name of bioreplicate annotated to data
+#'   \item File.Name : Name of spectral processing run
+#'   \item Area : Abudance area
+#'   \item Standard.Type : Type name for row
+#'   \item Truncated : Boolean if row was truncated
+#' }
+#'
+#' @format A data.table consisting of 2115 rows and 13 columns. Raw data
+#' for use in testing and examples.
+#' @examples
+#' head(SkylineTest)
+#'
+'SkylineTest'

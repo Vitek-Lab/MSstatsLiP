@@ -1,24 +1,25 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 0.0.9
-Date: 2021-09-21
-Description: Tools for Post Translational Modification (PTM) and protein 
-              significance analysis. Supports DDA, DIA, and tandem mass tag 
-              (TMT) labeling. Provides functions for summarization, estimation 
-              of PTM site abundance, and detection of changes in PTMs across 
-              conditions. 
+Version: 0.99.5
+Date: 2021-10-14
+Description: Tools for LiP peptide and protein significance analysis. Provides 
+              functions for summarization, estimation of LiP peptide abundance, 
+              and detection of changes across conditions. Utilizes functionality
+              across the MSstats family of packages.
 Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
             person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
             person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
             person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
           	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
+            person("Valentina", "Cappelletti", email = "valentina.cappelletti@imsb.biol.ethz.ch", role="aut"),
+            person("Liliana", "Malinovska", email = "malinovska@imsb.biol.ethz.ch", role="aut"),
           	person("Olga", "Vitek", email = "o.vitek@northeastern.edu", role = "aut"))
 License: Artistic-2.0
 Depends: R (>= 4.1)
 Imports: dplyr, gridExtra, stringr, ggplot2, grDevices, MSstats, MSstatsConvert,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, factoextra, 
-          ggpubr, purrr, tibble, tidyr, tidyverse, scales
+          ggpubr, purrr, tibble, tidyr, tidyverse, scales, stats
 Suggests: BiocStyle, knitr, rmarkdown, covr, tinytest
 LinkingTo: Rcpp
 VignetteBuilder: knitr
@@ -28,4 +29,4 @@ BugReports: https://github.com/Vitek-Lab/MSstatsLiP/issues
 Encoding: UTF-8
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

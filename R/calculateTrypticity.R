@@ -40,17 +40,14 @@ calculateTrypticity <- function(LiP_data, fasta_file){
                                combined_df$end + 1, combined_df$sequence)
 
   ## Determine trip
-  combined_df$fully_TRI <- ifelse(combined_df$preAA %in% c("K", "R") &
-                                    combined_df$endAA %in% c("K", "R"),
-                                  TRUE, FALSE)
-  combined_df$NSEMI_TRI <- ifelse(combined_df$preAA %in% c("K", "R") &
-                                    !combined_df$endAA %in% c("K", "R"),
-                                  TRUE, FALSE)
-  combined_df$CSEMI_TRI <- ifelse(!combined_df$preAA %in% c("K", "R") &
-                                    combined_df$endAA %in% c("K", "R"),
-                                  TRUE, FALSE)
-  combined_df$CTERMINUS <- ifelse(combined_df$postAA == "", TRUE, FALSE)
-  combined_df$NTERMINUS <- ifelse(combined_df$start == 1, TRUE, FALSE)
+  combined_df$fully_TRI <- (combined_df$preAA %in% c("K", "R") &
+                                    combined_df$endAA %in% c("K", "R"))
+  combined_df$NSEMI_TRI <- (combined_df$preAA %in% c("K", "R") &
+                                    !combined_df$endAA %in% c("K", "R"))
+  combined_df$CSEMI_TRI <- (!combined_df$preAA %in% c("K", "R") &
+                                    combined_df$endAA %in% c("K", "R"))
+  combined_df$CTERMINUS <- combined_df$postAA == ""
+  combined_df$NTERMINUS <- combined_df$start == 1
   combined_df$StartPos <- combined_df$start
   combined_df$EndPos <- combined_df$end
 

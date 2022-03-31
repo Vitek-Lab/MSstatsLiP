@@ -1,5 +1,6 @@
 
 data("summarized_data", package = "MSstatsLiP")
+data("model_data", package = "MSstatsLiP")
 
 ## trypticHistogramLiP testing
 expect_error(trypticHistogramLiP())
@@ -38,3 +39,60 @@ expect_error(correlationPlotLiP(MSstatsLiP_Summarized, value_columns = FALSE))
 
 ## Normal plotting
 expect_silent(correlationPlotLiP(MSstatsLiP_Summarized, address = FALSE))
+
+## BarcodePlotLiP
+## Test normal plot
+expect_silent(BarcodePlotLiP(MSstatsLiP_model,
+               "../extdata/ExampleFastaFile.fasta",
+               address = FALSE))
+
+## Test single protein
+expect_silent(BarcodePlotLiP(MSstatsLiP_model,
+                            "../extdata/ExampleFastaFile.fasta",
+                            which.prot = "P36112"))
+
+## Parameter checking
+expect_error(BarcodePlotLiP(MSstatsLiP_model,
+                             "../extdata/ExampleFastaFile.fasta",
+                            model_type = "test"))
+expect_error(BarcodePlotLiP(MSstatsLiP_model,
+                            "../extdata/ExampleFastaFile.fasta",
+                            which.prot = "test"))
+expect_error(BarcodePlotLiP(MSstatsLiP_model,
+                            "../extdata/ExampleFastaFile.fasta",
+                            which.comp = "test"))
+expect_error(BarcodePlotLiP(MSstatsLiP_model,
+                            "../extdata/ExampleFastaFile.fasta",
+                            FT.only = "test"))
+
+## PCAPlotLiP
+## Test normal plot
+expect_silent(PCAPlotLiP(MSstatsLiP_Summarized, address = FALSE))
+
+## Test individual plots
+expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
+                         which.comparison = c("Ctrl", "Osmo"),
+                         address = FALSE))
+expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
+                         which.pep = c("P14164_ILQNDLK",
+                                       "P17891_ALQLINQDDADIIGGRDR"),
+                         address = FALSE))
+
+## Parameter checking
+expect_error(PCAPlotLiP(MSstatsLiP_Summarized,
+                        bar.plot = "test",
+                        address = FALSE))
+expect_error(PCAPlotLiP(MSstatsLiP_Summarized,
+                        protein.pca = "test",
+                        address = FALSE))
+expect_error(PCAPlotLiP(MSstatsLiP_Summarized,
+                        comparison.pca = "test",
+                        address = FALSE))
+expect_error(PCAPlotLiP(MSstatsLiP_Summarized,
+                        which.pep = "test",
+                        address = FALSE))
+expect_error(PCAPlotLiP(MSstatsLiP_Summarized,
+                        which.comparison = "test",
+                        address = FALSE))
+
+

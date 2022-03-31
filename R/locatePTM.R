@@ -132,31 +132,6 @@ locatePTM <- function(peptide, uniprot, fasta, modResidue, modSymbol,
 }
 
 #' @noRd
-.locateCheck <- function(peptide, uniprot, fasta, modResidue, modSymbol) {
-  if (missing(peptide))
-    stop("Input peptide is missing!")
-  if (missing(uniprot))
-    stop("Input uniprot is missing!")
-  if (missing(fasta))
-    stop("Input fasta is missing!")
-  if (missing(modResidue))
-    stop("Input modResidue is missing!")
-  if (missing(modSymbol))
-    stop("Input modSymbol is missing!")
-  if (!is.character(peptide))
-    stop("Please provide peptide sequence as character in peptide!")
-  if (!is.character(uniprot))
-    stop("Please provide Uniprot protein ID as character in uniprot!")
-  if (length(peptide) != length(uniprot))
-    stop("peptide and uniprot must be of the same length")
-  if (!is.data.frame(fasta))
-    stop("Please provide the FASTA information in a data frame!")
-  if (!all(c("uniprot_iso", "sequence") %in% names(fasta)))
-    stop("Uniprot_iso or sequence is missing from FASTA data frame!")
-  TRUE
-}
-
-#' @noRd
 #' @importFrom dplyr group_by mutate ungroup bind_rows
 .rmConfounded <- function(peptideFasta, rmConfound) {
   # Handle confounded unmodified sites

@@ -10,7 +10,7 @@ groupComparisonLiP(
   contrast.matrix = "pairwise",
   fasta.path = NULL,
   log_base = 2,
-  use_log_file = TRUE,
+  use_log_file = FALSE,
   append = FALSE,
   verbose = TRUE,
   log_file_path = NULL,
