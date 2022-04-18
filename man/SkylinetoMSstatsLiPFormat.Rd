@@ -9,6 +9,7 @@ SkylinetoMSstatsLiPFormat(
   LiP.data,
   TrP.data = NULL,
   annotation = NULL,
+  msstats_format = FALSE,
   removeiRT = TRUE,
   filter_with_Qvalue = TRUE,
   qvalue_cutoff = 0.01,
@@ -30,6 +31,11 @@ SkylinetoMSstatsLiPFormat(
 \item{annotation}{name of 'annotation.txt' data which includes Condition,
 BioReplicate, Run. If annotation is already complete in Skyline, use
 annotation=NULL (default). It will use the annotation information from input.}
+
+\item{msstats_format}{logical indicating how the data was output from
+Skyline. FALSE (default) indicates that standard Skyline output was selected.
+TRUE should be selected if the Skyline data was output using the MSstats
+format option in Skyline.}
 
 \item{removeiRT}{TRUE (default) will remove the proteins or peptides which
 are labeld 'iRT' in 'StandardType' column. FALSE will keep them.}

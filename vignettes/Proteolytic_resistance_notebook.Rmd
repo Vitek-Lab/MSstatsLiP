@@ -63,13 +63,13 @@ raw_lip <- read_delim(file=choose.files(caption="Choose LiP dataset"),
                          delim=",", escape_double = FALSE, trim_ws = TRUE)
 ```
 
-```{r load TrP data, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE, eval = FALSE}
+```{r load TrP data, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 
 raw_prot <- read_delim(file=choose.files(caption="Choose TrP dataset"), 
                           delim=",", escape_double = FALSE, trim_ws = TRUE)
 ```
 
-```{r Adjust aSynuclein nomenclature to match fasta file, echo=TRUE, message=FALSE, warning=FALSE,include=TRUE}
+```{r Adjust aSynuclein nomenclature to match fasta file, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 raw_lip <- raw_lip %>% mutate_all(funs(ifelse(.=="P37840.1", "P37840", .)))
 raw_prot <- raw_prot %>% mutate_all(funs(ifelse(.=="P37840.1", "P37840", .)))
 ```
@@ -80,6 +80,10 @@ Load the fasta file that was used in the Spectronaut search.
 fasta_file=choose.files(caption = "Choose FASTA file")
 ```
 
+```{r include=FALSE}
+fasta_file = "../inst/extdata/proteolytic_fasta_data.fasta"
+```
+
 Convert the data to MSstatsLiP format. Load first the LiP data set `raw_lip`, then the FASTA file `fasta_file` used for searches. If the experiment contains TrP data, `raw_prot` is loaded last.
 
 To remove information on iRT peptides, the default setting is `removeiRT = TRUE`. As default, peptides containing modifications are filtered, but this can be changed using the argument `removeModifications`. Also, peptides with multiple protein annotations are filtered as default. However, for data sets containing protein isoforms, this argument can be set to `removeNonUniqueProteins = FALSE`.
@@ -87,7 +91,7 @@ To remove information on iRT peptides, the default setting is `removeiRT = TRUE`
 The default settings use *PeakArea* as measure of intensity, filter features based on the q-value, with a q-value cut-off of 0.01 and import all conditions. You can adjust the settings accordingly. For information on each option, refer to the vignette of the function.
 
 ```{r convert to MSstatsLiP format, message=FALSE, warning=FALSE,echo=TRUE,include=TRUE}
-msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, fasta_file,raw_prot)
+msstats_data <- SpectronauttoMSstatsLiPFormat(raw_lip, fasta_file, raw_prot)
 ```
 
 ## 2.2 Select only fully tryptic (FT) peptides in both LiP and TrP dataset
@@ -100,22 +104,17 @@ FullyTrP <- msstats_data[["LiP"]] %>%
   distinct(ProteinName, PeptideSequence) %>% 
   calculateTrypticity(fasta_file) %>% 
   filter(fully_TRI) %>% 
-  select(ProteinName, PeptideSequence, StartPos, EndPos) %>% 
-  group_by(ProteinName) %>% 
-  mutate(ProteinName2 = str_c(ProteinName, 1:n(), sep = "**")) %>% 
-  ungroup()
+  select(ProteinName, PeptideSequence, StartPos, EndPos)
 ```
 
 ```{r select FT peptides in LiP data, echo=TRUE, message=FALSE, warning=FALSE,include=TRUE}
 msstats_data[["LiP"]] <- msstats_data[["LiP"]] %>% 
-  select(-ProteinName) %>% 
-  inner_join(FullyTrP %>% select(ProteinName = ProteinName2, PeptideSequence, StartPos, EndPos))
+  select(-ProteinName) %>% inner_join(FullyTrP)
 ```
 
 ```{r select FT peptides in TrP data, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 msstats_data[["TrP"]] <- msstats_data[["TrP"]] %>% 
-  select(-ProteinName) %>% 
-  inner_join(FullyTrP %>% select(ProteinName = ProteinName2, PeptideSequence, StartPos, EndPos))
+  select(-ProteinName) %>% inner_join(FullyTrP)
 ```
 
 ## 2.3 Correct nomenclature
@@ -176,6 +175,24 @@ This function will take some time and memory. If memory is limited, it is advisa
 
 ```{r Data summarization, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
 MSstatsLiP_Summarized <- dataSummarizationLiP(msstats_data, normalization.LiP = "equalizeMedians")
+
+results = calculateProteolyticResistance(MSstatsLiP_Summarized, fasta_file, differential_analysis = TRUE)
+results$RunLevelData
+results$groupComparison
+
+ResistanceBarcodePlotLiP(results,
+                           fasta_file,
+                           which.prot = "P16622",
+                           which.condition = "F1",
+                           differential_analysis = TRUE,
+                           which.comp = "F1 vs F2",
+                           address = FALSE)
+
+StructuralBarcodePlotLiP(results$groupComparison, 
+                         "../inst/extdata/ExampleFastaFile.fasta", 
+                         model_type = "Adjusted", which.prot = c("P53858"),
+                         address = FALSE)
+
 ```
 
 Inspect `MSstatsLiP_Summarized`. 
@@ -201,6 +218,7 @@ Run the modeling to obtain significantly altered peptides and proteins. The func
 
 ```{r Modelling, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
 MSstatsLiP_model = groupComparisonLiP(MSstatsLiP_Summarized)
+
 ```
 
 Inspect `MSstatsLiP_model`. 
@@ -361,7 +379,7 @@ log2FC.cutoff=1
 
 P37840%>%
   mutate(significant=case_when(log2FC>log2FC.cutoff&adj.pvalue<adj.pvalue.cutoff~"Yes,UP",
-                               log2FC< -log2FC.cutoff&adj.pvalue<adj.pvalue.cutoff~"Yes,DOWN",TRUE~"No"))%>%
+                               log2FC< -log2FC.cutoff&adj.pvalue<adj.pvalue.cutoff~"Yes,DOWN",TRUE~"No")) %>%
   print() %>%
   ggplot()+
   geom_rect(aes(ymin=61, ymax=95, xmin=0.85, xmax=1.15), fill = NA,color=1)+

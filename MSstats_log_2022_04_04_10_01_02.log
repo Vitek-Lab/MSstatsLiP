@@ -1,4 +1,0 @@
-INFO  [2022-04-04 10:01:02] ** Raw data from Skyline imported successfully.
-INFO  [2022-04-04 10:01:02] ** Raw data from Skyline cleaned successfully.
-INFO  [2022-04-04 10:01:02] ** Using annotation extracted from quantification data.
-ERROR [2022-04-04 10:01:02] ** Columns Run, Condition, BioReplicate missing in the annotation. Please check the annotation file.

@@ -40,8 +40,9 @@ changes in protein abundance.
 analysis and summarization.
 \item \code{\link{PCAPlotLiP}} : Runs PCA on the summarized data. Can
 visualize the PCA analysis in three different plots.
-\item \code{\link{BarcodePlotLiP}} :  Shows protein coverage of LiP
-modified peptides. Shows significant, insignificant, and missing coverage.
+\item \code{\link{StructuralBarcodePlotLiP}} :  Shows protein coverage of
+LiP modified peptides. Shows significant, insignificant, and missing
+coverage.
 }
 }
 
