@@ -126,8 +126,10 @@ ResistanceBarcodePlotLiP = function(data,
   #
   if (differential_analysis  == TRUE){
     model.data = data$groupComparison
+    # model.data = model.data[is.finite(model.data$log2FC), ]
     model.data$sig = (model.data$adj.pvalue < adj.pvalue.cutoff &
-                          abs(model.data$log2FC) >= FC.cutoff)
+                        abs(model.data$log2FC) >= FC.cutoff & 
+                        is.finite(model.data$log2FC))
 
     coverage.df = model.data[, c("Protein", "PeptideSequence",
                                   "Label", "sig")]

@@ -10,8 +10,10 @@ ResistanceBarcodePlotLiP(
   fasta,
   which.prot = "all",
   which.condition = "all",
-  differential_analysis = data.frame(),
+  differential_analysis = FALSE,
   which.comp = "all",
+  adj.pvalue.cutoff = 0.05,
+  FC.cutoff = 0,
   width = 12,
   height = 4,
   address = ""
