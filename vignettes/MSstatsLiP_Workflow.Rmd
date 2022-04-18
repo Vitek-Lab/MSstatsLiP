@@ -281,9 +281,10 @@ LiP and TrP peptides. This function requires the data in MSstatsLiP format and
 the path to a fasta file.
 
 ```{r}
-BarcodePlotLiP(MSstatsLiP_model, "../inst/extdata/ExampleFastaFile.fasta", 
-               model_type = "Adjusted", which.prot = c("P53235"),
-               address = FALSE)
+StructuralBarcodePlotLiP(MSstatsLiP_model, 
+                         "../inst/extdata/ExampleFastaFile.fasta", 
+                         model_type = "Adjusted", which.prot = c("P53858"),
+                         address = FALSE)
 
 ```
 

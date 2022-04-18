@@ -12,6 +12,10 @@
 #' @param annotation name of 'annotation.txt' data which includes Condition,
 #' BioReplicate, Run. If annotation is already complete in Skyline, use
 #' annotation=NULL (default). It will use the annotation information from input.
+#' @param msstats_format logical indicating how the data was output from
+#' Skyline. FALSE (default) indicates that standard Skyline output was selected.
+#' TRUE should be selected if the Skyline data was output using the MSstats
+#' format option in Skyline.
 #' @param removeiRT TRUE (default) will remove the proteins or peptides which
 #' are labeld 'iRT' in 'StandardType' column. FALSE will keep them.
 #' @param filter_with_Qvalue TRUE(default) will filter out the intensities that
@@ -47,6 +51,7 @@
 SkylinetoMSstatsLiPFormat <- function(LiP.data,
                                       TrP.data = NULL,
                                       annotation = NULL,
+                                      msstats_format = FALSE,
                                       removeiRT = TRUE,
                                       filter_with_Qvalue = TRUE,
                                       qvalue_cutoff = 0.01,
@@ -59,23 +64,34 @@ SkylinetoMSstatsLiPFormat <- function(LiP.data,
                                       verbose = TRUE,
                                       log_file_path = NULL){
 
-  LiP.data <- as.data.table(LiP.data)
+  LiP.data = as.data.table(LiP.data)
 
-  LiP.Skyline <- SkylinetoMSstatsFormat(LiP.data, annotation, removeiRT,
+  if (msstats_format){
+    LiP.data$Run = LiP.data$Replicate.Name
+    LiP.Skyline = LiP.data
+  }
+  else {
+    LiP.Skyline = SkylinetoMSstatsFormat(LiP.data, annotation, removeiRT,
                                         filter_with_Qvalue,
                          qvalue_cutoff, useUniquePeptide,
                          removeFewMeasurements, removeOxidationMpeptides,
                          removeProtein_with1Feature, use_log_file,
                          append, verbose, log_file_path)
+  }
 
-  LiP.Skyline$FULL_PEPTIDE <- paste(LiP.Skyline$ProteinName,
+  LiP.Skyline$FULL_PEPTIDE = paste(LiP.Skyline$ProteinName,
                                     LiP.Skyline$PeptideSequence, sep = "_")
 
 
   if (!is.null(TrP.data)){
-    TrP.data <- as.data.table(TrP.data)
+    TrP.data = as.data.table(TrP.data)
 
-    TrP.Skyline <- SkylinetoMSstatsFormat(TrP.data, annotation, removeiRT,
+    if (msstats_format){
+      TrP.data$Run = TrP.data$Replicate.Name
+      TrP.Skyline = TrP.data
+    }
+    else {
+      TrP.Skyline = SkylinetoMSstatsFormat(TrP.data, annotation, removeiRT,
                                           filter_with_Qvalue,
                                           qvalue_cutoff, useUniquePeptide,
                                           removeFewMeasurements,
@@ -83,9 +99,10 @@ SkylinetoMSstatsLiPFormat <- function(LiP.data,
                                           removeProtein_with1Feature,
                                           use_log_file,
                                           append, verbose, log_file_path)
+    }
 
   } else {
-    TrP.Skyline <- NULL
+    TrP.Skyline = NULL
   }
 
   return(list(LiP = LiP.Skyline, TrP = TrP.Skyline))

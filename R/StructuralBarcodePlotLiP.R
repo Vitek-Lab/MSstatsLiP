@@ -15,7 +15,7 @@
 #' @param which.prot a list of peptides to be visualized. Default is "all" which
 #' will plot a separate barcode plot for each protein.
 #' @param which.comp a list of comparisons to be visualized. Default is "all"
-#' which will plot a separate barcode plot for each condition and protein.
+#' which will plot a separate barcode plot for each comparison and protein.
 #' @param adj.pvalue.cutoff Defualt is .05. Alpha value for testing significance
 #' of model output.
 #' @param FC.cutoff Default is 0. Minimum absolute FC before a comparison will
@@ -41,7 +41,7 @@
 #'               model_type = "Adjusted",
 #'               address=FALSE)
 #'
-BarcodePlotLiP <- function(data,
+StructuralBarcodePlotLiP <- function(data,
                            fasta,
                            model_type = "Adjusted",
                            which.prot = "all",
@@ -69,6 +69,9 @@ BarcodePlotLiP <- function(data,
 
   if (FT.only){
     model.data <- model.data[fully_TRI == TRUE]
+  } else {
+    model.data <- model.data[fully_TRI == TRUE | NSEMI_TRI == TRUE |
+                               CSEMI_TRI == TRUE]
   }
 
   formated_fasta <- tidyFasta(fasta)
