@@ -34,7 +34,7 @@ will plot a separate barcode plot for each protein.}
 \item{which.comp}{a list of comparisons to be visualized. Default is "all"
 which will plot a separate barcode plot for each comparison and protein.}
 
-\item{adj.pvalue.cutoff}{Defualt is .05. Alpha value for testing significance
+\item{adj.pvalue.cutoff}{Default is .05. Alpha value for testing significance
 of model output.}
 
 \item{FC.cutoff}{Default is 0. Minimum absolute FC before a comparison will
@@ -66,8 +66,8 @@ Barcode plot. Shows protein coverge of LiP modified peptides.
 fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
 # Use model data to create Barcode Plot
-BarcodePlotLiP(MSstatsLiP_model, fasta_path,
-              model_type = "Adjusted",
-              address=FALSE)
+StructuralBarcodePlotLiP(MSstatsLiP_model, fasta_path,
+                         model_type = "Adjusted",
+                         address=FALSE)
 
 }

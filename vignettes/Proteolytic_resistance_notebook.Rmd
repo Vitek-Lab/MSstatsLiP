@@ -5,7 +5,7 @@ author: Valentina Cappelletti (<cappelletti@imsb.biol.ethz.ch>),
   Devon Kohler (<kohler.d@northeastern.edu>)
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{MSstatsLiP Workflow: An example workflow and analysis of the MSstatsLiP package}
+  %\VignetteIndexEntry{MSstatsLiP Proteolytic Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 output:

@@ -250,3 +250,95 @@
 #' head(SkylineTest)
 #'
 'SkylineTest'
+
+#' raw_lip
+#'
+#' A different example of input LiP dataset.
+#'
+#' Input to MSstatsLiP converter SpectronauttoMSstatsLiPFormat.
+#' Contains the following columns:
+#'
+#' \itemize{
+#'   \item R.Condition : Label of conditions (EG Disease/Control)
+#'   \item R.FileName : Name of spectral processing run
+#'   \item R.Replicate : Name of biological replicate
+#'   \item PG.ProteinAccessions : Protein name
+#'   \item PG.ProteinGroups : Protein name, can be multiple
+#'   \item PG.Quantity : Protein Quantity
+#'   \item PEP.GroupingKey : Peptide grouping
+#'   \item PEP.StrippedSequence : Peptide sequence
+#'   \item PEP.Quantity : Peptide quantity
+#'   \item EG.iRTPredicted : Predicted value
+#'   \item EG.Library : Name of library
+#'   \item EG.ModifiedSequence : Peptide sequence including any post-translational modifications
+#'   \item EG.PrecursorId : Peptide sequence wiht modifications including charge
+#'   \item EG.Qvalue : Qvalue
+#'   \item FG.Charge : Identified Ion charge
+#'   \item FG.Id : Peptide sequence with charge
+#'   \item FG.PrecMz : Prec Mz reading
+#'   \item FG.Quantity : Initial quantity reading
+#'   \item F.Charge : F.Charge
+#'   \item F.FrgIon : Fragment ion
+#'   \item F.FrgLossType : Label for loss type
+#'   \item F.FrgMz : Mz reading
+#'   \item F.FrgNum : numeric Frg
+#'   \item F.FrgType : character label for Frg
+#'   \item F.ExcludedFromQuantification : True/False boolean for if to exclude
+#'   \item F.NormalizedPeakArea : Normalized peak intensity
+#'   \item F.NormalizedPeakHeight : Normalized peak height
+#'   \item F.PeakArea : Unnormalized peak area
+#'   \item F.PeakHeight : Unnormalized peak height
+#' }
+#'
+#' @format A data.table consisting of 6,944 rows and 29 columns. Raw LiP data for use in testing
+#' and examples.
+#' @examples
+#' head(raw_lip)
+#'
+'raw_lip'
+
+#' raw_prot
+#'
+#' Example of input TrP dataset.
+#'
+#' Input to MSstatsLiP converter SpectronauttoMSstatsLiPFormat.
+#' Contains the following columns:
+#'
+#' \itemize{
+#'   \item R.Condition : Label of conditions (EG Disease/Control)
+#'   \item R.FileName : Name of spectral processing run
+#'   \item R.Replicate : Name of biological replicate
+#'   \item PG.ProteinAccessions : Protein name
+#'   \item PG.ProteinGroups : Protein name, can be multiple
+#'   \item PG.Quantity : Protein Quantity
+#'   \item PEP.GroupingKey : Peptide grouping
+#'   \item PEP.StrippedSequence : Peptide sequence
+#'   \item PEP.Quantity : Peptide quantity
+#'   \item EG.iRTPredicted : Predicted value
+#'   \item EG.Library : Name of library
+#'   \item EG.ModifiedSequence : Peptide sequence including any post-translational modifications
+#'   \item EG.PrecursorId : Peptide sequence wiht modifications including charge
+#'   \item EG.Qvalue : Qvalue
+#'   \item FG.Charge : Identified Ion charge
+#'   \item FG.Id : Peptide sequence with charge
+#'   \item FG.PrecMz : Prec Mz reading
+#'   \item FG.Quantity : Initial quantity reading
+#'   \item F.Charge : F.Charge
+#'   \item F.FrgIon : Fragment ion
+#'   \item F.FrgLossType : Label for loss type
+#'   \item F.FrgMz : Mz reading
+#'   \item F.FrgNum : numeric Frg
+#'   \item F.FrgType : character label for Frg
+#'   \item F.ExcludedFromQuantification : True/False boolean for if to exclude
+#'   \item F.NormalizedPeakArea : Normalized peak intensity
+#'   \item F.NormalizedPeakHeight : Normalized peak height
+#'   \item F.PeakArea : Unnormalized peak area
+#'   \item F.PeakHeight : Unnormalized peak height
+#' }
+#'
+#' @format A data.table consisting of 9,120 rows and 29 columns. Raw TrP data for use in testing
+#' and examples.
+#' @examples
+#' head(raw_prot)
+#'
+'raw_prot'

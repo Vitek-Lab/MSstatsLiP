@@ -16,7 +16,7 @@
 #' will plot a separate barcode plot for each protein.
 #' @param which.comp a list of comparisons to be visualized. Default is "all"
 #' which will plot a separate barcode plot for each comparison and protein.
-#' @param adj.pvalue.cutoff Defualt is .05. Alpha value for testing significance
+#' @param adj.pvalue.cutoff Default is .05. Alpha value for testing significance
 #' of model output.
 #' @param FC.cutoff Default is 0. Minimum absolute FC before a comparison will
 #' be considered significant.
@@ -37,9 +37,9 @@
 #' fasta_path <- system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 #'
 #' # Use model data to create Barcode Plot
-#' BarcodePlotLiP(MSstatsLiP_model, fasta_path,
-#'               model_type = "Adjusted",
-#'               address=FALSE)
+#' StructuralBarcodePlotLiP(MSstatsLiP_model, fasta_path,
+#'                          model_type = "Adjusted",
+#'                          address=FALSE)
 #'
 StructuralBarcodePlotLiP <- function(data,
                            fasta,
