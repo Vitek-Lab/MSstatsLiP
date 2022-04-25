@@ -33,9 +33,20 @@ will plot a separate barcode plot for each protein.}
 "all" which will plot all conditions for a single protein in the same barcode
 plot.}
 
+\item{differential_analysis}{a boolean indicating if a barcode plot showing
+the differential analysis should be plotted. If this is selected you must
+have performed differential analysis on the proteoltic data in the
+\code{calculateProteolyticResistance} function. Default is \code{FALSE}.}
+
 \item{which.comp}{a list of comparisons to be visualized, if differential
 analysis is passed to plot_differential variable. Default is "all"
 which will plot a separate barcode plot for each comparison and protein.}
+
+\item{adj.pvalue.cutoff}{Default is .05. Alpha value for testing significance
+of model output.}
+
+\item{FC.cutoff}{Default is 0. Minimum absolute FC before a comparison will
+be considered significant.}
 
 \item{width}{width of the saved file. Default is 10.}
 
@@ -61,6 +72,6 @@ fully tryptic peptides in a protein.
 fasta_path = system.file("extdata", "ExampleFastaFile.fasta", package="MSstatsLiP")
 
 # Use model data to create Barcode Plot
-ResistanceBarcodePlotLiP(MSstatsLiP_model, fasta_path)
+#ResistanceBarcodePlotLiP(MSstatsLiP_model, fasta_path)
 
 }

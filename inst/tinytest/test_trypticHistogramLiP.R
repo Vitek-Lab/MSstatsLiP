@@ -42,26 +42,26 @@ expect_silent(correlationPlotLiP(MSstatsLiP_Summarized, address = FALSE))
 
 ## BarcodePlotLiP
 ## Test normal plot
-expect_silent(BarcodePlotLiP(MSstatsLiP_model,
+expect_silent(StructuralBarcodePlotLiP(MSstatsLiP_model,
                "../extdata/ExampleFastaFile.fasta",
                address = FALSE))
 
 ## Test single protein
-expect_silent(BarcodePlotLiP(MSstatsLiP_model,
+expect_silent(StructuralBarcodePlotLiP(MSstatsLiP_model,
                             "../extdata/ExampleFastaFile.fasta",
                             which.prot = "P36112"))
 
 ## Parameter checking
-expect_error(BarcodePlotLiP(MSstatsLiP_model,
+expect_error(StructuralBarcodePlotLiP(MSstatsLiP_model,
                              "../extdata/ExampleFastaFile.fasta",
                             model_type = "test"))
-expect_error(BarcodePlotLiP(MSstatsLiP_model,
+expect_error(StructuralBarcodePlotLiP(MSstatsLiP_model,
                             "../extdata/ExampleFastaFile.fasta",
                             which.prot = "test"))
-expect_error(BarcodePlotLiP(MSstatsLiP_model,
+expect_error(StructuralBarcodePlotLiP(MSstatsLiP_model,
                             "../extdata/ExampleFastaFile.fasta",
                             which.comp = "test"))
-expect_error(BarcodePlotLiP(MSstatsLiP_model,
+expect_error(StructuralBarcodePlotLiP(MSstatsLiP_model,
                             "../extdata/ExampleFastaFile.fasta",
                             FT.only = "test"))
 

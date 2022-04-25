@@ -1,7 +1,13 @@
 ---
 title: "Proteolytic resistance analysis"
-author: Valentina Cappelletti (<cappelletti@imsb.biol.ethz.ch>),Malinovska Liliana
-  (<malinovska@imsb.biol.ethz.ch>)
+author: Valentina Cappelletti (<cappelletti@imsb.biol.ethz.ch>),
+  Malinovska Liliana (<malinovska@imsb.biol.ethz.ch>), 
+  Devon Kohler (<kohler.d@northeastern.edu>)
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{MSstatsLiP Proteolytic Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 output:
   html_document:
     toc: yes
@@ -221,19 +227,7 @@ load(file = 'MSstatsLiP_model.rda')
 Proteolytic resistance ratios are calculated as the ratio of the intensity of fully tryptic peptides in the LiP condition to the TrP condition. In general, a low protease resistance value is indicative of high extent of cleavage, while high protease resistance values indicate low cleavage extent.
 
 ```{r calculate accessibility, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
-# Accessibility <-  MSstatsLiP_Summarized[["LiP"]]$ProteinLevelData %>% 
-#         select(FULL_PEPTIDE, Protein, LogIntensities, GROUP,SUBJECT) %>% 
-#     inner_join(MSstatsLiP_Summarized[["TrP"]]$ProteinLevelData %>% 
-#         select(Protein, LogIntensities, GROUP, SUBJECT ),by = c('Protein','GROUP','SUBJECT'), suffix = c('_LiP', '_TrP')) %>% 
-#         group_by(Protein, SUBJECT) %>% 
-#         #mutate(LiP_norm =  2 ^ (LogIntensities_LiP-LogIntensities_TrP))%>%
-#         mutate(LiP_norm = 2 ^ (LogIntensities_LiP-LogIntensities_TrP))%>%
-#         mutate(LiP_norm_SD = sd(2 ^ (mean(LogIntensities_LiP)-mean(LogIntensities_TrP))))%>%
-#         #ungroup()%>%
-#         group_by(Protein, GROUP) %>% 
-#         mutate(Accessibility_ratio = (mean(LiP_norm)))%>%
-#         mutate(Accessibility_ratio_SD = sd(LiP_norm))%>%
-#         left_join(FullyTrP, by=c("Protein"="ProteinName2"))
+
 Accessibility = calculateProteolyticResistance(MSstatsLiP_Summarized, 
                                                fasta_file, 
                                                differential_analysis = TRUE)
@@ -256,26 +250,6 @@ Accessibility$RunLevelData
 
 ```{r Barplot of protease resistance of aSynuclein (monomer - M and fibril - F), message=FALSE, warning=FALSE, fig.height=2, fig.width=10,echo=TRUE,include=TRUE}
 
-# Accessibility_full%>% mutate(Protease_resistance=case_when(Accessibility_ratio>1 ~1,TRUE~Accessibility_ratio))%>%
-#   filter(ProteinName=="P37840")%>%
-#   ggplot()+
-#   geom_rect(aes(ymin=61, ymax=95, xmin=0.85, xmax=1.15), fill = NA,color=1)+
-#   geom_vline(xintercept = 1, size=20, color="black")+
-#   geom_linerange(aes(x=1, ymin=StartPos, ymax=EndPos,colour=Protease_resistance), size=20)+
-#   coord_flip()+
-#   scale_color_gradient(low = "yellow",
-#                           high = "red",limits = c(0,1))+
-#   theme_classic()+
-#   guides()+
-#   facet_grid(~GROUP)+
-#   labs(y="aSynuclein sequence [AA]",x="")+
-#   ylim(0,140)+
-#   theme(panel.grid.major = element_blank(),
-#   panel.grid.minor = element_blank(),
-#   axis.text.y = element_blank(),
-#   axis.line.y = element_blank(),
-#   axis.ticks.y = element_blank())
-
 ResistanceBarcodePlotLiP(Accessibility,
                          fasta_file,
                          which.prot = "P16622",
@@ -293,43 +267,6 @@ In general, a low Proteolytic resistance value is indicative of high extent of c
 
 
 ```{r Perform Proteolytic resistance differential analysis on Fully tryptic peptides, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
-
-# full <- inner_join(
-#     MSstatsLiP_model[["LiP.Model"]] %>% 
-#         filter(abs(log2FC) != Inf) %>% 
-#         select(ProteinName, PeptideSequence, Label, log2FC, SE, DF),
-#     MSstatsLiP_model[["TrP.Model"]] %>% 
-#         filter(abs(log2FC) != Inf) %>% 
-#         select(ProteinName = Protein, Label, log2FC, SE, DF) %>% 
-#         rename(log2FC_ref = log2FC, SE_ref = SE, DF_ref = DF)
-# )
-# 
-# log2fc <- full$log2FC - full$log2FC_ref
-# s2 <- full$SE ^ 2
-# s2_ref <- full$SE_ref ^ 2
-# stderr <- sqrt(s2 + s2_ref)
-# numer <- (s2 + s2_ref) ^ 2
-# denom <- (s2 ^ 2 / full$DF + s2_ref ^ 2 / full$DF_ref)
-# df <- numer / denom
-# tval <- log2fc / stderr
-# pval <- 2 * stats::pt(abs(tval), df, lower.tail = FALSE)
-# 
-# regex_uniprot_iso <- regex(paste0(
-#     "([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})",
-#     "([-]\\d{1,}){0,1}"
-# ))
-# 
-# FullyTrp.Model <- data.table(
-#     Protein = str_extract(full$ProteinName, regex_uniprot_iso),
-#     PeptideSequence = full$PeptideSequence,
-#     Label = full$Label,
-#     log2FC = log2fc,
-#     SE = stderr,
-#     Tvalue = tval,
-#     DF = df,
-#     pvalue = pval,
-#     adj.pvalue = p.adjust(pval, method = 'BH')
-# )
 
 Accessibility$groupComparison
 
@@ -374,28 +311,6 @@ Proteolytic resistance barcodes can be used to visualize FT peptides along the s
 
 
 ```{r Barplot of DA of protease resistance of aSynuclein (monomer - M and fibril - F), message=FALSE, warning=FALSE, fig.height=2, fig.width=10,echo=TRUE,include=TRUE}
-
-# P37840%>%
-#   mutate(significant=case_when(log2FC>log2FC.cutoff&adj.pvalue<adj.pvalue.cutoff~"Yes,UP",
-#                                log2FC< -log2FC.cutoff&adj.pvalue<adj.pvalue.cutoff~"Yes,DOWN",TRUE~"No")) %>%
-#   print() %>%
-#   ggplot()+
-#   geom_rect(aes(ymin=61, ymax=95, xmin=0.85, xmax=1.15), fill = NA,color=1)+
-#   geom_vline(xintercept = 1, size=20, color="black")+
-#   geom_linerange(aes(x=1, ymin=StartPos, ymax=EndPos, color=significant), size=20)+
-#   gghighlight((significant=="Yes,UP" | significant=="Yes,DOWN"), calculate_per_facet = TRUE, use_direct_label = FALSE, use_group_by = FALSE, unhighlighted_params = list(colour =NULL))+ 
-#   coord_flip()+
-#   scale_color_manual(values = c("Yes,UP"="darkred", "Yes,DOWN"="blue"))+
-#   theme_classic()+
-#   guides(color="none")+
-#   facet_grid(~Label)+
-#   labs(y="aSynuclein sequence [AA]",x="")+
-#   ylim(0,140)+
-#   theme(panel.grid.major = element_blank(),
-#   panel.grid.minor = element_blank(),
-#   axis.text.y = element_blank(),
-#   axis.line.y = element_blank(),
-#   axis.ticks.y = element_blank())
 
 ResistanceBarcodePlotLiP(Accessibility,
                          fasta_file,
