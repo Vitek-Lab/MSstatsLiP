@@ -62,8 +62,6 @@ Load the data from the Spectronaut export. LiP data is loaded as `raw_lip`,  try
 
 **CAVE:** Make sure the separator `delim` is set correctly. For comma-separated values (csv), the separator is set to `delim=","`.
 
-TODO: Change variable names to match the included data name (don't run these for vignette output)
-
 ```{r load LiP data, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE, eval = FALSE}
 raw_lip <- read_delim(file=choose.files(caption="Choose LiP dataset"), 
                          delim=",", escape_double = FALSE, trim_ws = TRUE)
@@ -236,18 +234,6 @@ Accessibility$RunLevelData
 
 ```
 
-```{r load tripticity data, echo=TRUE, message=FALSE, warning=FALSE,include=TRUE, eval=FALSE}
-
-# tripticity <- read_delim(file=choose.files(caption="Choose dataset with trypticity information"), 
-                          # delim=",", escape_double = FALSE, trim_ws = TRUE)
-```
-
-
-```{r filter peptides with missed cleavages, echo=TRUE, message=FALSE, warning=FALSE,include=TRUE}
-# tripticity<- tripticity%>%filter(hasMiSSedCl==FALSE)
-# Accessibility_full <- Accessibility[Accessibility$PeptideSequence %in% tripticity$peptide, ]
-```
-
 ```{r Barplot of protease resistance of aSynuclein (monomer - M and fibril - F), message=FALSE, warning=FALSE, fig.height=2, fig.width=10,echo=TRUE,include=TRUE}
 
 ResistanceBarcodePlotLiP(Accessibility,
@@ -271,10 +257,6 @@ In general, a low Proteolytic resistance value is indicative of high extent of c
 Accessibility$groupComparison
 
 ```
-Inspect `FullyTrp_model`. 
-```{r Inspect protection model, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
-# head(FullyTrp.Model)
-```
 
 Save and/or load model data
 ```{r Save protection model, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE, eval=FALSE}
@@ -292,22 +274,6 @@ Save the output of the modeling in a .csv file.
 # 7. Plot aSynuclein proteolytic resistance DA result as barcode
 
 Proteolytic resistance barcodes can be used to visualize FT peptides along the sequence of aSynucelin. Significant peptides showing high protease resistance are colored in red, significant peptides showing a decreased protease resistance are colored in blue and non-significant peptides (no change in protease resistance between conditions) are colored in grey. Black regions represent regions with no identified matching peptide. Position of the NAC domain is indicated by a rectangle.
-
-
-```{r Select aSynuclein, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
-
-# P37840=FullyTrp.Model%>%filter(Protein=="P37840"&!Label%in%c("F1 vs F2","M1 vs M2"))
-```
-
-```{r add position of peptides, fig.height=5, fig.width=15, echo=TRUE, include=TRUE}
-# P37840 <- P37840 %>% left_join(FullyTrP, by=c("Protein"="ProteinName","PeptideSequence"="PeptideSequence"))
-
-```
-
-```{r set cutoff values, fig.height=5, fig.width=15, echo=TRUE, include=TRUE}
-# adj.pvalue.cutoff=0.05
-# log2FC.cutoff=1
-```
 
 
 ```{r Barplot of DA of protease resistance of aSynuclein (monomer - M and fibril - F), message=FALSE, warning=FALSE, fig.height=2, fig.width=10,echo=TRUE,include=TRUE}
