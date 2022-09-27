@@ -25,6 +25,8 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook describing the an
 
 Here, we use LiP-MS data of human alpha-Synuclein in the monomeric (M) and fibrillar form (F) spiked into a *S.cerevisiae* lysate  at 5 pmol/ug lysate (M1 and F1) and 20 pmol/ug lysate (M2 and F2).The data set is composed of four biological replicates per condition.
 
+*Note*: The example dataset was very limited in size due to what could be included in the package. Thus some of the plots and results look different then what they would appear with a full dataset.
+
 ## 1. Installation
 
 - Install and load all necessary packages. The installation needs to be performed at first use only. Un-comment the lines for execution.
@@ -238,7 +240,7 @@ Accessibility$RunLevelData
 
 ResistanceBarcodePlotLiP(Accessibility,
                          fasta_file,
-                         which.prot = "P16622",
+                         which.prot = "P37840",
                          which.condition = "F1",
                          address = FALSE)
 
@@ -280,7 +282,7 @@ Proteolytic resistance barcodes can be used to visualize FT peptides along the s
 
 ResistanceBarcodePlotLiP(Accessibility,
                          fasta_file,
-                         which.prot = "P16622",
+                         which.prot = "P37840",
                          which.condition = "F1",
                          differential_analysis = TRUE,
                          which.comp = "F1 vs F2",

@@ -90,7 +90,8 @@ trypticHistogramLiP <- function(data, fasta, x.axis.size = 10,
     geom_col(aes(x = SUBJECT, y = percent_plot, fill = fully_TRI)) +
     facet_wrap(.~GROUP, scales = "free") +
     labs(title = "Proteotrypticity", x = "Replicate", y = "Percent") +
-    scale_fill_manual(values = plot_colors, labels = c("Half", "Full"),
+    scale_fill_manual(values = plot_colors, labels = c("Half tryptic (HT)",
+                                                       "Full tryptic (FT)"),
                       name = "Trypticity") +
     scale_y_continuous(labels = percent) +
     theme(

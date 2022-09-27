@@ -146,7 +146,7 @@ conditions
 
 ``` {r}
 MSstatsLiP_Summarized[["LiP"]]$FeatureLevelData %>% 
-  group_by(PEPTIDE, GROUP) %>% 
+  group_by(FEATURE, GROUP) %>% 
   summarize(cv = sd(INTENSITY) / mean(INTENSITY)) %>% 
   ggplot() + geom_violin(aes(x = GROUP, y = cv, fill = GROUP)) + 
   labs(title = "Coefficient of Variation between Condtions", 
