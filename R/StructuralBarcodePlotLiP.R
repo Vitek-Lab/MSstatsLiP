@@ -157,9 +157,9 @@ StructuralBarcodePlotLiP <- function(data,
 
       barcode_plot <- ggplot(data = coverage.index) +
         geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
-        scale_fill_manual(values = c('Significant' = '#FF0000',
-                                     'Insignificant' = '#808080',
-                                     'No Coverage' = '#000000')) +
+        scale_fill_manual(values = c('Significant' = '#FEC200',
+                                     'Not Significant' = '#808080',
+                                     'Not Detected' = '#000000')) +
         labs(title = paste0(which.prot[[i]], " Coverage - ", which.comp[[c]]),
              x = "Amino Acid Sequence", y = "") +
         theme(axis.text.y = element_blank(),

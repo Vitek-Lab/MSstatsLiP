@@ -23,7 +23,7 @@ output:
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook describing the analysis of a LiP-MS experiment using [MSstatsLiP](https://github.com/Vitek-Lab/MSstatsLiP). When you execute code within the notebook, the results appear beneath the code. 
 
-Here, we use LiP-MS data of human alpha-Synuclein in the monomeric (M) and fibrillar form (F) spiked into a *S.cerevisiae* lysate  at 5 pmol/ug lysate (M1 and F1) and 20 pmol/ug lysate (M2 and F2).The data set is composed of four biological replicates per condition.
+Here, we use LiP-MS data of human alpha-Synuclein in the monomeric (M) and fibrillar form (F) spiked into a *S.cerevisiae* lysate at 5 pmol/ug lysate (M1 and F1) and 20 pmol/ug lysate (M2 and F2).The data set is composed of four biological replicates per condition.
 
 ## 1. Installation
 
@@ -107,7 +107,8 @@ Proteolytic resistance is calculated as the of the intensity of fully tryptic pe
 FullyTrP <- msstats_data[["LiP"]] %>% 
   distinct(ProteinName, PeptideSequence) %>% 
   calculateTrypticity(fasta_file) %>% 
-  filter(fully_TRI) %>% 
+  filter(fully_TRI) %>%
+  filter(MissedCleavage == FALSE) %>% 
   select(ProteinName, PeptideSequence, StartPos, EndPos)
 ```
 

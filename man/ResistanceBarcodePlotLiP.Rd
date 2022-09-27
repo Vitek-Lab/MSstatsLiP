@@ -7,7 +7,7 @@ fully tryptic peptides in a protein.}
 \usage{
 ResistanceBarcodePlotLiP(
   data,
-  fasta,
+  fasta_file,
   which.prot = "all",
   which.condition = "all",
   differential_analysis = FALSE,
@@ -24,7 +24,7 @@ ResistanceBarcodePlotLiP(
 format. Should be output of summarization function as
 \code{\link[MSstatsLiP]{dataSummarizationLiP}}.}
 
-\item{fasta}{A string of path to a FASTA file}
+\item{fasta_file}{A string of path to a FASTA file}
 
 \item{which.prot}{a list of peptides to be visualized. Default is "all" which
 will plot a separate barcode plot for each protein.}

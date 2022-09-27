@@ -23,6 +23,8 @@ knitr::opts_chunk$set(
 This Vignette provides an example workflow for how to use the package 
 MSstatsLiP.
 
+**NOTE** This vignette uses a small portion of a bigger dataset, which may cause some plots to look different than they would with the full data.
+
 ## Installation
 
 To install this package, start R (version "4.1") and enter:
@@ -60,7 +62,6 @@ head(TrPRawData)
 ### 1.2 Converter
 
 ``` {r}
-
 ## Run converter
 MSstatsLiP_data <- SpectronauttoMSstatsLiPFormat(LiPRawData, 
                                       "../inst/extdata/ExampleFastaFile.fasta", 
@@ -98,7 +99,6 @@ as input the formatted data from the converter.
 #### 2.1 Summarization Function
 
 ``` {r}
-
 MSstatsLiP_Summarized <- dataSummarizationLiP(MSstatsLiP_data,
                                               MBimpute = FALSE, 
                                               use_log_file = FALSE, 
@@ -146,7 +146,7 @@ conditions
 
 ``` {r}
 MSstatsLiP_Summarized[["LiP"]]$FeatureLevelData %>% 
-  group_by(PEPTIDE, GROUP) %>% 
+  group_by(FEATURE, GROUP) %>% 
   summarize(cv = sd(INTENSITY) / mean(INTENSITY)) %>% 
   ggplot() + geom_violin(aes(x = GROUP, y = cv, fill = GROUP)) + 
   labs(title = "Coefficient of Variation between Condtions", 
@@ -288,3 +288,33 @@ StructuralBarcodePlotLiP(MSstatsLiP_model,
 
 ```
 
+#### 3.5 Calculate proteolytic resistance ratios
+
+Proteolytic resistance ratios are calculated as the ratio of the intensity of fully tryptic peptides in the LiP condition to the TrP condition. In general, a low protease resistance value is indicative of high extent of cleavage, while high protease resistance values indicate low cleavage extent.
+
+```{r calculate accessibility, message=FALSE, warning=FALSE, echo=TRUE,include=TRUE}
+
+Accessibility = calculateProteolyticResistance(MSstatsLiP_Summarized, 
+                                               "../inst/extdata/ExampleFastaFile.fasta", 
+                                               differential_analysis = TRUE)
+
+Accessibility$RunLevelData
+
+```
+
+```{r Barplot of protease resistance of aSynuclein (monomer - M and fibril - F), message=FALSE, warning=FALSE, fig.height=2, fig.width=10,echo=TRUE,include=TRUE}
+
+ResistanceBarcodePlotLiP(Accessibility,
+                         "../inst/extdata/ExampleFastaFile.fasta",
+                         which.prot = "P14164",
+                         which.condition = "Osmo",
+                         address = FALSE)
+
+ResistanceBarcodePlotLiP(Accessibility,
+                         "../inst/extdata/ExampleFastaFile.fasta",
+                         differential_analysis = TRUE,
+                         which.prot = "P53858",
+                         which.condition = "Osmo",
+                         address = FALSE)
+
+```
