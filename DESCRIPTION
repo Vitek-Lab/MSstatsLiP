@@ -29,4 +29,4 @@ BugReports: https://github.com/Vitek-Lab/MSstatsLiP/issues
 Encoding: UTF-8
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1

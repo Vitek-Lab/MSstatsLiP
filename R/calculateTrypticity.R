@@ -52,7 +52,7 @@ calculateTrypticity = function(LiP_data, fasta_file){
                              combined_df$postAA != "P")
   combined_df$CTERMINUS = combined_df$postAA == ""
   combined_df$NTERMINUS = combined_df$start == 1
-  combined_df$MISSED = ifelse((str_count(combined_df$PeptideSequence, "K") -
+  combined_df$MissedCleavage = ifelse((str_count(combined_df$PeptideSequence, "K") -
                                  str_count(combined_df$PeptideSequence, "KP") +
                                  str_count(combined_df$PeptideSequence, "R") -
                                  str_count(combined_df$PeptideSequence, "RP")
@@ -60,9 +60,7 @@ calculateTrypticity = function(LiP_data, fasta_file){
   combined_df$StartPos = combined_df$start
   combined_df$EndPos = combined_df$end
 
-
-
   return(combined_df[, c("ProteinName", "PeptideSequence", "fully_TRI",
                          "NSEMI_TRI", "CSEMI_TRI", "CTERMINUS", "NTERMINUS",
-                         "MISSED", "StartPos", "EndPos")])
+                         "MissedCleavage", "StartPos", "EndPos")])
 }

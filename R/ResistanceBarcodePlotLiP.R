@@ -10,7 +10,7 @@
 #' @param data list of data.tables containing LiP and TrP data in MSstatsLiP
 #' format. Should be output of summarization function as
 #' \code{\link[MSstatsLiP]{dataSummarizationLiP}}.
-#' @param fasta A string of path to a FASTA file
+#' @param fasta_file A string of path to a FASTA file
 #' @param which.prot a list of peptides to be visualized. Default is "all" which
 #' will plot a separate barcode plot for each protein.
 #' @param which.condition  a list of conditions to be visualized. Default is
@@ -45,16 +45,16 @@
 #' #ResistanceBarcodePlotLiP(MSstatsLiP_model, fasta_path)
 #'
 ResistanceBarcodePlotLiP = function(data,
-                           fasta,
-                           which.prot = "all",
-                           which.condition = "all",
-                           differential_analysis = FALSE,
-                           which.comp = "all",
-                           adj.pvalue.cutoff = .05,
-                           FC.cutoff = 0,
-                           width = 12,
-                           height = 4,
-                           address = ""){
+                                    fasta_file,
+                                    which.prot = "all",
+                                    which.condition = "all",
+                                    differential_analysis = FALSE,
+                                    which.comp = "all",
+                                    adj.pvalue.cutoff = .05,
+                                    FC.cutoff = 0,
+                                    width = 12,
+                                    height = 4,
+                                    address = ""){
 
   # Load and format Fasta file
   ## Make sure file is loaded into memory
@@ -139,7 +139,7 @@ ResistanceBarcodePlotLiP = function(data,
                         is.finite(model.data$log2FC))
 
     coverage.df = model.data[, c("Protein", "PeptideSequence",
-                                  "Label", "sig")]
+                                  "Label", "log2FC", "sig")]
     ## Bring sequence into data
     coverage.df = merge(coverage.df, formated_fasta, all.x = TRUE,
                         by.x = "Protein", by.y = "uniprot_iso")
@@ -173,18 +173,23 @@ ResistanceBarcodePlotLiP = function(data,
           for (j in start:end){
             if (temp.coverage.df[idx, sig] == TRUE){
               coverage.index[j, Coverage := 'Significant']
+              # coverage.index[j, log2FC := temp.coverage.df[idx, log2FC]]
             } else if (temp.coverage.df[idx, sig] == FALSE &
                        coverage.index[j, Coverage] != 'Significant'){
               coverage.index[j, Coverage := 'Insignificant']
+              # coverage.index[j, log2FC := NULL]
             }
           }
         }
 
         barcode_plot <- ggplot(data = coverage.index) +
           geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
-          scale_fill_manual(values = c('Significant' = '#FF0000',
-                                       'Insignificant' = '#808080',
-                                       'No Coverage' = '#000000')) +
+          scale_fill_manual(values = c('Significant' = '#FEC200',
+                                       'Not Significant' = '#808080',
+                                       'Not Detected' = '#000000')) +
+          # geom_col(data = coverage.index, 
+          #          aes(x = Index, y = 10, fill = factor(log2FC)), width = 1) +
+          # scale_fill_brewer(palette = "RdBu") + 
           labs(title = paste0(which.prot[[i]], " Coverage - ", which.comp[[c]]),
                x = "Amino Acid Sequence", y = "") +
           theme(axis.text.y = element_blank(),
