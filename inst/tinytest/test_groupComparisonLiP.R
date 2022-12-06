@@ -32,6 +32,6 @@ expect_equal(colnames(group.comp$Adjusted.LiP.Model), c("FULL_PEPTIDE", "Label",
                                                     "log2FC", "SE", "Tvalue",
                                                     "DF", "pvalue",
                                                     "adj.pvalue",
-                                                    "GlobalProtein",
+                                                    "GlobalProtein", "Adjusted",
                                                     "ProteinName",
                                                     "PeptideSequence", "issue"))
