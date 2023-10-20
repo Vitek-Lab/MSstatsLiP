@@ -92,8 +92,9 @@ StructuralBarcodePlotLiP <- function(data,
   }
 
   ## Calculate significance
-  model.data$sig <-  (model.data$adj.pvalue < adj.pvalue.cutoff &
+  model.data$sig <- (model.data$adj.pvalue < adj.pvalue.cutoff &
                         abs(model.data$log2FC) >= FC.cutoff)
+  model.data[is.na(model.data$sig), "sig"] = FALSE
 
   coverage.df <- model.data[, c("ProteinName", "PeptideSequence",
                                 "Label", "sig")]
