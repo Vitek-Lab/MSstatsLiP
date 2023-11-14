@@ -1,8 +1,8 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 1.8.0
-Date: 2022-12-06
+Version: 1.7.1
+Date: 2023-11-14
 Description: Tools for LiP peptide and protein significance analysis. Provides 
               functions for summarization, estimation of LiP peptide abundance, 
               and detection of changes across conditions. Utilizes functionality
@@ -29,4 +29,4 @@ BugReports: https://github.com/Vitek-Lab/MSstatsLiP/issues
 Encoding: UTF-8
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
