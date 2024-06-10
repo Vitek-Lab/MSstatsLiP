@@ -5,6 +5,7 @@
 #' @importFrom data.table as.data.table `:=` rbindlist
 #' @importFrom stringr str_match
 #' @importFrom grDevices dev.off hcl pdf
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
 #'
 #' @param data list of data.tables containing LiP and TrP data in MSstatsLiP
 #' format. Should be output of modeling function such as
