@@ -73,6 +73,9 @@
 #' "Heatmap.pdf". The command address can help to specify where to store the
 #' file as well as how to modify the beginning of the file name. If
 #' address=FALSE, plot will be not saved as pdf file but showed in window
+#' @param isPlotly Parameter to use Plotly or ggplot2. If set to TRUE, MSstats 
+#' will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+#' as PDF files
 #' @return plot or pdf
 #' @examples
 #'
@@ -106,7 +109,8 @@ groupComparisonPlotsLiP <- function(data = data,
                                     which.Comparison="all",
                                     which.Peptide="all",
                                     which.Protein=NULL,
-                                    address="") {
+                                    address="",
+                                    isPlotly = FALSE) {
 
   FULL_PEPTIDE <- Protein <- NULL
 
@@ -159,5 +163,5 @@ groupComparisonPlotsLiP <- function(data = data,
                           dot.size, text.size, text.angle, legend.size,
                           ProteinName, colorkey, numProtein,
                           width, height, which.Comparison, which.Peptide,
-                          address)
+                          address, isPlotly)
 }
