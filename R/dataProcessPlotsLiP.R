@@ -12,6 +12,8 @@
 #' @export
 #' @importFrom data.table `:=`
 #' @importFrom MSstatsPTM dataProcessPlotsPTM
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
+
 #' @param data name of the list with LiP and (optionally) Protein data, which
 #' can be the output of the MSstatsLiP.
 #' \code{\link[MSstatsLiP]{dataSummarizationLiP}} function.

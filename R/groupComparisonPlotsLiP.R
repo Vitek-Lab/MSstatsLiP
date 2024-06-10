@@ -12,6 +12,7 @@
 #'
 #' @export
 #' @importFrom MSstatsPTM groupComparisonPlotsPTM
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
 #'
 #' @param data name of the list with models, which can be the output of the
 #' MSstatsLiP \code{\link[MSstatsLiP]{groupComparisonLiP}} function
