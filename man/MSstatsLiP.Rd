@@ -2,6 +2,7 @@
 % Please edit documentation in R/MSstatsLiP.R
 \docType{package}
 \name{MSstatsLiP}
+\alias{MSstatsLiP-package}
 \alias{MSstatsLiP}
 \title{MSstatsLiP: A package for identifying and analyzing changes in protein
 structures caused by compound binding in cellur lysates.}
@@ -46,3 +47,25 @@ coverage.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/Vitek-Lab/MSstatsLiP/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Devon Kohler \email{kohler.d@northeastern.edu}
+
+Authors:
+\itemize{
+  \item Tsung-Heng Tsai \email{tsai.tsungheng@gmail.com}
+  \item Ting Huang \email{thuang0703@gmail.com}
+  \item Mateusz Staniak \email{mtst@mstaniak.pl}
+  \item Meena Choi \email{mnchoi67@gmail.com}
+  \item Valentina Cappelletti \email{valentina.cappelletti@imsb.biol.ethz.ch}
+  \item Liliana Malinovska \email{malinovska@imsb.biol.ethz.ch}
+  \item Olga Vitek \email{o.vitek@northeastern.edu}
+}
+
+}

@@ -24,7 +24,8 @@ dataProcessPlotsLiP(
   which.Protein = NULL,
   originalPlot = TRUE,
   summaryPlot = TRUE,
-  address = ""
+  address = "",
+  isPlotly = FALSE
 )
 }
 \arguments{
@@ -93,6 +94,10 @@ An output pdf file is automatically created with the default name of
 The command address can help to specify where to store the file as well as
 how to modify the beginning of the file name.
 If address=FALSE, plot will be not saved as pdf file but showed in window.}
+
+\item{isPlotly}{Parameter to use Plotly or ggplot2. If set to TRUE, MSstats
+will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+as PDF files}
 }
 \value{
 plot or pdf
