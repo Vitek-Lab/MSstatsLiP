@@ -19,6 +19,7 @@
 #' @importFrom gridExtra grid.arrange
 #' @importFrom ggpubr ggpar
 #' @importFrom stats prcomp
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
 #'
 #' @param data data name of the list with LiP and (optionally) Protein data, which
 #' can be the output of the MSstatsLiP.
@@ -51,6 +52,9 @@
 #' "Heatmap.pdf". The command address can help to specify where to store the
 #' file as well as how to modify the beginning of the file name. If
 #' address=FALSE, plot will be not saved as pdf file but showed in window
+#' @param isPlotly Parameter to use Plotly or ggplot2. If set to TRUE, MSstats 
+#' will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+#' as PDF files
 #' @return plot or pdf
 #' @examples
 #' # Use output of dataSummarizationLiP function
@@ -76,7 +80,8 @@ PCAPlotLiP <- function(data,
                        which.comparison = "all",
                        width=10,
                        height=10,
-                       address=""){
+                       address="",
+                       isPlotly = FALSE){
 
 
   FULL_PEPTIDE <- Protein <- NULL
@@ -84,7 +89,6 @@ PCAPlotLiP <- function(data,
   ## Format Dataset
   lip.data <- data[["LiP"]]$ProteinLevelData
   trp.data <- data[["TrP"]]$ProteinLevelData
-
   if (which.comparison[[1]] != "all"){
     lip.data <- lip.data[lip.data$GROUP %in% which.comparison, ]
     if (!is.null(trp.data)){
@@ -99,7 +103,7 @@ PCAPlotLiP <- function(data,
   }
 
   ## Create PDF to save plots if requested
-  if (address != FALSE) {
+  if (!isPlotly && address != FALSE) {
     allfiles <- list.files()
 
     num <- 0
@@ -121,8 +125,10 @@ PCAPlotLiP <- function(data,
       trp.bar <- pca.component.bar.plot(trp.pca, n.components,
                                         "TrP Explained Variance")
       grid.arrange(lip.bar, trp.bar, ncol=2)
+      bar_plots <- list(LIP = lip.bar, TRP = trp.bar)
     } else {
       print(lip.bar)
+      bar_plots <- list(LIP = lip.bar, TRP = NULL)
     }
   }
 
@@ -145,11 +151,14 @@ PCAPlotLiP <- function(data,
       if (nrow(trp.pca$x) > 1){
         trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
         grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
+        protein_plots <- list(LIP = lip.prot.plot, TRP = trp.prot.plot)
       } else {
         print(lip.prot.plot)
+        protein_plots <- list(LIP = lip.prot.plot, TRP = NULL)
       }
     } else {
       print(lip.prot.plot)
+      protein_plots <- list(LIP = lip.prot.plot, TRP = NULL)
     }
   }
 
@@ -159,13 +168,56 @@ PCAPlotLiP <- function(data,
       trp.comp.plot <- pca.component.comparison.plot(trp.pca,
                                                      "TrP Component PCA")
       grid.arrange(lip.comp.plot, trp.comp.plot, ncol=2)
+      comparison_plots <- list(LIP = lip.comp.plot, TRP = trp.comp.plot)
     } else {
       print(lip.comp.plot)
+      comparison_plots <- list(LIP = lip.comp.plot, TRP = NULL)
     }
   }
 
   if (address != FALSE) {
     dev.off()
+  }
+  
+  if(isPlotly) {
+    plotly_plots <- list()
+    
+    # Bar Plots
+    if(bar.plot) {
+      plotly_plot_bar_lip <- .convertGgplot2Plotly(bar_plots[["LIP"]], width = 1300)
+      plotly_plot_bar_lip$x$data[[2]]$textposition='top'
+      if (!is.null(bar_plots[["TRP"]])) {
+        plotly_plot_bar_trp <- .convertGgplot2Plotly(bar_plots[["TRP"]], width = 1300)
+        plotly_plot_bar_trp$x$data[[2]]$textposition='top'
+        plotly_plot_combined <- .combineSubPlotsPlotly(plotly_plot_bar_lip, plotly_plot_bar_trp)
+        plotly_plots <- c(plotly_plots, list(plotly_plot_combined))
+      } else {
+        plotly_plots <- c(plotly_plots, list(plotly_plot_bar_lip))
+      }
+    }
+    
+    if(protein.pca) {
+      plotly_plot_prot_lip <- .convertGgplot2Plotly(protein_plots[["LIP"]], width = 1350)
+      # plotly_plot_bar_lip$x$data[[2]]$textposition='top'
+      if (!is.null(protein_plots[["TRP"]])) {
+        plotly_plot_prot_trp <- .convertGgplot2Plotly(protein_plots[["TRP"]], width = 1350)
+        # plotly_plot_bar_trp$x$data[[2]]$textposition='top'
+        plotly_plot_combined <- .combineSubPlotsPlotly(plotly_plot_prot_lip, plotly_plot_prot_trp)
+        plotly_plots <- c(plotly_plots, list(plotly_plot_combined))
+      } else {
+        plotly_plots <- c(plotly_plots, list(plotly_plot_prot_lip))
+      }
+    }
+    
+    if(comparison.pca) {
+      
+    }
+    
+    if(address != FALSE) {
+      .savePlotlyPlotHTML(plotly_plots,address,"PCA_Plot" ,width, height)
+    }
+    plotly_plots <- unlist(plotly_plots, recursive = FALSE)
+    plotly_plots
   }
 
 }
@@ -233,14 +285,16 @@ pca.component.bar.plot <- function(data, n.components, title){
     ylab = "Variance",
     ggtheme = theme_minimal())
   )
-
+  
   return(temp.bar.plot)
 }
 
 #' Dot plot of peptides with top two components on the axis
 #' @noRd
 pca.component.prot.plot <- function(data, title){
-
+  print("=========")
+  print(data)
+  print("=========")
   temp.bar.plot <- ggpar(
     fviz_pca_ind(data,
                  col.ind = "cos2",
@@ -266,5 +320,41 @@ pca.component.comparison.plot <- function(data, title){
   )
 
   return(temp.bar.plot)
+}
+
+.combineSubPlotsPlotly = function(plotly_plot_ptm, plotly_plot_protein) {
+  title_ptm <- plotly_plot_ptm$x$layout$title$text
+  title_protein <- plotly_plot_protein$x$layout$title$text
+  
+  plotly_plot_ptm <- plotly::layout(plotly_plot_ptm, title = "")
+  plotly_plot_protein <- plotly::layout(plotly_plot_protein, title = "")
+  
+  plotly_plot_combined <- subplot(plotly_plot_ptm, plotly_plot_protein,  margin=0.04,titleX = TRUE, titleY = TRUE)
+  plotly_plot_combined <- plotly::layout(plotly_plot_combined,
+                                         annotations = list(
+                                           list(
+                                             x = 0.25,  # Centered horizontally over the first plot
+                                             y = 1,  # Above the first plot
+                                             text = title_ptm,  # Title for the first plot
+                                             showarrow = FALSE,
+                                             xref = 'paper',
+                                             yref = 'paper',
+                                             xanchor = 'center',
+                                             yanchor = 'bottom',
+                                             font = list(size = 16)
+                                           ),
+                                           list(
+                                             x = 0.75,  # Centered horizontally over the second plot
+                                             y = 1,  # Above the second plot
+                                             text = title_protein,  # Title for the second plot
+                                             showarrow = FALSE,
+                                             xref = 'paper',
+                                             yref = 'paper',
+                                             xanchor = 'center',
+                                             yanchor = 'bottom',
+                                             font = list(size = 16)
+                                           )
+                                         ))
+  plotly_plot_combined
 }
 
