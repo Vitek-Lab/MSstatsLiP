@@ -151,7 +151,7 @@ PCAPlotLiP <- function(data,
       if (nrow(trp.pca$x) > 1){
         trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
         grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
-        protein_plots <- list(LIP = lip.prot.plot, TRP = trp.prot.plot)
+        protein_plots <- list(LIP = lip.prot.plot, TRP = trp.prot.plot) ### changeeee
       } else {
         print(lip.prot.plot)
         protein_plots <- list(LIP = lip.prot.plot, TRP = NULL)
@@ -197,20 +197,27 @@ PCAPlotLiP <- function(data,
     }
     
     if(protein.pca) {
-      plotly_plot_prot_lip <- .convertGgplot2Plotly(protein_plots[["LIP"]], width = 1350)
-      # plotly_plot_bar_lip$x$data[[2]]$textposition='top'
+      plotly_plot_prot_lip <- .convertGgplot2Plotly(protein_plots[["LIP"]], width = 1300)
+      plotly_plot_prot_lip[["x"]][["data"]][[1]][["text"]] = paste(plotly_plot_prot_lip[["x"]][["data"]][[1]][["text"]], "<br />protein:", rownames(lip.pca[["x"]]))
       if (!is.null(protein_plots[["TRP"]])) {
-        plotly_plot_prot_trp <- .convertGgplot2Plotly(protein_plots[["TRP"]], width = 1350)
-        # plotly_plot_bar_trp$x$data[[2]]$textposition='top'
-        plotly_plot_combined <- .combineSubPlotsPlotly(plotly_plot_prot_lip, plotly_plot_prot_trp)
-        plotly_plots <- c(plotly_plots, list(plotly_plot_combined))
+        plotly_plot_prot_trp <- .convertGgplot2Plotly(protein_plots[["TRP"]], width = 1300)
+        plotly_plot_prot_trp[["x"]][["data"]][[1]][["text"]] = paste(plotly_plot_prot_trp[["x"]][["data"]][[1]][["text"]], "<br />protein:", rownames(trp.pca[["x"]]))
+        plotly_plots <- c(plotly_plots, c(list(plotly_plot_prot_lip),list(plotly_plot_prot_trp)))
       } else {
         plotly_plots <- c(plotly_plots, list(plotly_plot_prot_lip))
       }
     }
     
     if(comparison.pca) {
-      
+      plotly_plot_comparison_lip <- .convertGgplot2Plotly(comparison_plots[["LIP"]], width = 1300)
+      plotly_plot_comparison_lip[["x"]][["data"]][[1]][["text"]] = paste(plotly_plot_comparison_lip[["x"]][["data"]][[1]][["text"]], "<br />protein:", rownames(lip.pca[["rotation"]]))
+      if (!is.null(comparison_plots[["TRP"]])) {
+        plotly_plot_comparison_trp <- .convertGgplot2Plotly(comparison_plots[["TRP"]], width = 1300)
+        plotly_plot_comparison_trp[["x"]][["data"]][[1]][["text"]] = paste(plotly_plot_comparison_trp[["x"]][["data"]][[1]][["text"]], "<br />protein:", rownames(trp.pca[["rotation"]]))
+        plotly_plots <- c(plotly_plots, c(list(plotly_plot_comparison_lip),list(plotly_plot_comparison_trp)))
+      } else {
+        plotly_plots <- c(plotly_plots, list(plotly_plot_comparison_lip))
+      }
     }
     
     if(address != FALSE) {
@@ -328,8 +335,9 @@ pca.component.comparison.plot <- function(data, title){
   
   plotly_plot_ptm <- plotly::layout(plotly_plot_ptm, title = "")
   plotly_plot_protein <- plotly::layout(plotly_plot_protein, title = "")
+  plotly_plot_protein <- plotly_plot_protein %>% layout(showlegend = FALSE)
   
-  plotly_plot_combined <- subplot(plotly_plot_ptm, plotly_plot_protein,  margin=0.04,titleX = TRUE, titleY = TRUE)
+  plotly_plot_combined <- subplot(plotly_plot_ptm, plotly_plot_protein,  margin=0.04,titleX = TRUE, titleY = TRUE, nrows=2)
   plotly_plot_combined <- plotly::layout(plotly_plot_combined,
                                          annotations = list(
                                            list(
@@ -355,6 +363,6 @@ pca.component.comparison.plot <- function(data, title){
                                              font = list(size = 16)
                                            )
                                          ))
-  plotly_plot_combined
+  plotly_plot_combined 
 }
 
