@@ -142,7 +142,7 @@ StructuralBarcodePlotLiP <- function(data,
       temp.seq <- formated_fasta[uniprot_iso == which.prot[[i]], sequence]
       coverage.index <- data.table("Index" = seq_len(nchar(temp.seq)),
                                    "Coverage" = "No Coverage")
-
+      coverage.index[, Sequence := unlist(strsplit(temp.seq, ""))]
       temp.coverage.df <- cond.coverage.df[ProteinName == which.prot[[i]], ]
 
       for (idx in seq(nrow(temp.coverage.df))){
@@ -162,7 +162,7 @@ StructuralBarcodePlotLiP <- function(data,
       }
 
       barcode_plot <- ggplot(data = coverage.index) +
-        geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
+        geom_col(aes(x = Index, y = 10, fill = Coverage,text = paste("Sequence:", Sequence)), width = 1) +
         scale_fill_manual(values = c('Significant' = '#FEC200',
                                      'Not Significant' = '#808080',
                                      'Not Detected' = '#000000')) +

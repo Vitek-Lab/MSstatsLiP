@@ -107,7 +107,7 @@ ResistanceBarcodePlotLiP = function(data,
       temp.seq = formated_fasta[uniprot_iso == which.prot[[i]], sequence]
       coverage.index = data.table("Index" = seq_len(nchar(temp.seq)),
                                    "Accessibility_ratio" = 0)
-
+      coverage.index[, Sequence := unlist(strsplit(temp.seq, ""))]
       temp.coverage.df = cond.coverage.df[Protein == which.prot[[i]], ]
 
       for (idx in seq(nrow(temp.coverage.df))){
@@ -123,7 +123,7 @@ ResistanceBarcodePlotLiP = function(data,
       coverage.index$Accessibility_ratio = ifelse(coverage.index$Accessibility_ratio == 0.,
                                                   NA, coverage.index$Accessibility_ratio)
       barcode_plot = ggplot(data = coverage.index) +
-        geom_col(aes(x = Index, y = 10, fill = Accessibility_ratio), width = 1) +
+        geom_col(aes(x = Index, y = 10, fill = Accessibility_ratio,text = paste("Sequence:", Sequence)), width = 1) +
         scale_fill_gradient(low = "yellow", high = "red", limits = c(0,1),
                             name = "Proteolytic Resistance") +
         labs(title = paste0(which.prot[[i]], " Coverage - ", which.condition[[c]]),
@@ -166,7 +166,7 @@ ResistanceBarcodePlotLiP = function(data,
         temp.seq = formated_fasta[uniprot_iso == which.prot[[i]], sequence]
         coverage.index = data.table("Index" = seq_len(nchar(temp.seq)),
                                     "Coverage" = "No Coverage")
-
+        coverage.index[, Sequence := unlist(strsplit(temp.seq, ""))]
         temp.coverage.df = cond.coverage.df[Protein == which.prot[[i]], ]
 
         for (idx in seq(nrow(temp.coverage.df))){
@@ -188,7 +188,7 @@ ResistanceBarcodePlotLiP = function(data,
         }
 
         barcode_plot <- ggplot(data = coverage.index) +
-          geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
+          geom_col(aes(x = Index, y = 10, fill = Coverage,text = paste("Sequence:", Sequence)), width = 1) +
           scale_fill_manual(values = c('Significant' = '#FEC200',
                                        'Not Significant' = '#808080',
                                        'Not Detected' = '#000000')) +
