@@ -151,7 +151,7 @@ PCAPlotLiP <- function(data,
       if (nrow(trp.pca$x) > 1){
         trp.prot.plot <- pca.component.prot.plot(trp.pca, "TrP Protein PCA")
         grid.arrange(lip.prot.plot, trp.prot.plot, ncol=1)
-        protein_plots <- list(LIP = lip.prot.plot, TRP = trp.prot.plot) ### changeeee
+        protein_plots <- list(LIP = lip.prot.plot, TRP = trp.prot.plot)
       } else {
         print(lip.prot.plot)
         protein_plots <- list(LIP = lip.prot.plot, TRP = NULL)
@@ -299,9 +299,6 @@ pca.component.bar.plot <- function(data, n.components, title){
 #' Dot plot of peptides with top two components on the axis
 #' @noRd
 pca.component.prot.plot <- function(data, title){
-  print("=========")
-  print(data)
-  print("=========")
   temp.bar.plot <- ggpar(
     fviz_pca_ind(data,
                  col.ind = "cos2",
@@ -329,21 +326,21 @@ pca.component.comparison.plot <- function(data, title){
   return(temp.bar.plot)
 }
 
-.combineSubPlotsPlotly = function(plotly_plot_ptm, plotly_plot_protein) {
-  title_ptm <- plotly_plot_ptm$x$layout$title$text
-  title_protein <- plotly_plot_protein$x$layout$title$text
+.combineSubPlotsPlotly = function(plotly_plot_lip, plotly_plot_trp) {
+  title_lip <- plotly_plot_lip$x$layout$title$text
+  title_trp <- plotly_plot_trp$x$layout$title$text
   
-  plotly_plot_ptm <- plotly::layout(plotly_plot_ptm, title = "")
-  plotly_plot_protein <- plotly::layout(plotly_plot_protein, title = "")
-  plotly_plot_protein <- plotly_plot_protein %>% layout(showlegend = FALSE)
+  plotly_plot_lip <- plotly::layout(plotly_plot_lip, title = "")
+  plotly_plot_trp <- plotly::layout(plotly_plot_trp, title = "")
+  plotly_plot_trp <- plotly_plot_trp %>% layout(showlegend = FALSE)
   
-  plotly_plot_combined <- subplot(plotly_plot_ptm, plotly_plot_protein,  margin=0.04,titleX = TRUE, titleY = TRUE, nrows=2)
+  plotly_plot_combined <- subplot(plotly_plot_lip, plotly_plot_trp,  margin=0.04,titleX = TRUE, titleY = TRUE, nrows=2)
   plotly_plot_combined <- plotly::layout(plotly_plot_combined,
                                          annotations = list(
                                            list(
                                              x = 0.25,  # Centered horizontally over the first plot
                                              y = 1,  # Above the first plot
-                                             text = title_ptm,  # Title for the first plot
+                                             text = title_lip,  # Title for the first plot
                                              showarrow = FALSE,
                                              xref = 'paper',
                                              yref = 'paper',
@@ -354,7 +351,7 @@ pca.component.comparison.plot <- function(data, title){
                                            list(
                                              x = 0.75,  # Centered horizontally over the second plot
                                              y = 1,  # Above the second plot
-                                             text = title_protein,  # Title for the second plot
+                                             text = title_trp,  # Title for the second plot
                                              showarrow = FALSE,
                                              xref = 'paper',
                                              yref = 'paper',
