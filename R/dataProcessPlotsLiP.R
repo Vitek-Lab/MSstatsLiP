@@ -12,6 +12,8 @@
 #' @export
 #' @importFrom data.table `:=`
 #' @importFrom MSstatsPTM dataProcessPlotsPTM
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
+
 #' @param data name of the list with LiP and (optionally) Protein data, which
 #' can be the output of the MSstatsLiP.
 #' \code{\link[MSstatsLiP]{dataSummarizationLiP}} function.
@@ -58,6 +60,9 @@
 #' The command address can help to specify where to store the file as well as
 #' how to modify the beginning of the file name.
 #' If address=FALSE, plot will be not saved as pdf file but showed in window.
+#' @param isPlotly Parameter to use Plotly or ggplot2. If set to TRUE, MSstats 
+#' will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+#' as PDF files
 #' @return plot or pdf
 #' @examples
 #' # Use the output of the MSstatsLiP_Summarized function
@@ -86,7 +91,8 @@ dataProcessPlotsLiP <- function(data,
                                 which.Protein = NULL,
                                 originalPlot = TRUE,
                                 summaryPlot = TRUE,
-                                address = "") {
+                                address = "",
+                                isPlotly = FALSE) {
 
 
   PROTEIN <- Protein <- FULL_PEPTIDE <- NULL
@@ -139,6 +145,6 @@ dataProcessPlotsLiP <- function(data,
                       y.axis.size, text.size, text.angle, legend.size,
                       dot.size.profile, ncol.guide, width, height, lip.title,
                       protein.title, which.Peptide, which.Protein, originalPlot,
-                      summaryPlot, address)
+                      summaryPlot, address, isPlotly)
 
 }
