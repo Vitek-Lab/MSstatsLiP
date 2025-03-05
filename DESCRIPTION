@@ -1,14 +1,15 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 1.9.2
-Date: 2024-4-02
+Version: 1.11.1
+Date: 2025-03-05
 Description: Tools for LiP peptide and protein significance analysis. Provides 
               functions for summarization, estimation of LiP peptide abundance, 
               and detection of changes across conditions. Utilizes functionality
               across the MSstats family of packages.
 Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
             person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
+            person("Deril", "Raju", email = "raju.d@northeastern.edu", role = "aut"),
             person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
             person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
           	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
