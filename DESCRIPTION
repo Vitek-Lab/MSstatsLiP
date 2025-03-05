@@ -1,14 +1,15 @@
 Type: Package
 Package: MSstatsLiP
 Title: LiP Significance Analysis in shotgun mass spectrometry-based proteomic experiments
-Version: 1.13.0
-Date: 2024-3-19
+Version: 1.13.1
+Date: 2025-03-05
 Description: Tools for LiP peptide and protein significance analysis. Provides 
               functions for summarization, estimation of LiP peptide abundance, 
               and detection of changes across conditions. Utilizes functionality
               across the MSstats family of packages.
 Authors@R: c(person("Devon", "Kohler", email = "kohler.d@northeastern.edu", role = c("aut", "cre")),
             person("Tsung-Heng", "Tsai", email = "tsai.tsungheng@gmail.com", role = "aut"),
+            person("Deril", "Raju", email = "raju.d@northeastern.edu", role = "aut"),
             person("Ting", "Huang", email = "thuang0703@gmail.com", role=c("aut")),
             person("Mateusz", "Staniak", email = "mtst@mstaniak.pl", role = c("aut")),
           	person("Meena", "Choi", email = "mnchoi67@gmail.com", role="aut"),
@@ -19,7 +20,7 @@ License: Artistic-2.0
 Depends: R (>= 4.1)
 Imports: dplyr, gridExtra, stringr, ggplot2, grDevices, MSstats, MSstatsConvert,
           data.table, Biostrings, MSstatsPTM, Rcpp, checkmate, factoextra, 
-          ggpubr, purrr, tibble, tidyr, tidyverse, scales, stats
+          ggpubr, purrr, tibble, tidyr, tidyverse, scales, stats, plotly, htmltools
 Suggests: BiocStyle, knitr, rmarkdown, covr, tinytest, gghighlight
 LinkingTo: Rcpp
 VignetteBuilder: knitr
@@ -29,4 +30,4 @@ BugReports: https://github.com/Vitek-Lab/MSstatsLiP/issues
 Encoding: UTF-8
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

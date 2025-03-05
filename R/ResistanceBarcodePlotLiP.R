@@ -6,6 +6,7 @@
 #' @importFrom data.table as.data.table `:=` rbindlist
 #' @importFrom stringr str_match str_split
 #' @importFrom grDevices dev.off hcl pdf
+#' @importFrom plotly ggplotly style add_trace plot_ly subplot layout
 #'
 #' @param data list of data.tables containing LiP and TrP data in MSstatsLiP
 #' format. Should be output of summarization function as
@@ -36,6 +37,9 @@
 #' "Heatmap.pdf". The command address can help to specify where to store the
 #' file as well as how to modify the beginning of the file name. If
 #' address=FALSE, plot will be not saved as pdf file but showed in window
+#' @param isPlotly Parameter to use Plotly or ggplot2. If set to TRUE, MSstats 
+#' will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+#' as PDF files
 #' @return plot or pdf
 #' @examples
 #' # Specify Fasta path
@@ -54,7 +58,8 @@ ResistanceBarcodePlotLiP = function(data,
                                     FC.cutoff = 0,
                                     width = 12,
                                     height = 4,
-                                    address = ""){
+                                    address = "",
+                                    isPlotly = FALSE){
 
   # Load and format Fasta file
   ## Make sure file is loaded into memory
@@ -69,7 +74,7 @@ ResistanceBarcodePlotLiP = function(data,
                       by.x = "Protein", by.y = "uniprot_iso")
 
   ## Create PDF to save plots if requested
-  if (address != FALSE) {
+  if (!isPlotly && address != FALSE) {
     allfiles = list.files()
 
     num = 0
@@ -87,7 +92,7 @@ ResistanceBarcodePlotLiP = function(data,
   if (which.condition == "all"){
     which.condition = unique(coverage.df[, GROUP])
   }
-
+  plots <- vector("list",length(which.condition))
   for (c in seq(length(which.condition))){
 
     cond.coverage.df = coverage.df[GROUP == which.condition[[c]], ]
@@ -102,7 +107,7 @@ ResistanceBarcodePlotLiP = function(data,
       temp.seq = formated_fasta[uniprot_iso == which.prot[[i]], sequence]
       coverage.index = data.table("Index" = seq_len(nchar(temp.seq)),
                                    "Accessibility_ratio" = 0)
-
+      coverage.index[, Sequence := unlist(strsplit(temp.seq, ""))]
       temp.coverage.df = cond.coverage.df[Protein == which.prot[[i]], ]
 
       for (idx in seq(nrow(temp.coverage.df))){
@@ -118,7 +123,7 @@ ResistanceBarcodePlotLiP = function(data,
       coverage.index$Accessibility_ratio = ifelse(coverage.index$Accessibility_ratio == 0.,
                                                   NA, coverage.index$Accessibility_ratio)
       barcode_plot = ggplot(data = coverage.index) +
-        geom_col(aes(x = Index, y = 10, fill = Accessibility_ratio), width = 1) +
+        geom_col(aes(x = Index, y = 10, fill = Accessibility_ratio,text = paste("Sequence:", Sequence)), width = 1) +
         scale_fill_gradient(low = "yellow", high = "red", limits = c(0,1),
                             name = "Proteolytic Resistance") +
         labs(title = paste0(which.prot[[i]], " Coverage - ", which.condition[[c]]),
@@ -127,10 +132,10 @@ ResistanceBarcodePlotLiP = function(data,
               axis.ticks.y = element_blank(),
               panel.background = element_rect(fill = 'white', colour = 'white'))
       print(barcode_plot)
+      plots[[i]] = barcode_plot
     }
   }
 
-  #
   if (differential_analysis  == TRUE){
     model.data = data$groupComparison
     # model.data = model.data[is.finite(model.data$log2FC), ]
@@ -146,7 +151,7 @@ ResistanceBarcodePlotLiP = function(data,
     if (which.comp == "all"){
       which.comp = unique(coverage.df[, Label])
     }
-
+    differential_plots <- vector("list",length(which.comp))
     for (c in seq(length(which.comp))){
 
       cond.coverage.df = coverage.df[Label == which.comp[[c]], ]
@@ -161,7 +166,7 @@ ResistanceBarcodePlotLiP = function(data,
         temp.seq = formated_fasta[uniprot_iso == which.prot[[i]], sequence]
         coverage.index = data.table("Index" = seq_len(nchar(temp.seq)),
                                     "Coverage" = "No Coverage")
-
+        coverage.index[, Sequence := unlist(strsplit(temp.seq, ""))]
         temp.coverage.df = cond.coverage.df[Protein == which.prot[[i]], ]
 
         for (idx in seq(nrow(temp.coverage.df))){
@@ -183,7 +188,7 @@ ResistanceBarcodePlotLiP = function(data,
         }
 
         barcode_plot <- ggplot(data = coverage.index) +
-          geom_col(aes(x = Index, y = 10, fill = Coverage), width = 1) +
+          geom_col(aes(x = Index, y = 10, fill = Coverage,text = paste("Sequence:", Sequence)), width = 1) +
           scale_fill_manual(values = c('Significant' = '#FEC200',
                                        'Not Significant' = '#808080',
                                        'Not Detected' = '#000000')) +
@@ -196,6 +201,7 @@ ResistanceBarcodePlotLiP = function(data,
                 axis.ticks.y = element_blank(),
                 panel.background = element_rect(fill = 'white', colour = 'white'))
         print(barcode_plot)
+        differential_plots[[i]] = barcode_plot
       }
     }
 
@@ -203,6 +209,31 @@ ResistanceBarcodePlotLiP = function(data,
 
   if (address != FALSE) {
     dev.off()
+  }
+  
+  if(isPlotly) {
+    plotly_plots <- list()
+    # Normal
+    for(i in seq_along(plots)) {
+      plot <- plots[[i]]
+      plotly_plot <- .convertGgplot2Plotly(plot, width = 1250)
+      plotly_plots = c(plotly_plots, list(plotly_plot))
+    }
+    
+    # Differential
+    if (differential_analysis  == TRUE){
+      for(i in seq_along(differential_plots)) {
+        plot <- differential_plots[[i]]
+        plotly_plot <- .convertGgplot2Plotly(plot, width = 1000)
+        plotly_plots = c(plotly_plots, list(plotly_plot))
+      }
+    }
+    
+    if(address != FALSE) {
+      .savePlotlyPlotHTML(plotly_plots,address,"ResistanceBarcode_Plot" ,width, height)
+    }
+    plotly_plots <- unlist(plotly_plots, recursive = FALSE)
+    plotly_plots
   }
 
 }

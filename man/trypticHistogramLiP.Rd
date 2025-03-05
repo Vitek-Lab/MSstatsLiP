@@ -14,7 +14,8 @@ trypticHistogramLiP(
   width = 12,
   height = 4,
   color_scale = "bright",
-  address = ""
+  address = "",
+  isPlotly = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,10 @@ is the current working directory. The other assigned folder has to be
 existed under the current working directory. An output pdf file is
 automatically created with the default name of "TyrpticPlot.pdf". If
 address=FALSE, plot will be not saved as pdf file but shown in window..}
+
+\item{isPlotly}{Parameter to use Plotly or ggplot2. If set to TRUE, MSstats
+will save Plotly plots as HTML files. If set to FALSE MSstats will save ggplot2 plots
+as PDF files}
 }
 \value{
 plot or pdf
