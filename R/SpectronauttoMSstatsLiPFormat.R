@@ -163,7 +163,8 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
 
     getOption("MSstatsLog")("INFO", "Formatting TrP data..")
     df.trp <- SpectronauttoMSstatsFormat(
-        as.data.frame(Trp.data), annotation = annotation, 
+        as.data.frame(Trp.data), 
+        annotation = annotation, 
         intensity = intensity,
         filter_with_Qvalue = filter_with_Qvalue,
         qvalue_cutoff = qvalue_cutoff,
@@ -175,7 +176,7 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
         append = append, 
         verbose = verbose,
         log_file_path = path
-        )
+    )
     df.trp <- as.data.table(as.matrix(df.trp))
   }
 
