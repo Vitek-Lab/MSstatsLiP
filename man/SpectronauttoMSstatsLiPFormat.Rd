@@ -2,7 +2,7 @@
 % Please edit documentation in R/SpectronauttoMSstatsLiPFormat.R
 \name{SpectronauttoMSstatsLiPFormat}
 \alias{SpectronauttoMSstatsLiPFormat}
-\title{Converts raw LiP MS data from Spectronautt into the format needed for
+\title{Converts raw LiP MS data from Spectronaut into the format needed for
 MSstatsLiP.}
 \usage{
 SpectronauttoMSstatsLiPFormat(
@@ -95,7 +95,7 @@ If \code{append = TRUE}, has to be a valid path to a file.}
 a \code{list} of two \code{data.frames} in MSstatsLiP format
 }
 \description{
-Takes as as input both raw LiP and Trp outputs from Spectronautt.
+Takes as as input both raw LiP and Trp outputs from Spectronaut.
 }
 \examples{
 # Output datasets of Spectronaut

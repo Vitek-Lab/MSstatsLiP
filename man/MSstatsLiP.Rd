@@ -55,11 +55,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Devon Kohler \email{kohler.d@northeastern.edu}
+\strong{Maintainer}: Anthony Wu \email{wu.anthon@northeastern.edu}
 
 Authors:
 \itemize{
+  \item Devon Kohler \email{kohler.d@northeastern.edu}
   \item Tsung-Heng Tsai \email{tsai.tsungheng@gmail.com}
+  \item Deril Raju \email{raju.d@northeastern.edu}
   \item Ting Huang \email{thuang0703@gmail.com}
   \item Mateusz Staniak \email{mtst@mstaniak.pl}
   \item Meena Choi \email{mnchoi67@gmail.com}
@@ -69,3 +71,4 @@ Authors:
 }
 
 }
+\keyword{internal}

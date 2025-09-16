@@ -39,6 +39,6 @@
 #'   coverage.
 #' }
 #'
-#' @docType package
 #' @name MSstatsLiP
-NULL
+#' @keywords internal
+"_PACKAGE"
