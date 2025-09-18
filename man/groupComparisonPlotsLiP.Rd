@@ -22,8 +22,8 @@ groupComparisonPlotsLiP(
   ProteinName = TRUE,
   colorkey = TRUE,
   numProtein = 100,
-  width = 10,
-  height = 10,
+  width = 800,
+  height = 600,
   which.Comparison = "all",
   which.Peptide = "all",
   which.Protein = NULL,
@@ -90,9 +90,9 @@ displayed next to the points. FALSE means no protein names are displayed.}
 \item{numProtein}{The number of proteins which will be presented in each
 heatmap. Default is 50.}
 
-\item{width}{width of the saved file. Default is 10.}
+\item{width}{width of the saved file. Default is 800 pixels.}
 
-\item{height}{height of the saved file. Default is 10.}
+\item{height}{height of the saved file. Default is 600 pixels.}
 
 \item{which.Comparison}{list of comparisons to draw plots. List can be
 labels of comparisons or order numbers of comparisons from levels(data$Label)

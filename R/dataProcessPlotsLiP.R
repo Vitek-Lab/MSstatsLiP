@@ -36,8 +36,8 @@
 #' @param dot.size.profile size of dots in Profile plot. Default is 2.
 #' @param ncol.guide number of columns for legends at the top of plot. Default
 #' is 5.
-#' @param width width of the saved pdf file. Default is 10.
-#' @param height height of the saved pdf file. Default is 10.
+#' @param width width of the saved pdf file. Default is 800 pixels.
+#' @param height height of the saved pdf file. Default is 600 pixels.
 #' @param lip.title title of all LiP QC plot
 #' @param protein.title title of all Protein QC plot
 #' @param which.Peptide LiP peptide list to draw plots. List can be names of
@@ -83,8 +83,8 @@ dataProcessPlotsLiP <- function(data,
                                 legend.size = 7,
                                 dot.size.profile = 2,
                                 ncol.guide = 5,
-                                width = 10,
-                                height = 12,
+                                width = 800,
+                                height = 600,
                                 lip.title = "All Peptides",
                                 protein.title = "All Proteins",
                                 which.Peptide = "all",

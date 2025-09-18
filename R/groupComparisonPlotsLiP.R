@@ -55,8 +55,8 @@
 #' @param colorkey TRUE(default) shows colorkey.
 #' @param numProtein The number of proteins which will be presented in each
 #' heatmap. Default is 50.
-#' @param width width of the saved file. Default is 10.
-#' @param height height of the saved file. Default is 10.
+#' @param width width of the saved file. Default is 800 pixels.
+#' @param height height of the saved file. Default is 600 pixels.
 #' @param which.Comparison list of comparisons to draw plots. List can be
 #' labels of comparisons or order numbers of comparisons from levels(data$Label)
 #' , such as levels(testResultMultiComparisons$ComparisonResult$Label).
@@ -105,8 +105,8 @@ groupComparisonPlotsLiP <- function(data = data,
                                     ProteinName=TRUE,
                                     colorkey=TRUE,
                                     numProtein=100,
-                                    width=10,
-                                    height=10,
+                                    width=800,
+                                    height=600,
                                     which.Comparison="all",
                                     which.Peptide="all",
                                     which.Protein=NULL,
