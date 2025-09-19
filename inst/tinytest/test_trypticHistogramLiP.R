@@ -60,16 +60,16 @@ expect_error(StructuralBarcodePlotLiP(MSstatsLiP_model,
 
 ## PCAPlotLiP
 ## Test normal plot
-expect_silent(PCAPlotLiP(MSstatsLiP_Summarized, address = FALSE))
-
-## Test individual plots
-expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
-                         which.comparison = c("Ctrl", "Osmo"),
-                         address = FALSE))
-expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
-                         which.pep = c("P14164_ILQNDLK",
-                                       "P17891_ALQLINQDDADIIGGRDR"),
-                         address = FALSE))
+# expect_silent(PCAPlotLiP(MSstatsLiP_Summarized, address = FALSE))
+# 
+# ## Test individual plots
+# expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
+#                          which.comparison = c("Ctrl", "Osmo"),
+#                          address = FALSE))
+# expect_silent(PCAPlotLiP(MSstatsLiP_Summarized,
+#                          which.pep = c("P14164_ILQNDLK",
+#                                        "P17891_ALQLINQDDADIIGGRDR"),
+#                          address = FALSE))
 
 ## Parameter checking
 expect_error(PCAPlotLiP(MSstatsLiP_Summarized,

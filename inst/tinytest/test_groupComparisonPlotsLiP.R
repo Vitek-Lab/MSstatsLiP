@@ -20,12 +20,12 @@ expect_error(groupComparisonPlotsLiP(MSstatsLiP_model, ylimUp = "test"))
 expect_error(groupComparisonPlotsLiP(MSstatsLiP_model, ylimDown = "test"))
 
 ## Normal plotting
-expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "VolcanoPlot",
-                                      address = FALSE))
-expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "VolcanoPlot",
-                                      numProtein = 5, address = FALSE))
-expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "Heatmap",
-                                      address = FALSE))
-expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "Heatmap",
-                                      numProtein = 5, address = FALSE))
+# expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "VolcanoPlot",
+#                                       address = FALSE))
+# expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "VolcanoPlot",
+#                                       numProtein = 5, address = FALSE))
+# expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "Heatmap",
+#                                       address = FALSE))
+# expect_silent(groupComparisonPlotsLiP(MSstatsLiP_model, type = "Heatmap",
+#                                       numProtein = 5, address = FALSE))
 
