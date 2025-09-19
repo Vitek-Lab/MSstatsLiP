@@ -290,7 +290,8 @@ pca.component.bar.plot <- function(data, n.components, title){
     main = title,
     xlab = "PC",
     ylab = "Variance",
-    ggtheme = theme_minimal())
+    ggtheme = theme_minimal(),
+    bar_width = 1)
   )
   
   return(temp.bar.plot)
