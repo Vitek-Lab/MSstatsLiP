@@ -1,7 +1,7 @@
-#' Converts raw LiP MS data from Spectronautt into the format needed for
+#' Converts raw LiP MS data from Spectronaut into the format needed for
 #' MSstatsLiP.
 #'
-#' Takes as as input both raw LiP and Trp outputs from Spectronautt.
+#' Takes as as input both raw LiP and Trp outputs from Spectronaut.
 #'
 #' @export
 #' @importFrom MSstats SpectronauttoMSstatsFormat
@@ -143,26 +143,40 @@ SpectronauttoMSstatsLiPFormat <- function(LiP.data,
 
   getOption("MSstatsLog")("INFO", "Formatting LiP data..")
   ## MSstats process
-  df.lip <- SpectronauttoMSstatsFormat(LiP.data, annotation, intensity,
-                                       filter_with_Qvalue, qvalue_cutoff,
-                                       useUniquePeptide, removeFewMeasurements,
-                                       removeProtein_with1Feature,
-                                       summaryforMultipleRows, use_log_file,
-                                       append, verbose, log_file_path = path,
-                                       base)
+  df.lip <- SpectronauttoMSstatsFormat(
+      LiP.data, 
+      annotation = annotation, 
+      intensity = intensity,
+      filter_with_Qvalue = filter_with_Qvalue,
+      qvalue_cutoff = qvalue_cutoff,
+      useUniquePeptide = useUniquePeptide,
+      removeFewMeasurements = removeFewMeasurements,
+      removeProtein_with1Feature = removeProtein_with1Feature,
+      summaryforMultipleRows = summaryforMultipleRows,
+      use_log_file = use_log_file,
+      append = append, 
+      verbose = verbose,
+      log_file_path = path
+  )
   df.lip <- as.data.table(as.matrix(df.lip))
   if (!is.null(Trp.data)){
 
     getOption("MSstatsLog")("INFO", "Formatting TrP data..")
-    df.trp <- SpectronauttoMSstatsFormat(as.data.frame(Trp.data), annotation,
-                                         intensity,
-                                         filter_with_Qvalue, qvalue_cutoff,
-                                         useUniquePeptide,
-                                         removeFewMeasurements,
-                                         removeProtein_with1Feature,
-                                         summaryforMultipleRows, use_log_file,
-                                         append, verbose, log_file_path = path,
-                                         base)
+    df.trp <- SpectronauttoMSstatsFormat(
+        as.data.frame(Trp.data), 
+        annotation = annotation, 
+        intensity = intensity,
+        filter_with_Qvalue = filter_with_Qvalue,
+        qvalue_cutoff = qvalue_cutoff,
+        useUniquePeptide = useUniquePeptide,
+        removeFewMeasurements = removeFewMeasurements,
+        removeProtein_with1Feature = removeProtein_with1Feature,
+        summaryforMultipleRows = summaryforMultipleRows,
+        use_log_file = use_log_file,
+        append = append, 
+        verbose = verbose,
+        log_file_path = path
+    )
     df.trp <- as.data.table(as.matrix(df.trp))
   }
 
