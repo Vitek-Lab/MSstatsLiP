@@ -29,7 +29,8 @@ models full pairwise comparison between all conditions}
 listed in the data. Default is NULL. Include this parameter to determine
 trypticity of peptides in LiP models.}
 
-\item{log_base}{base of the logarithm used in dataProcess.}
+\item{log_base}{For non-TMT experiments only. The base of the logarithm used
+in summarization.}
 
 \item{use_log_file}{logical. If TRUE, information about data processing
 will be saved to a file.}
