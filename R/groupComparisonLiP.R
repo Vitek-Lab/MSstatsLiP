@@ -13,23 +13,15 @@
 #' @param data list of summarized datasets. Can be output of MSstatsLiP
 #' summarization function \code{\link[MSstatsLiP]{dataSummarizationLiP}}. Must
 #' include dataset named "LiP" as minimum.
-#' @param contrast.matrix comparison between conditions of interests. Default
-#' models full pairwise comparison between all conditions
 #' @param fasta.path a file path to a fasta file that includes the proteins
 #' listed in the data. Default is NULL. Include this parameter to determine
 #' trypticity of peptides in LiP models.
-#' @param log_base base of the logarithm used in dataProcess.
-#' @param use_log_file logical. If TRUE, information about data processing
-#' will be saved to a file.
-#' @param append logical. If TRUE, information about data processing will be
-#' added to an existing log file.
-#' @param verbose logical. If TRUE, information about data processing will be
-#' printed to the console.
 #' @param log_file_path character. Path to a file to which information about
 #' data processing will be saved.
 #' If not provided, such a file will be created automatically.
 #' If `append = TRUE`, has to be a valid path to a file.
 #' @param base start of the file name.
+#' @inheritParams MSstatsPTM::groupComparisonPTM
 #' @return list of modeling results. Includes LiP, PROTEIN, and ADJUSTED LiP
 #'         data.tables with their corresponding model results.
 #' @examples
@@ -92,9 +84,20 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                       PROTEIN = data.protein)
 
   ## Model
-  model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix,
-                                   FALSE, "BH", log_base, use_log_file, append,
-                                   verbose, path, base)
+  model.data <- groupComparisonPTM(
+      format.data, 
+      contrast.matrix = contrast.matrix,
+      ptm_label_type = "LF",
+      protein_label_type = "LF",
+      moderated = FALSE, 
+      adj.method = "BH",
+      log_base = log_base,
+      save_fitted_models=TRUE,
+      use_log_file = use_log_file, 
+      append = append,
+      verbose = verbose, 
+      log_file_path = path
+  )
   model.data$ADJUSTED.Model <- model.data$ADJUSTED.Model[!is.na(
     model.data$ADJUSTED.Model$Protein)]
 
