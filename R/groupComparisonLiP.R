@@ -92,9 +92,20 @@ groupComparisonLiP <- function(data, contrast.matrix = "pairwise",
                       PROTEIN = data.protein)
 
   ## Model
-  model.data <- groupComparisonPTM(format.data, "LabelFree", contrast.matrix,
-                                   FALSE, "BH", log_base, use_log_file, append,
-                                   verbose, path, base)
+  model.data <- groupComparisonPTM(
+      format.data, 
+      ptm_label_type = "LF", 
+      protein_label_type = "LF",
+      contrast.matrix = contrast.matrix,
+      moderated = FALSE, 
+      adj.method = "BH", 
+      log_base = log_base, 
+      use_log_file = use_log_file, 
+      append = append,
+      verbose = verbose, 
+      log_file_path = path, 
+      base = base
+  )
   model.data$ADJUSTED.Model <- model.data$ADJUSTED.Model[!is.na(
     model.data$ADJUSTED.Model$Protein)]
 
