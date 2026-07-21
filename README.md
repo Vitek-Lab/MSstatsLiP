@@ -38,7 +38,7 @@ BiocManager::install("MSstatsLiP")
 The development version can be installed directly from this repository:
 
 ```r
-BiocManager::install("Vitek-Lab/MSstatsLiP", ref = "devel")
+remotes::install_github("Vitek-Lab/MSstatsLiP")
 ```
 
 ## Quick Start
